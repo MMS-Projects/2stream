@@ -29,7 +29,7 @@ public class FfmpegWrapper extends Thread {
 
 	public void startEncoder()
 	{
-		ProcessBuilder builder = new ProcessBuilder("avconv", "-y", "-f", "x11grab", "-i", ":0.0", "bla.flv");
+		ProcessBuilder builder = new ProcessBuilder("avconv", "-y", "-f", "x11grab", "-r", "60", "-i", ":0.0", "bla.flv");
 		builder.redirectErrorStream(true);
 		try {
 			process = builder.start();
@@ -43,6 +43,8 @@ public class FfmpegWrapper extends Thread {
 
 	public void stopEncoder()
 	{
+		input  = null;
+		reader = null;
 		process.destroy();
 	}
 
@@ -51,8 +53,8 @@ public class FfmpegWrapper extends Thread {
 		try {
 			while (true) {
 				String line;
-				try {
-					if (reader != null) {
+				if (reader != null) {
+					try {
 						while ((line = reader.readLine()) != null) {
 							Matcher matcher;
 							
@@ -71,9 +73,9 @@ public class FfmpegWrapper extends Thread {
 								listener.onOutput(line + "\n");
 							}
 						}
+					} catch (Exception e) {
+						System.out.println("Error: '" + e.getClass() + "' thrown in the FfmpegWrapper.");
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 				Thread.sleep(500);
 			}
