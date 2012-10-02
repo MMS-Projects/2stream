@@ -1,6 +1,6 @@
 package net.mms_projects.tostream;
 
-import net.mms_projects.tostream.ui.swt.InterfaceLoader;
+import net.mms_projects.tostream.ui.cli.InterfaceLoader;
 
 public class ToStream {
 
@@ -8,7 +8,11 @@ public class ToStream {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		InterfaceLoader uiLoader = new InterfaceLoader();
+		FfmpegWrapper wrapperThread = new FfmpegWrapper();
+		wrapperThread.setDaemon(true);
+		wrapperThread.start();
+		
+		InterfaceLoader uiLoader = new InterfaceLoader(wrapperThread);
 	}
 
 }
