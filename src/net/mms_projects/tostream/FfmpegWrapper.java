@@ -27,7 +27,7 @@ public class FfmpegWrapper extends Thread {
 		listeners.add(toAdd);
 	}
 
-	public void startEncoder()
+	public void startEncoder() throws IOException
 	{
 		ProcessBuilder builder = new ProcessBuilder("avconv", "-y", "-f", "x11grab", "-r", "60", "-i", ":0.0", "bla.flv");
 		builder.redirectErrorStream(true);
@@ -36,8 +36,7 @@ public class FfmpegWrapper extends Thread {
 			input = process.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

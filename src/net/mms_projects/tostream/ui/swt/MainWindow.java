@@ -1,5 +1,7 @@
 package net.mms_projects.tostream.ui.swt;
 
+import java.io.IOException;
+
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
@@ -16,6 +18,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -99,8 +102,15 @@ public class MainWindow extends Shell {
 		Button btnNewButton = new Button(composite, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				ffmpegWrapper.startEncoder();
+			public void widgetSelected(SelectionEvent event) {
+				try {
+					ffmpegWrapper.startEncoder();
+				} catch (IOException e) {
+					MessageBox msg = new MessageBox(new Shell());
+					msg.setText("An erorr occured");
+					msg.setMessage("Error while starting FFmpeg: " + e.getMessage());
+					msg.open();
+				}
 			}
 		});
 		btnNewButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
