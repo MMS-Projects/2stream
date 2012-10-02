@@ -22,14 +22,21 @@ public class FfmpegWrapper extends Thread {
 	Process process;
 	InputStream input;
 	BufferedReader reader;
+	Settings settings;
 
+	public FfmpegWrapper(Settings settings) {
+		super();
+		
+		this.settings = settings;
+	}
+	
 	public void addListener(EncoderOutputListener toAdd) {
 		listeners.add(toAdd);
 	}
 
 	public void startEncoder() throws IOException
 	{
-		ProcessBuilder builder = new ProcessBuilder("avconv", "-y", "-f", "x11grab", "-r", "60", "-i", ":0.0", "bla.flv");
+		ProcessBuilder builder = new ProcessBuilder(compileSettings());
 		builder.redirectErrorStream(true);
 		try {
 			process = builder.start();
@@ -82,6 +89,36 @@ public class FfmpegWrapper extends Thread {
 			System.out.println("Child interrupted.");
 		}
 		System.out.println("Exiting child thread.");
+	}
+	
+	public List<String> compileSettings()
+	{
+		List<String> command = new ArrayList<String>();
+		command.add("avconv");
+		command.add("-y");
+		command.add("-f");
+		command.add("x11grab");
+		
+		command.add("-i");
+		command.add(":0.0");
+
+		if (settings.framerate > 5) {
+			command.add("-r");
+			command.add(Integer.toString(settings.framerate));
+		}
+		if (!settings.bitrate.isEmpty()) {
+			command.add("-b");
+			command.add(settings.bitrate);
+			command.add("-minrate");
+			command.add(settings.bitrate);
+			command.add("-maxrate");
+			command.add(settings.bitrate);
+			command.add("-bufsize");
+			command.add(settings.bufferSize);
+		}
+		command.add("bla.flv");
+		
+		return command;
 	}
 
 }

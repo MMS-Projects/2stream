@@ -8,11 +8,13 @@ public class ToStream {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		FfmpegWrapper wrapperThread = new FfmpegWrapper();
+		Settings settings = new Settings();
+		
+		FfmpegWrapper wrapperThread = new FfmpegWrapper(settings);
 		wrapperThread.setDaemon(true);
 		wrapperThread.start();
 		
-		InterfaceLoader uiLoader = new InterfaceLoader(wrapperThread);
+		InterfaceLoader uiLoader = new InterfaceLoader(wrapperThread, settings);
 	}
 
 }

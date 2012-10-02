@@ -7,17 +7,13 @@ import org.eclipse.swt.widgets.Display;
 
 public class InterfaceLoader {
 
-	public InterfaceLoader(FfmpegWrapper wrapperThread) {
+	public InterfaceLoader(FfmpegWrapper wrapperThread, Settings settings) {
 		try {
 			Display display = Display.getDefault();
-			
-			Settings settings = new Settings();
 			
 			DebugConsole debugWindow = new DebugConsole(display, wrapperThread);
 			debugWindow.setVisible(true);
 			debugWindow.layout();
-			
-			
 			
 			MainWindow shell = new MainWindow(display, wrapperThread, settings);
 			shell.open();

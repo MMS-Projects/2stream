@@ -21,19 +21,22 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 public class MainWindow extends Shell {
 
 	FfmpegWrapper ffmpegWrapper;
-	private Text text;
-	private Text text_1;
-	private Text text_2;
+	private Text settingBitrate;
+	private Text settingsResolutionX;
+	private Text settingsResolutionY;
+	private Text settingFramerate;
 
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper, Settings settings) {
+	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper, final Settings settings) {
 		super(display, SWT.SHELL_TRIM);
 		this.ffmpegWrapper = ffmpegWrapper;
 		setLayout(new GridLayout(2, false));
@@ -51,47 +54,70 @@ public class MainWindow extends Shell {
 		mntmQuit.setText("Quit");
 
 		Label lblVideoBitrate = new Label(this, SWT.NONE);
-		lblVideoBitrate.setText("Video Bitrate");
+		lblVideoBitrate.setText("Video bitrate");
 
-		text = new Text(this, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		text.setText("2500");
+		settingBitrate = new Text(this, SWT.BORDER);
+		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingBitrate.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				settings.bitrate = settingBitrate.getText();
+			}
+		});
+		settingBitrate.setText(settings.bitrate);
 
 		Label lblVideoEncodePreset = new Label(this, SWT.NONE);
 		lblVideoEncodePreset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblVideoEncodePreset.setText("Video Encode Preset");
+		lblVideoEncodePreset.setText("Video encode preset");
 
-		Combo comboVideoEncodePreset = new Combo(this, SWT.READ_ONLY);
-		comboVideoEncodePreset.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboVideoEncodePreset.setItems(new String[] {"a", "a", "a"});
+		Combo settingVideoEncodePreset = new Combo(this, SWT.READ_ONLY);
+		settingVideoEncodePreset.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingVideoEncodePreset.setItems(new String[] {"a", "a", "a"});
 
 		Label lblVideoResolution = new Label(this, SWT.NONE);
-		lblVideoResolution.setText("Video Resolution");
+		lblVideoResolution.setText("Video resolution");
 
 		Composite compositeVideoResolution = new Composite(this, SWT.NONE);
 		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		compositeVideoResolution.setLayout(new GridLayout(3, false));
 
-		text_1 = new Text(compositeVideoResolution, SWT.BORDER);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingsResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
+		settingsResolutionX.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				settings.videoResolution[0] = Integer.parseInt(settingsResolutionX.getText());
+			}
+		});
+		settingsResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblX = new Label(compositeVideoResolution, SWT.NONE);
 		lblX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblX.setText("X");
 
-		text_2 = new Text(compositeVideoResolution, SWT.BORDER);
-		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingsResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
+		settingsResolutionY.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				settings.videoResolution[1] = Integer.parseInt(settingsResolutionY.getText());
+			}
+		});
+		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblVideoFrameRate = new Label(this, SWT.NONE);
-		lblVideoFrameRate.setText("Video Frame Rate");
-		new Label(this, SWT.NONE);
+		lblVideoFrameRate.setText("Video frame rate");
+		
+		settingFramerate = new Text(this, SWT.BORDER);
+		settingFramerate.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				settings.framerate = Integer.parseInt(settingFramerate.getText());
+			}
+		});
+		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingFramerate.setText(Integer.toString(settings.framerate));
 
 		Label lblAudioBitrate = new Label(this, SWT.NONE);
-		lblAudioBitrate.setText("Audio Bitrate");
+		lblAudioBitrate.setText("Audio bitrate");
 		new Label(this, SWT.NONE);
 
 		Label lblAudioChannels = new Label(this, SWT.NONE);
-		lblAudioChannels.setText("Audio Channels");
+		lblAudioChannels.setText("Audio channels");
 		new Label(this, SWT.NONE);
 		new Label(this, SWT.NONE);
 
@@ -114,7 +140,7 @@ public class MainWindow extends Shell {
 			}
 		});
 		btnNewButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		btnNewButton.setText("New Button");
+		btnNewButton.setText("Start");
 
 		Button btnNewButton_1 = new Button(composite, SWT.NONE);
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
@@ -124,7 +150,7 @@ public class MainWindow extends Shell {
 			}
 		});
 		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		btnNewButton_1.setText("New Button");
+		btnNewButton_1.setText("Stop");
 		new Label(this, SWT.NONE);
 		
 		final Label lblStatus = new Label(this, SWT.NONE);
