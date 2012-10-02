@@ -1,4 +1,4 @@
-package net.mms_projects.tostream.ui;
+package net.mms_projects.tostream.ui.swt;
 
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.EncoderOutputListener;
