@@ -1,5 +1,6 @@
 package net.mms_projects.tostream.ui;
 
+import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
 
@@ -114,7 +115,22 @@ public class MainWindow extends Shell {
 		});
 		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		btnNewButton_1.setText("New Button");
+		new Label(this, SWT.NONE);
+		
+		final Label lblStatus = new Label(this, SWT.NONE);
+		lblStatus.setText("Please start to get the status");
 
+		this.ffmpegWrapper.addListener(new EncoderOutputListener() {
+			public void onStatusUpdate(final int frame, final int framerate) {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						lblStatus.setText("FPS: " + framerate + " - Frame: " + frame);
+					}
+				});
+			}
+		});
+		
 		createContents();
 	}
 

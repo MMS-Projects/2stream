@@ -6,8 +6,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FfmpegWrapper extends Thread {
+
+    private static final Pattern FRAME_PATTERN = Pattern.compile(
+        "frame(\\s*)=(\\s+)(\\d+)", Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern FRAME_RATE_PATTERN = Pattern.compile(
+        "fps(\\s*)=(\\s+)(\\d+)", Pattern.CASE_INSENSITIVE
+    );
 
 	List<EncoderOutputListener> listeners = new ArrayList<EncoderOutputListener>();
 	Process process;
@@ -45,33 +54,33 @@ public class FfmpegWrapper extends Thread {
 				try {
 					if (reader != null) {
 						while ((line = reader.readLine()) != null) {
-							//System.out.println ("Stdout: " + line);
-							System.out.println(parseOutput(line));
-							for (EncoderOutputListener hl : listeners) {
-								hl.onOutput(line + "\n");
+							Matcher matcher;
+							
+							int framerate = 0;
+							int frame     = 0;
+							matcher = FRAME_RATE_PATTERN.matcher(line);
+							if (matcher.find()) {
+								framerate = Integer.parseInt(matcher.group(3));
+							}
+							matcher = FRAME_PATTERN.matcher(line);
+							if (matcher.find()) {
+								frame = Integer.parseInt(matcher.group(3));
+							}
+							for (EncoderOutputListener listener : listeners) {
+								listener.onStatusUpdate(frame, framerate);
+								listener.onOutput(line + "\n");
 							}
 						}
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//System.out.println("Child Thread: " + 1000);
-				// Let the thread sleep for a while.
-				
 				Thread.sleep(500);
 			}
 		} catch (InterruptedException e) {
 			System.out.println("Child interrupted.");
 		}
 		System.out.println("Exiting child thread.");
-	}
-	
-	public String parseOutput(String output) {
-		for (String piece : output.split(" ")) {
-			
-		}
-		return "";
 	}
 
 }
