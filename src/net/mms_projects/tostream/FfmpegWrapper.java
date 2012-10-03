@@ -107,7 +107,7 @@ public class FfmpegWrapper extends Thread {
 
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
 			command.add("-r");
-			command.add(Integer.toString(settings.framerate));
+			command.add(settings.get(Settings.FRAME_RATE));
 		}
 		if (!settings.get(Settings.BITRATE).isEmpty()) {
 			command.add("-b");

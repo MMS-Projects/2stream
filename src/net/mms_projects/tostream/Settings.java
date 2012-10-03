@@ -43,7 +43,7 @@ public class Settings extends Properties {
 	}
 
 	public int[] getAsIntegerArray(String key) {
-		String[] tokens = getProperty(key).split(",");
+		String[] tokens = get(key).split(",");
 		int[] array = new int[tokens.length];
 		for (int i = 0; i < tokens.length; i++) {
 			array[i] = Integer.parseInt(tokens[i]);
@@ -57,7 +57,7 @@ public class Settings extends Properties {
 	}
 
 	public void set(String key, Integer value) {
-		setProperty(key, value.toString());
+		set(key, value.toString());
 	}
 
 	public void set(String key, Integer[] array) {
@@ -79,7 +79,7 @@ public class Settings extends Properties {
 				value += "," + number.toString();
 			}
 		}
-		setProperty(key, value);
+		set(key, value);
 	}
 
 	public void loadProperties() {

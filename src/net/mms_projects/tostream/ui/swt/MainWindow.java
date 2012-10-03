@@ -65,7 +65,7 @@ public class MainWindow extends Shell {
 				settings.set(Settings.BITRATE, settingBitrate.getText());
 			}
 		});
-		settingBitrate.setText(settings.bitrate);
+		settingBitrate.setText(settings.get(Settings.BITRATE));
 
 		Label lblVideoEncodePreset = new Label(this, SWT.NONE);
 		lblVideoEncodePreset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -83,6 +83,7 @@ public class MainWindow extends Shell {
 		compositeVideoResolution.setLayout(new GridLayout(3, false));
 
 		settingsResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
+		settingsResolutionX.setText(Integer.toString(settings.getAsIntegerArray(Settings.RESOLUTION)[0]));
 		settingsResolutionX.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
@@ -119,6 +120,7 @@ public class MainWindow extends Shell {
 		lblX.setText("X");
 
 		settingsResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
+		settingsResolutionY.setText(Integer.toString(settings.getAsIntegerArray(Settings.RESOLUTION)[1]));
 		settingsResolutionY.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
@@ -149,7 +151,7 @@ public class MainWindow extends Shell {
 		    }  
 		});
 		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
+		
 		Label lblVideoFrameRate = new Label(this, SWT.NONE);
 		lblVideoFrameRate.setText("Video frame rate");
 		
@@ -160,7 +162,7 @@ public class MainWindow extends Shell {
 			}
 		});
 		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		settingFramerate.setText(Integer.toString(settings.framerate));
+		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
 
 		Label lblAudioBitrate = new Label(this, SWT.NONE);
 		lblAudioBitrate.setText("Audio bitrate");
