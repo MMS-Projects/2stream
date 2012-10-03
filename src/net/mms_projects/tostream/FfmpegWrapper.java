@@ -74,8 +74,11 @@ public class FfmpegWrapper extends Thread {
 							if (matcher.find()) {
 								frame = Integer.parseInt(matcher.group(3));
 							}
+							
 							for (EncoderOutputListener listener : listeners) {
-								listener.onStatusUpdate(frame, framerate);
+								if (frame != 0) {
+									listener.onStatusUpdate(frame, framerate);
+								}
 								listener.onOutput(line + "\n");
 							}
 						}
