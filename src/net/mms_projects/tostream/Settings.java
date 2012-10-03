@@ -41,13 +41,13 @@ public class Settings extends Properties {
 	public int getAsInteger(String key) {
 		return Integer.parseInt(get(key));
 	}
-	
+
 	public int[] getAsIntegerArray(String key) {
 		String[] tokens = getProperty(key).split(",");
 		int[] array = new int[tokens.length];
 		for (int i = 0; i < tokens.length; i++) {
 			array[i] = Integer.parseInt(tokens[i]);
-	    }
+		}
 		return array;
 	}
 
@@ -64,7 +64,7 @@ public class Settings extends Properties {
 		String value = "";
 		Iterator<Integer> itemIterator = Arrays.asList(array).iterator();
 		Integer number;
-		
+
 		if (itemIterator.hasNext()) {
 			number = itemIterator.next();
 			if (number == null) {
@@ -76,9 +76,48 @@ public class Settings extends Properties {
 				if (number == null) {
 					number = 0;
 				}
-				value +=  "," + number.toString();
+				value += "," + number.toString();
 			}
 		}
 		setProperty(key, value);
+	}
+
+	public void loadProperties() {
+		BufferedInputStream stream;
+		try {
+			stream = new BufferedInputStream(new FileInputStream(
+					getConfigDirectory() + "options.properties"));
+			this.load(stream);
+			stream.close();
+		} catch (FileNotFoundException e) {
+			// having no properties file is OK
+		} catch (IOException e) {
+			// something went wrong with the stream
+			e.printStackTrace();
+		}
+	}
+
+	public void saveProperties() {
+		BufferedOutputStream stream;
+		try {
+			File file = new File(getConfigDirectory() + "options.properties");
+			if (!file.exists()) {
+				System.out.println("File not there");
+				file.createNewFile();
+			}
+			stream = new BufferedOutputStream(new FileOutputStream(file));
+			// TODO describe properties in comments
+			String comments = "";
+			store(stream, comments);
+		} catch (FileNotFoundException e) {
+			// we checked this first so this shouldn't occurs
+		} catch (IOException e) {
+			// something went wrong with the stream
+			e.printStackTrace();
+		}
+	}
+
+	public String getConfigDirectory() {
+		return "." + System.getProperty("file.separator");
 	}
 }
