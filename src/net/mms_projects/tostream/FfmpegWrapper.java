@@ -64,7 +64,7 @@ public class FfmpegWrapper extends Thread {
 						while ((line = reader.readLine()) != null) {
 							Matcher matcher;
 							
-							int framerate = 0;
+							int framerate = -1;
 							int frame     = 0;
 							matcher = FRAME_RATE_PATTERN.matcher(line);
 							if (matcher.find()) {
@@ -76,7 +76,7 @@ public class FfmpegWrapper extends Thread {
 							}
 							
 							for (EncoderOutputListener listener : listeners) {
-								if (frame != 0) {
+								if (framerate != -1) {
 									listener.onStatusUpdate(frame, framerate);
 								}
 								listener.onOutput(line + "\n");
@@ -105,20 +105,25 @@ public class FfmpegWrapper extends Thread {
 		command.add("-i");
 		command.add(":0.0");
 
-		if (settings.framerate > 5) {
+		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
 			command.add("-r");
 			command.add(Integer.toString(settings.framerate));
 		}
-		if (!settings.bitrate.isEmpty()) {
+		if (!settings.get(Settings.BITRATE).isEmpty()) {
 			command.add("-b");
-			command.add(settings.bitrate);
+			command.add(settings.get(Settings.BITRATE));
 			command.add("-minrate");
-			command.add(settings.bitrate);
+			command.add(settings.get(Settings.BITRATE));
 			command.add("-maxrate");
-			command.add(settings.bitrate);
+			command.add(settings.get(Settings.BITRATE));
 			command.add("-bufsize");
-			command.add(settings.bufferSize);
+			command.add(settings.get(Settings.BUFFER_SIZE));
 		}
+		
+		int[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
+		System.out.println(resolution[0]);
+		System.out.println(resolution[1]);
+		
 		command.add("bla.flv");
 		
 		return command;

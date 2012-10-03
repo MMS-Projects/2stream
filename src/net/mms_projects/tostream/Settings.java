@@ -1,14 +1,84 @@
 package net.mms_projects.tostream;
 
-public class Settings {
+import java.awt.Rectangle;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Properties;
+
+public class Settings extends Properties {
 
 	public String bitrate = "250k";
 	public String bufferSize = "1835k";
-	public int framerate  = 30;
-	public int[] videoResolution;
-	
+	public int framerate = 30;
+	public Integer[] videoResolution = new Integer[2];
+
+	public static final String BITRATE = "bitrate";
+	public static final String BUFFER_SIZE = "bufferSize";
+	public static final String FRAME_RATE = "frameRate";
+	public static final String RESOLUTION = "resolution";
+
 	public Settings() {
-		// TODO Auto-generated constructor stub
+		super();
+
+		defaults = new Properties();
+		defaults.setProperty(Settings.BITRATE, "250k");
+		defaults.setProperty(Settings.BUFFER_SIZE, "1835k");
+		defaults.setProperty(Settings.FRAME_RATE, "30");
+		defaults.setProperty(Settings.RESOLUTION, "800,600");
 	}
 
+	public String get(String key) {
+		return getProperty(key);
+	}
+
+	public int getAsInteger(String key) {
+		return Integer.parseInt(get(key));
+	}
+	
+	public int[] getAsIntegerArray(String key) {
+		String[] tokens = getProperty(key).split(",");
+		int[] array = new int[tokens.length];
+		for (int i = 0; i < tokens.length; i++) {
+			array[i] = Integer.parseInt(tokens[i]);
+	    }
+		return array;
+	}
+
+	public void set(String key, String value) {
+		setProperty(key, value);
+		saveProperties();
+	}
+
+	public void set(String key, Integer value) {
+		setProperty(key, value.toString());
+	}
+
+	public void set(String key, Integer[] array) {
+		String value = "";
+		Iterator<Integer> itemIterator = Arrays.asList(array).iterator();
+		Integer number;
+		
+		if (itemIterator.hasNext()) {
+			number = itemIterator.next();
+			if (number == null) {
+				number = 0;
+			}
+			value += number.toString();
+			while (itemIterator.hasNext()) {
+				number = itemIterator.next();
+				if (number == null) {
+					number = 0;
+				}
+				value +=  "," + number.toString();
+			}
+		}
+		setProperty(key, value);
+	}
 }

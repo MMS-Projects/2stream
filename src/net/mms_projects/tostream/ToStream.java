@@ -9,6 +9,7 @@ public class ToStream {
 	 */
 	public static void main(String[] args) {
 		Settings settings = new Settings();
+		settings.loadProperties();
 		
 		FfmpegWrapper wrapperThread = new FfmpegWrapper(settings);
 		wrapperThread.setDaemon(true);

@@ -9,6 +9,8 @@ import net.mms_projects.tostream.Settings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,7 +62,7 @@ public class MainWindow extends Shell {
 		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		settingBitrate.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				settings.bitrate = settingBitrate.getText();
+				settings.set(Settings.BITRATE, settingBitrate.getText());
 			}
 		});
 		settingBitrate.setText(settings.bitrate);
@@ -83,8 +85,32 @@ public class MainWindow extends Shell {
 		settingsResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
 		settingsResolutionX.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				settings.videoResolution[0] = Integer.parseInt(settingsResolutionX.getText());
+				try {
+					settings.videoResolution[0] = Integer.parseInt(settingsResolutionX.getText());
+				}
+				catch (java.lang.NumberFormatException e) {
+					settingsResolutionX.setText("0");
+				}
+				settings.set(Settings.RESOLUTION, settings.videoResolution);
 			}
+		});
+		settingsResolutionX.addVerifyListener(new VerifyListener() {  
+		    @Override  
+		    public void verifyText(final VerifyEvent event) {  
+		        switch (event.keyCode) {  
+		            case SWT.BS:           // Backspace  
+		            case SWT.DEL:          // Delete  
+		            case SWT.HOME:         // Home  
+		            case SWT.END:          // End  
+		            case SWT.ARROW_LEFT:   // Left arrow  
+		            case SWT.ARROW_RIGHT:  // Right arrow  
+		                return;  
+		        }  
+		  
+		        if (!Character.isDigit(event.character)) {  
+		            event.doit = false;  // disallow the action  
+		        }  
+		    }  
 		});
 		settingsResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -95,8 +121,32 @@ public class MainWindow extends Shell {
 		settingsResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
 		settingsResolutionY.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				settings.videoResolution[1] = Integer.parseInt(settingsResolutionY.getText());
+				try {
+					settings.videoResolution[1] = Integer.parseInt(settingsResolutionY.getText());
+				}
+				catch (java.lang.NumberFormatException e) {
+					settingsResolutionY.setText("0");
+				}
+				settings.set(Settings.RESOLUTION, settings.videoResolution);
 			}
+		});
+		settingsResolutionY.addVerifyListener(new VerifyListener() {  
+		    @Override  
+		    public void verifyText(final VerifyEvent event) {  
+		        switch (event.keyCode) {  
+		            case SWT.BS:           // Backspace  
+		            case SWT.DEL:          // Delete  
+		            case SWT.HOME:         // Home  
+		            case SWT.END:          // End  
+		            case SWT.ARROW_LEFT:   // Left arrow  
+		            case SWT.ARROW_RIGHT:  // Right arrow  
+		                return;  
+		        }  
+		  
+		        if (!Character.isDigit(event.character)) {  
+		            event.doit = false;  // disallow the action  
+		        }  
+		    }  
 		});
 		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -106,7 +156,7 @@ public class MainWindow extends Shell {
 		settingFramerate = new Text(this, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				settings.framerate = Integer.parseInt(settingFramerate.getText());
+				settings.set(Settings.FRAME_RATE, settingFramerate.getText());
 			}
 		});
 		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
