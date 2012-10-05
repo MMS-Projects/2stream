@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
-public class InterfaceLoader {
+public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 
 	public InterfaceLoader(FfmpegWrapper wrapperThread, Settings settings) {
 		try {

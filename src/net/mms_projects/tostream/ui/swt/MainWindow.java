@@ -62,7 +62,10 @@ public class MainWindow extends Shell {
 		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		settingBitrate.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				settings.set(Settings.BITRATE, settingBitrate.getText());
+				try {
+					settings.set(Settings.BITRATE, settingBitrate.getText());
+				} catch (Exception e) {
+				}
 			}
 		});
 		settingBitrate.setText(settings.get(Settings.BITRATE));
@@ -92,7 +95,10 @@ public class MainWindow extends Shell {
 				catch (java.lang.NumberFormatException e) {
 					settingsResolutionX.setText("0");
 				}
-				settings.set(Settings.RESOLUTION, settings.videoResolution);
+				try {
+					settings.set(Settings.RESOLUTION, settings.videoResolution);
+				} catch (Exception e) {
+				}
 			}
 		});
 		settingsResolutionX.addVerifyListener(new VerifyListener() {  
@@ -129,7 +135,10 @@ public class MainWindow extends Shell {
 				catch (java.lang.NumberFormatException e) {
 					settingsResolutionY.setText("0");
 				}
-				settings.set(Settings.RESOLUTION, settings.videoResolution);
+				try {
+					settings.set(Settings.RESOLUTION, settings.videoResolution);
+				} catch (Exception e) {
+				}
 			}
 		});
 		settingsResolutionY.addVerifyListener(new VerifyListener() {  
@@ -158,7 +167,10 @@ public class MainWindow extends Shell {
 		settingFramerate = new Text(this, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				settings.set(Settings.FRAME_RATE, settingFramerate.getText());
+				try {
+					settings.set(Settings.FRAME_RATE, settingFramerate.getText());
+				} catch (Exception e) {
+				}
 			}
 		});
 		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -1,6 +1,5 @@
 package net.mms_projects.tostream;
 
-import java.awt.Rectangle;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -14,10 +13,9 @@ import java.util.Properties;
 
 public class Settings extends Properties {
 
-	public String bitrate = "250k";
-	public String bufferSize = "1835k";
-	public int framerate = 30;
 	public Integer[] videoResolution = new Integer[2];
+	
+	public Properties defaults = new Properties();
 
 	public static final String BITRATE = "bitrate";
 	public static final String BUFFER_SIZE = "bufferSize";
@@ -27,7 +25,6 @@ public class Settings extends Properties {
 	public Settings() {
 		super();
 
-		defaults = new Properties();
 		defaults.setProperty(Settings.BITRATE, "250k");
 		defaults.setProperty(Settings.BUFFER_SIZE, "1835k");
 		defaults.setProperty(Settings.FRAME_RATE, "30");
@@ -51,16 +48,19 @@ public class Settings extends Properties {
 		return array;
 	}
 
-	public void set(String key, String value) {
+	public void set(String key, String value) throws Exception {
+		if (!defaults.containsKey(key)) {
+			throw new Exception("Tried to set unknown setting");
+		}
 		setProperty(key, value);
 		saveProperties();
 	}
 
-	public void set(String key, Integer value) {
+	public void set(String key, Integer value) throws Exception {
 		set(key, value.toString());
 	}
 
-	public void set(String key, Integer[] array) {
+	public void set(String key, Integer[] array) throws Exception {
 		String value = "";
 		Iterator<Integer> itemIterator = Arrays.asList(array).iterator();
 		Integer number;

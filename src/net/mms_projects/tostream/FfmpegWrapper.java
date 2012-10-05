@@ -126,6 +126,13 @@ public class FfmpegWrapper extends Thread {
 		
 		command.add("bla.flv");
 		
+		String cmd = "";
+		for (String piece : command) {
+			cmd += piece;
+			cmd += " ";
+		}
+		System.out.println(cmd);
+		
 		return command;
 	}
 
