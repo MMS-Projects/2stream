@@ -21,6 +21,7 @@ public class Settings extends Properties {
 	public static final String BUFFER_SIZE = "bufferSize";
 	public static final String FRAME_RATE = "frameRate";
 	public static final String RESOLUTION = "resolution";
+	public static final String STREAM_URL = "streamUrl";
 
 	public Settings() {
 		super();
@@ -29,6 +30,7 @@ public class Settings extends Properties {
 		defaults.setProperty(Settings.BUFFER_SIZE, "1835k");
 		defaults.setProperty(Settings.FRAME_RATE, "30");
 		defaults.setProperty(Settings.RESOLUTION, "800,600");
+		defaults.setProperty(Settings.STREAM_URL, "");
 	}
 
 	public String get(String key) {

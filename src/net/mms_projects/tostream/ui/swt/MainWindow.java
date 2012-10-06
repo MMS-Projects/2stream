@@ -33,6 +33,7 @@ public class MainWindow extends Shell {
 	private Text settingsResolutionX;
 	private Text settingsResolutionY;
 	private Text settingFramerate;
+	private Text settingStreamUrl;
 
 	/**
 	 * Create the shell.
@@ -183,6 +184,24 @@ public class MainWindow extends Shell {
 		Label lblAudioChannels = new Label(this, SWT.NONE);
 		lblAudioChannels.setText("Audio channels");
 		new Label(this, SWT.NONE);
+		
+		Label lblStreamUrl = new Label(this, SWT.NONE);
+		lblStreamUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblStreamUrl.setText("Stream URL");
+		
+		settingStreamUrl = new Text(this, SWT.BORDER);
+		settingStreamUrl.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				try {
+					settings.set(Settings.STREAM_URL, settingStreamUrl.getText());
+				} catch (Exception e) {
+				}
+			}
+		});
+		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if (settings.get(settings.STREAM_URL) != null) {
+			settingStreamUrl.setText(settings.get(settings.STREAM_URL));
+		}
 		new Label(this, SWT.NONE);
 
 		Composite composite = new Composite(this, SWT.NONE);
@@ -239,7 +258,7 @@ public class MainWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText("2STREAM");
-		setSize(450, 300);
+		setSize(600, 400);
 
 	}
 

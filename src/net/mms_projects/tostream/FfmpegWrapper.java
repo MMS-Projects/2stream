@@ -1,5 +1,7 @@
 package net.mms_projects.tostream;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,12 +105,18 @@ public class FfmpegWrapper extends Thread {
 		command.add("x11grab");
 		
 		command.add("-i");
-		command.add(":0.0");
-
+		command.add("1300x744|:0.0+65,24");
+	
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
 			command.add("-r");
 			command.add(settings.get(Settings.FRAME_RATE));
 		}
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Dimension scrnsize = toolkit.getScreenSize();
+		System.out.println ("Screen size : " + scrnsize);
+		
+		command.add("-s");
+		command.add(scrnsize.width + "x" + scrnsize.height);
 		if (!settings.get(Settings.BITRATE).isEmpty()) {
 			command.add("-b");
 			command.add(settings.get(Settings.BITRATE));
@@ -120,11 +128,17 @@ public class FfmpegWrapper extends Thread {
 			command.add(settings.get(Settings.BUFFER_SIZE));
 		}
 		
+		command.add("-vcodec");
+		command.add("libx264");
+		
 		int[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
 		System.out.println(resolution[0]);
 		System.out.println(resolution[1]);
 		
-		command.add("bla.flv");
+		command.add("-f");
+		command.add("flv");
+		
+		command.add(settings.get(Settings.STREAM_URL));
 		
 		String cmd = "";
 		for (String piece : command) {
