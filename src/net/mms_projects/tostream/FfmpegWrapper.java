@@ -1,6 +1,8 @@
 package net.mms_projects.tostream;
 
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -88,7 +90,7 @@ public class FfmpegWrapper extends Thread {
 						System.out.println("Error: '" + e.getClass() + "' thrown in the FfmpegWrapper.");
 					}
 				}
-				Thread.sleep(500);
+				Thread.sleep(50);
 			}
 		} catch (InterruptedException e) {
 			System.out.println("Child interrupted.");
@@ -99,24 +101,25 @@ public class FfmpegWrapper extends Thread {
 	public List<String> compileSettings()
 	{
 		List<String> command = new ArrayList<String>();
-		command.add("avconv");
+		command.add("ffmpeg");
 		command.add("-y");
 		command.add("-f");
 		command.add("x11grab");
 		
-		command.add("-i");
-		command.add("1300x744|:0.0+65,24");
-	
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
 			command.add("-r");
 			command.add(settings.get(Settings.FRAME_RATE));
 		}
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Dimension scrnsize = toolkit.getScreenSize();
-		System.out.println ("Screen size : " + scrnsize);
+		
+		int[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
+		System.out.println(resolution[0]);
+		System.out.println(resolution[1]);
 		
 		command.add("-s");
-		command.add(scrnsize.width + "x" + scrnsize.height);
+		command.add(resolution[0] + "x" + resolution[1]);
+		
+		command.add("-i");
+		command.add(":0.0+0,0");
 		if (!settings.get(Settings.BITRATE).isEmpty()) {
 			command.add("-b");
 			command.add(settings.get(Settings.BITRATE));
@@ -131,9 +134,10 @@ public class FfmpegWrapper extends Thread {
 		command.add("-vcodec");
 		command.add("libx264");
 		
-		int[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
-		System.out.println(resolution[0]);
-		System.out.println(resolution[1]);
+		
+		
+		command.add("-s");
+		command.add(resolution[0] + "x" + resolution[1]);
 		
 		command.add("-f");
 		command.add("flv");

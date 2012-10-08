@@ -22,6 +22,10 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 
 			Tray tray = display.getSystemTray();
 			final TrayItem item = new TrayItem(tray, SWT.NONE);
+			
+			final SfiLoop sfiLoop = new SfiLoop();
+			sfiLoop.setDaemon(true);
+			sfiLoop.start();
 
 			wrapperThread.addListener(new EncoderOutputListener() {
 				public void onStatusUpdate(final int frame, final int framerate) {
@@ -43,6 +47,9 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 							gc.dispose();
 							item.setImage(image);
 							image.dispose();
+							
+							sfiLoop.setFrameAmount(frame);
+							sfiLoop.setFramerate(framerate);
 						}
 					});
 				}
