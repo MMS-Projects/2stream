@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.graphics.Point;
 
 public class MainWindow extends Shell {
 
@@ -35,11 +36,18 @@ public class MainWindow extends Shell {
 	private Text settingFramerate;
 	private Text settingStreamUrl;
 
+	private RecordingSelectionWindow regionSelectionWindow = new RecordingSelectionWindow(
+			getDisplay());
+	private Text settingsLocationX;
+	private Text settingsLocationY;
+
 	/**
 	 * Create the shell.
+	 * 
 	 * @param display
 	 */
-	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper, final Settings settings) {
+	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper,
+			final Settings settings) {
 		super(display, SWT.SHELL_TRIM);
 		this.ffmpegWrapper = ffmpegWrapper;
 		setLayout(new GridLayout(2, false));
@@ -60,7 +68,8 @@ public class MainWindow extends Shell {
 		lblVideoBitrate.setText("Video bitrate");
 
 		settingBitrate = new Text(this, SWT.BORDER);
-		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		settingBitrate.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
@@ -72,28 +81,32 @@ public class MainWindow extends Shell {
 		settingBitrate.setText(settings.get(Settings.BITRATE));
 
 		Label lblVideoEncodePreset = new Label(this, SWT.NONE);
-		lblVideoEncodePreset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblVideoEncodePreset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
+				false, false, 1, 1));
 		lblVideoEncodePreset.setText("Video encode preset");
 
 		Combo settingVideoEncodePreset = new Combo(this, SWT.READ_ONLY);
-		settingVideoEncodePreset.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		settingVideoEncodePreset.setItems(new String[] {"a", "a", "a"});
+		settingVideoEncodePreset.setLayoutData(new GridData(SWT.FILL,
+				SWT.CENTER, true, false, 1, 1));
+		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" });
 
 		Label lblVideoResolution = new Label(this, SWT.NONE);
 		lblVideoResolution.setText("Video resolution");
 
 		Composite compositeVideoResolution = new Composite(this, SWT.NONE);
-		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		compositeVideoResolution.setLayout(new GridLayout(3, false));
+		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, false, 1, 1));
+		compositeVideoResolution.setLayout(new GridLayout(4, false));
 
 		settingsResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsResolutionX.setText(Integer.toString(settings.getAsIntegerArray(Settings.RESOLUTION)[0]));
+		settingsResolutionX.setText(Integer.toString(settings
+				.getAsIntegerArray(Settings.RESOLUTION)[0]));
 		settingsResolutionX.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
-					settings.videoResolution[0] = Integer.parseInt(settingsResolutionX.getText());
-				}
-				catch (java.lang.NumberFormatException e) {
+					settings.videoResolution[0] = Integer
+							.parseInt(settingsResolutionX.getText());
+				} catch (java.lang.NumberFormatException e) {
 					settingsResolutionX.setText("0");
 				}
 				try {
@@ -102,38 +115,42 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingsResolutionX.addVerifyListener(new VerifyListener() {  
-		    @Override  
-		    public void verifyText(final VerifyEvent event) {  
-		        switch (event.keyCode) {  
-		            case SWT.BS:           // Backspace  
-		            case SWT.DEL:          // Delete  
-		            case SWT.HOME:         // Home  
-		            case SWT.END:          // End  
-		            case SWT.ARROW_LEFT:   // Left arrow  
-		            case SWT.ARROW_RIGHT:  // Right arrow  
-		                return;  
-		        }  
-		  
-		        if (!Character.isDigit(event.character)) {  
-		            event.doit = false;  // disallow the action  
-		        }  
-		    }  
+		settingsResolutionX.addVerifyListener(new VerifyListener() {
+			@Override
+			public void verifyText(final VerifyEvent event) {
+				switch (event.keyCode) {
+				case SWT.BS: // Backspace
+				case SWT.DEL: // Delete
+				case SWT.HOME: // Home
+				case SWT.END: // End
+				case SWT.ARROW_LEFT: // Left arrow
+				case SWT.ARROW_RIGHT: // Right arrow
+					return;
+				}
+
+				if ((!Character.isDigit(event.character)) && (Character.getNumericValue(event.character) != -1)) {
+					event.doit = false; // disallow the action
+					System.out.println("'" + Character.getNumericValue(event.character) + "'");
+				}
+			}
 		});
-		settingsResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingsResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				true, false, 1, 1));
 
 		Label lblX = new Label(compositeVideoResolution, SWT.NONE);
-		lblX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1,
+				1));
 		lblX.setText("X");
 
 		settingsResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsResolutionY.setText(Integer.toString(settings.getAsIntegerArray(Settings.RESOLUTION)[1]));
+		settingsResolutionY.setText(Integer.toString(settings
+				.getAsIntegerArray(Settings.RESOLUTION)[1]));
 		settingsResolutionY.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
-					settings.videoResolution[1] = Integer.parseInt(settingsResolutionY.getText());
-				}
-				catch (java.lang.NumberFormatException e) {
+					settings.videoResolution[1] = Integer
+							.parseInt(settingsResolutionY.getText());
+				} catch (java.lang.NumberFormatException e) {
 					settingsResolutionY.setText("0");
 				}
 				try {
@@ -142,39 +159,66 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingsResolutionY.addVerifyListener(new VerifyListener() {  
-		    @Override  
-		    public void verifyText(final VerifyEvent event) {  
-		        switch (event.keyCode) {  
-		            case SWT.BS:           // Backspace  
-		            case SWT.DEL:          // Delete  
-		            case SWT.HOME:         // Home  
-		            case SWT.END:          // End  
-		            case SWT.ARROW_LEFT:   // Left arrow  
-		            case SWT.ARROW_RIGHT:  // Right arrow  
-		                return;  
-		        }  
-		  
-		        if (!Character.isDigit(event.character)) {  
-		            event.doit = false;  // disallow the action  
-		        }  
-		    }  
+		settingsResolutionY.addVerifyListener(new VerifyListener() {
+			@Override
+			public void verifyText(final VerifyEvent event) {
+				switch (event.keyCode) {
+				case SWT.BS: // Backspace
+				case SWT.DEL: // Delete
+				case SWT.HOME: // Home
+				case SWT.END: // End
+				case SWT.ARROW_LEFT: // Left arrow
+				case SWT.ARROW_RIGHT: // Right arrow
+					return;
+				}
+
+				if ((!Character.isDigit(event.character)) && (Character.getNumericValue(event.character) != -1)) {
+					event.doit = false; // disallow the action
+					System.out.println(event.character);
+				}
+			}
 		});
-		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				true, false, 1, 1));
+
+		Button btnSelectRegion = new Button(compositeVideoResolution, SWT.NONE);
+		btnSelectRegion.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				regionSelectionWindow.setSize(settings.getAsIntegerArray(Settings.RESOLUTION)[0], settings.getAsIntegerArray(Settings.RESOLUTION)[1]);
+				regionSelectionWindow.open();
+			}
+		});
+		btnSelectRegion.setText("Select region");
 		
+		settingsLocationX = new Text(compositeVideoResolution, SWT.BORDER);
+		settingsLocationX.setText("aaa");
+		settingsLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Label lblLocation = new Label(compositeVideoResolution, SWT.NONE);
+		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1,
+				1));
+		lblLocation.setText(",");
+		
+		settingsLocationY = new Text(compositeVideoResolution, SWT.BORDER);
+		settingsLocationY.setText("aaaa");
+		settingsLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeVideoResolution, SWT.NONE);
+
 		Label lblVideoFrameRate = new Label(this, SWT.NONE);
 		lblVideoFrameRate.setText("Video frame rate");
-		
+
 		settingFramerate = new Text(this, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
-					settings.set(Settings.FRAME_RATE, settingFramerate.getText());
+					settings.set(Settings.FRAME_RATE,
+							settingFramerate.getText());
 				} catch (Exception e) {
 				}
 			}
 		});
-		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
 
 		Label lblAudioBitrate = new Label(this, SWT.NONE);
@@ -184,28 +228,32 @@ public class MainWindow extends Shell {
 		Label lblAudioChannels = new Label(this, SWT.NONE);
 		lblAudioChannels.setText("Audio channels");
 		new Label(this, SWT.NONE);
-		
+
 		Label lblStreamUrl = new Label(this, SWT.NONE);
-		lblStreamUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblStreamUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		lblStreamUrl.setText("Stream URL");
-		
+
 		settingStreamUrl = new Text(this, SWT.BORDER);
 		settingStreamUrl.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				try {
-					settings.set(Settings.STREAM_URL, settingStreamUrl.getText());
+					settings.set(Settings.STREAM_URL,
+							settingStreamUrl.getText());
 				} catch (Exception e) {
 				}
 			}
 		});
-		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		if (settings.get(settings.STREAM_URL) != null) {
 			settingStreamUrl.setText(settings.get(settings.STREAM_URL));
 		}
 		new Label(this, SWT.NONE);
 
 		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false,
+				1, 1));
 		composite.setLayout(new GridLayout(2, false));
 
 		Button btnNewButton = new Button(composite, SWT.NONE);
@@ -217,12 +265,14 @@ public class MainWindow extends Shell {
 				} catch (IOException e) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");
-					msg.setMessage("Error while starting FFmpeg: " + e.getMessage());
+					msg.setMessage("Error while starting FFmpeg: "
+							+ e.getMessage());
 					msg.open();
 				}
 			}
 		});
-		btnNewButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		btnNewButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+				false, 1, 1));
 		btnNewButton.setText("Start");
 
 		Button btnNewButton_1 = new Button(composite, SWT.NONE);
@@ -232,10 +282,11 @@ public class MainWindow extends Shell {
 				ffmpegWrapper.stopEncoder();
 			}
 		});
-		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+				false, 1, 1));
 		btnNewButton_1.setText("Stop");
 		new Label(this, SWT.NONE);
-		
+
 		final Label lblStatus = new Label(this, SWT.NONE);
 		lblStatus.setText("Please start to get the status");
 
@@ -244,7 +295,31 @@ public class MainWindow extends Shell {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						lblStatus.setText("FPS: " + framerate + " - Frame: " + frame);
+						lblStatus.setText("FPS: " + framerate + " - Frame: "
+								+ frame);
+					}
+				});
+			}
+		});
+		
+		regionSelectionWindow.addListener(new RecordingSelectionListener() {
+			@Override
+			public void selectionChanged(final Point location, final Point size) {
+				Display.getDefault().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						settingsResolutionX.setText(Integer.toString(size.x));
+						settingsResolutionY.setText(Integer.toString(size.y));
+						
+						settingsLocationX.setText(Integer.toString(location.x));
+						settingsLocationY.setText(Integer.toString(location.y));
+						
+						Integer[] resolution = {size.x, size.y};
+						try {
+							settings.set(Settings.RESOLUTION, resolution);
+						} catch (Exception e) {
+						}
 					}
 				});
 			}
