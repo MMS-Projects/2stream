@@ -20,12 +20,21 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 		try {
 			final Display display = Display.getDefault();
 
+			final SplashScreen splashScreen = new SplashScreen(display);
+			splashScreen.open();
+			
+			splashScreen.setProgress(10, "Opened the splashscreen");
+			
 			Tray tray = display.getSystemTray();
 			final TrayItem item = new TrayItem(tray, SWT.NONE);
+			
+			splashScreen.setProgress(20, "Initialized the system tray");
 			
 			final SfiLoop sfiLoop = new SfiLoop();
 			sfiLoop.setDaemon(true);
 			sfiLoop.start();
+			
+			splashScreen.setProgress(30, "Initialized the SFI loop");
 
 			wrapperThread.addListener(new EncoderOutputListener() {
 				public void onStatusUpdate(final int frame, final int framerate) {
@@ -58,10 +67,17 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 			DebugConsole debugWindow = new DebugConsole(display, wrapperThread);
 			debugWindow.setVisible(true);
 			debugWindow.layout();
+			
+			splashScreen.setProgress(40, "Initialized the debug console");
 
 			MainWindow shell = new MainWindow(display, wrapperThread, settings);
 			shell.open();
 			shell.layout();
+			
+			splashScreen.setProgress(50, "Opened the main window");
+			
+			splashScreen.close();
+			
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
