@@ -285,35 +285,44 @@ public class MainWindow extends Shell {
 				1, 1));
 		composite.setLayout(new GridLayout(2, false));
 
-		Button btnNewButton = new Button(composite, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+		final Button buttonStart = new Button(composite, SWT.NONE);
+		buttonStart.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					ffmpegWrapper.startEncoder();
-				} catch (IOException e) {
+				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");
 					msg.setMessage("Error while starting FFmpeg: "
-							+ e.getMessage());
+							+ error.getMessage());
 					msg.open();
 				}
 			}
 		});
-		btnNewButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+		buttonStart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false, 1, 1));
-		btnNewButton.setText("Start");
+		buttonStart.setText("Start");
 
-		Button btnNewButton_1 = new Button(composite, SWT.NONE);
-		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+		final Button buttonStop = new Button(composite, SWT.NONE);
+		buttonStop.setEnabled(false);
+		buttonStop.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ffmpegWrapper.stopEncoder();
+				try {
+					ffmpegWrapper.stopEncoder();
+				} catch (Exception error) {
+					MessageBox msg = new MessageBox(new Shell());
+					msg.setText("An erorr occured");
+					msg.setMessage("Error while stopping FFmpeg: "
+							+ error.getMessage());
+					msg.open();
+				}
 			}
 		});
-		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+		buttonStop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false, 1, 1));
-		btnNewButton_1.setText("Stop");
+		buttonStop.setText("Stop");
 		new Label(this, SWT.NONE);
 
 		final Label lblStatus = new Label(this, SWT.NONE);
@@ -326,6 +335,28 @@ public class MainWindow extends Shell {
 					public void run() {
 						lblStatus.setText("FPS: " + framerate + " - Frame: "
 								+ frame);
+					}
+				});
+			}
+			@Override
+			public void onStart() {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						buttonStop.setEnabled(true);
+						buttonStart.setEnabled(false);
+						
+						regionSelectionWindow.close();
+					}
+				});
+			}
+			@Override
+			public void onStop() {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						buttonStop.setEnabled(false);
+						buttonStart.setEnabled(true);
 					}
 				});
 			}

@@ -31,10 +31,18 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 				System.out.println("input: '" + tokens[0] + "'");
 				if (tokens[0].contains("start")) {
 					System.out.println("Starting FFmpeg...");
-					ffmpegWrapper.startEncoder();
+					try {
+						ffmpegWrapper.startEncoder();
+					} catch (Exception e) {
+						System.out.println("Error trying to run FFmpeg: " + e.getMessage());
+					}
 				} else if (tokens[0].contains("stop")) {
 					System.out.println("Stopping FFmpeg...");
-					ffmpegWrapper.stopEncoder();
+					try {
+						ffmpegWrapper.stopEncoder();
+					} catch (Exception e) {
+						System.out.println("Error trying to stop FFmpeg: " + e.getMessage());
+					}
 				} else if (tokens[0].contains("set")) {
 					try {
 						settings.set(tokens[1], tokens[2]);

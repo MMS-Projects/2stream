@@ -27,6 +27,7 @@ public class FfmpegWrapper extends Thread {
 	InputStream input;
 	BufferedReader reader;
 	Settings settings;
+	boolean running = false;
 
 	public FfmpegWrapper(Settings settings) {
 		super();
@@ -38,24 +39,38 @@ public class FfmpegWrapper extends Thread {
 		listeners.add(toAdd);
 	}
 
-	public void startEncoder() throws IOException
+	public void startEncoder() throws IOException, Exception
 	{
+		if (running) {
+			throw new Exception("FFmpeg is already running");
+		}
 		ProcessBuilder builder = new ProcessBuilder(compileSettings());
 		builder.redirectErrorStream(true);
 		try {
 			process = builder.start();
 			input = process.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
+			running = true;
+			for (EncoderOutputListener listener : listeners) {
+				listener.onStart();
+			}
 		} catch (IOException e) {
 			throw e;
 		}
 	}
 
-	public void stopEncoder()
+	public void stopEncoder() throws Exception
 	{
+		if (!running) {
+			throw new Exception("FFmpeg is not running");
+		}
 		input  = null;
 		reader = null;
 		process.destroy();
+		running = false;
+		for (EncoderOutputListener listener : listeners) {
+			listener.onStop();
+		}
 	}
 
 	@Override
