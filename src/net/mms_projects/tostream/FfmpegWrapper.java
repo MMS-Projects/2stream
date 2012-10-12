@@ -111,15 +111,14 @@ public class FfmpegWrapper extends Thread {
 			command.add(settings.get(Settings.FRAME_RATE));
 		}
 		
-		int[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
-		System.out.println(resolution[0]);
-		System.out.println(resolution[1]);
+		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
+		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
 		
 		command.add("-s");
 		command.add(resolution[0] + "x" + resolution[1]);
 		
 		command.add("-i");
-		command.add(":0.0+0,0");
+		command.add(":0.0+" + Integer.toString(location[0]) + "," + Integer.toString(location[1]));
 		if (!settings.get(Settings.BITRATE).isEmpty()) {
 			command.add("-b");
 			command.add(settings.get(Settings.BITRATE));

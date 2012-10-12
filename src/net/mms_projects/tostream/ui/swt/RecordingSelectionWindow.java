@@ -34,6 +34,7 @@ import org.eclipse.swt.events.ShellEvent;
 public class RecordingSelectionWindow extends Shell {
 
 	private List<RecordingSelectionListener> listeners = new ArrayList<RecordingSelectionListener>();
+	public boolean notifyListeners = true;
 	
 	public void addListener(RecordingSelectionListener listener) {
 		listeners.add(listener);
@@ -87,8 +88,10 @@ public class RecordingSelectionWindow extends Shell {
 		
 		addControlListener(new ControlAdapter() {
 			public void event(ControlEvent arg0) {
-				for (RecordingSelectionListener listener : listeners) {
-					listener.selectionChanged(shell.getLocation(), shell.getSize());
+				if (notifyListeners) {
+					for (RecordingSelectionListener listener : listeners) {
+						listener.selectionChanged(shell.getLocation(), shell.getSize());
+					}
 				}
 			}
 			@Override
@@ -101,19 +104,17 @@ public class RecordingSelectionWindow extends Shell {
 			}
 		});
 		
-		addListener(new RecordingSelectionListener() {
-			@Override
-			public void selectionChanged(Point location, Point size) {
-				System.out.println("Left: " + location.x + " - Top: " + location.y);
-				System.out.println("Width: " + size.x + " - Heigth: " + size.y);
-			}
-		});
-		
 		createContents();
 	}
 
 	public void close() {
 		setVisible(false);
+	}
+	
+	@Override
+	public void setVisible(boolean arg0) {
+		notifyListeners = arg0;
+		super.setVisible(arg0);
 	}
 	
 	/**

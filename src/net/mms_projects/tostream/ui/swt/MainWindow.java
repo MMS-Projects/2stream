@@ -186,22 +186,51 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				regionSelectionWindow.setSize(settings.getAsIntegerArray(Settings.RESOLUTION)[0], settings.getAsIntegerArray(Settings.RESOLUTION)[1]);
+				regionSelectionWindow.setLocation(settings.getAsIntegerArray(Settings.LOCATION)[0], settings.getAsIntegerArray(Settings.LOCATION)[1]);
 				regionSelectionWindow.open();
 			}
 		});
 		btnSelectRegion.setText("Select region");
 		
 		settingsLocationX = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsLocationX.setText("aaa");
+		settingsLocationX.setText(Integer.toString(settings.getAsIntegerArray(Settings.LOCATION)[0]));
 		settingsLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingsLocationX.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
+				try {
+					location[0] = Integer.parseInt(settingsLocationX.getText());
+				} catch (java.lang.NumberFormatException e) {
+					settingsLocationX.setText("0");
+				}
+				try {
+					settings.set(Settings.LOCATION, location);
+				} catch (Exception e) {
+				}
+			}
+		});
 		Label lblLocation = new Label(compositeVideoResolution, SWT.NONE);
 		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1,
 				1));
 		lblLocation.setText(",");
 		
 		settingsLocationY = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsLocationY.setText("aaaa");
+		settingsLocationY.setText(Integer.toString(settings.getAsIntegerArray(Settings.LOCATION)[1]));
 		settingsLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingsLocationY.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
+				try {
+					location[1] = Integer.parseInt(settingsLocationY.getText());
+				} catch (java.lang.NumberFormatException e) {
+					settingsLocationY.setText("0");
+				}
+				try {
+					settings.set(Settings.LOCATION, location);
+				} catch (Exception e) {
+				}
+			}
+		});
 		new Label(compositeVideoResolution, SWT.NONE);
 
 		Label lblVideoFrameRate = new Label(this, SWT.NONE);
@@ -316,8 +345,10 @@ public class MainWindow extends Shell {
 						settingsLocationY.setText(Integer.toString(location.y));
 						
 						Integer[] resolution = {size.x, size.y};
+						Integer[] locationArray = {location.x, location.y};
 						try {
 							settings.set(Settings.RESOLUTION, resolution);
+							settings.set(Settings.LOCATION, locationArray);
 						} catch (Exception e) {
 						}
 					}

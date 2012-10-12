@@ -21,6 +21,7 @@ public class Settings extends Properties {
 	public static final String BUFFER_SIZE = "bufferSize";
 	public static final String FRAME_RATE = "frameRate";
 	public static final String RESOLUTION = "resolution";
+	public static final String LOCATION = "location";
 	public static final String STREAM_URL = "streamUrl";
 
 	public Settings() {
@@ -30,6 +31,7 @@ public class Settings extends Properties {
 		defaults.setProperty(Settings.BUFFER_SIZE, "1835k");
 		defaults.setProperty(Settings.FRAME_RATE, "30");
 		defaults.setProperty(Settings.RESOLUTION, "800,600");
+		defaults.setProperty(Settings.LOCATION, "10,10");
 		defaults.setProperty(Settings.STREAM_URL, "");
 	}
 
@@ -41,9 +43,9 @@ public class Settings extends Properties {
 		return Integer.parseInt(get(key));
 	}
 
-	public int[] getAsIntegerArray(String key) {
+	public Integer[] getAsIntegerArray(String key) {
 		String[] tokens = get(key).split(",");
-		int[] array = new int[tokens.length];
+		Integer[] array = new Integer[tokens.length];
 		for (int i = 0; i < tokens.length; i++) {
 			array[i] = Integer.parseInt(tokens[i]);
 		}
