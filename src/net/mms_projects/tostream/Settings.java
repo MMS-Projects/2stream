@@ -11,11 +11,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 
-public class Settings extends Properties {
+public class Settings {
 
 	public Integer[] videoResolution = new Integer[2];
 	
-	public Properties defaults = new Properties();
+	private Properties defaults = new Properties();
 
 	public static final String BITRATE = "bitrate";
 	public static final String BUFFER_SIZE = "bufferSize";
@@ -23,20 +23,22 @@ public class Settings extends Properties {
 	public static final String RESOLUTION = "resolution";
 	public static final String LOCATION = "location";
 	public static final String STREAM_URL = "streamUrl";
+	
+	private Properties properties;
 
 	public Settings() {
-		super();
-
-		defaults.setProperty(Settings.BITRATE, "250k");
-		defaults.setProperty(Settings.BUFFER_SIZE, "1835k");
-		defaults.setProperty(Settings.FRAME_RATE, "30");
-		defaults.setProperty(Settings.RESOLUTION, "800,600");
-		defaults.setProperty(Settings.LOCATION, "10,10");
-		defaults.setProperty(Settings.STREAM_URL, "");
+		defaults.setProperty(BITRATE, "250k");
+		defaults.setProperty(BUFFER_SIZE, "1835k");
+		defaults.setProperty(FRAME_RATE, "30");
+		defaults.setProperty(RESOLUTION, "800,600");
+		defaults.setProperty(LOCATION, "10,10");
+		defaults.setProperty(STREAM_URL, "");
+		
+		properties = new Properties(defaults);
 	}
 
 	public String get(String key) {
-		return getProperty(key);
+		return properties.getProperty(key);
 	}
 
 	public int getAsInteger(String key) {
@@ -56,7 +58,7 @@ public class Settings extends Properties {
 		if (!defaults.containsKey(key)) {
 			throw new Exception("Tried to set unknown setting");
 		}
-		setProperty(key, value);
+		properties.setProperty(key, value);
 		saveProperties();
 	}
 
@@ -91,7 +93,7 @@ public class Settings extends Properties {
 		try {
 			stream = new BufferedInputStream(new FileInputStream(
 					getConfigDirectory() + "options.properties"));
-			this.load(stream);
+			properties.load(stream);
 			stream.close();
 		} catch (FileNotFoundException e) {
 			// having no properties file is OK
@@ -112,7 +114,7 @@ public class Settings extends Properties {
 			stream = new BufferedOutputStream(new FileOutputStream(file));
 			// TODO describe properties in comments
 			String comments = "";
-			store(stream, comments);
+			properties.store(stream, comments);
 		} catch (FileNotFoundException e) {
 			// we checked this first so this shouldn't occurs
 		} catch (IOException e) {
