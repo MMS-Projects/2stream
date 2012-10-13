@@ -1,7 +1,7 @@
 2STREAM
 =======
 
-2STREAM is a application that allows you to live stream video. It is still in alpha but please don't hesitate to testing it.
+2STREAM is a application that allows you to live stream video. It is still in alpha but please don't hesitate to test it.
 
 You can find our Jenkins Build-Bot job over [here](http://jenkins.marlinc.nl/job/2STREAM/).
 We don't have a Travis-CI test-set yet but this may come in the future.
