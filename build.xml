@@ -3,14 +3,24 @@
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                        -->
 
-	<target name="windows-64bit" depends="windows-64bit-jar" />
-	<target name="linux-64bit" depends="linux-64bit-jar" />
-	
+	<target name="all" depends="linux, windows" />
+
+	<target name="linux" depends="linux-x86, linux-x86_64" />
+	<target name="windows" depends="windows-x86_64" />
+
+	<target name="linux-x86_64" depends="linux-x86_64-jar" />
+	<target name="linux-x86" depends="linux-x86-jar" />
+	<target name="windows-x86_64" depends="windows-x86_64-jar" />
+
 	<path id="global-classpath">
 		<fileset file="lib/swing2swt.jar" />
 	</path>
 
-	<path id="linux-64bit-classpath">
+	<path id="linux-x86-classpath">
+		<fileset file="lib/swt-4.2.1-gtk-linux-x86.jar" />
+	</path>
+
+	<path id="linux-x86_64-classpath">
 		<fileset file="lib/swt-4.2-gtk-linux-x86_64.jar" />
 	</path>
 
@@ -18,37 +28,37 @@
 		<fileset file="lib/swt-4.2-win32-win32-x86_64.jar" />
 	</path>
 
-	<target name="windows-64bit-compile">
+	<target name="linux-x86-compile" depends="clean">
 		<mkdir dir="build/classes" />
 		<!-- . is used for pointing to the current directory -->
 		<javac srcdir="src" destdir="build/classes">
 			<classpath refid="global-classpath" />
-			<classpath refid="windows-64bit-classpath" />
+			<classpath refid="linux-x86-classpath" />
 		</javac>
 	</target>
 
-	<target name="windows-64bit-jar" depends="windows-64bit-compile">
-		<jar destfile="build/2stream-windows-64bit.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+	<target name="linux-x86-jar" depends="linux-x86-compile">
+		<jar destfile="build/2stream-linux-x86.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
 			<manifest>
 				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
-			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-win32-win32-x86_64.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2.1-gtk-linux-x86.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
 	</target>
 
-	<target name="linux-64bit-compile">
+	<target name="linux-x86_64-compile" depends="clean">
 		<mkdir dir="build/classes" />
 		<!-- . is used for pointing to the current directory -->
 		<javac srcdir="src" destdir="build/classes">
 			<classpath refid="global-classpath" />
-			<classpath refid="linux-64bit-classpath" />
+			<classpath refid="linux-x86_64-classpath" />
 		</javac>
 	</target>
 
-	<target name="linux-64bit-jar" depends="linux-64bit-compile">
-		<jar destfile="build/2stream-linux-64bit.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+	<target name="linux-x86_64-jar" depends="linux-x86_64-compile">
+		<jar destfile="build/2stream-linux-x86_64.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
 			<manifest>
 				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
 				<attribute name="Class-Path" value="." />
@@ -57,5 +67,29 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
 	</target>
+
+	<target name="windows-x86_64-compile" depends="clean">
+		<mkdir dir="build/classes" />
+		<!-- . is used for pointing to the current directory -->
+		<javac srcdir="src" destdir="build/classes">
+			<classpath refid="global-classpath" />
+			<classpath refid="windows-64bit-classpath" />
+		</javac>
+	</target>
+
+	<target name="windows-x86_64-jar" depends="windows-x86_64-compile">
+		<jar destfile="build/2stream-windows-x86_64.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-win32-win32-x86_64.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
+		</jar>
+	</target>
+	
+	<target name="clean">
+        <delete dir="build/classes"/>
+    </target>
 
 </project>
