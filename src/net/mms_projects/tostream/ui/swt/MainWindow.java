@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.ToStream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -67,6 +68,12 @@ public class MainWindow extends Shell {
 		mntmFile.setMenu(menu_1);
 
 		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
+		mntmQuit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				close();
+			}
+		});
 		mntmQuit.setText("Quit");
 		
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
@@ -89,6 +96,18 @@ public class MainWindow extends Shell {
 		});
 		mntmShowDebugconsole.setText("Show debugconsole");
 		mntmShowDebugconsole.setSelection(debugWindow.getVisible());
+		
+		new MenuItem(menu_2, SWT.SEPARATOR);
+		
+		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
+		mntmAbout.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				AboutDialog about = new AboutDialog(arg0.display.getActiveShell());
+				about.open();
+			}
+		});
+		mntmAbout.setText("About " + ToStream.getApplicationName());
 		debugWindow.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
