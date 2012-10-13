@@ -1,4 +1,6 @@
 *.class
 *~
 *.flv
+build/
+.gradle/
 options.properties

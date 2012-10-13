@@ -17,13 +17,11 @@ public class ToStream {
 
 		InterfaceLoader uiLoader;
 		if (args.length != 0) {
-			switch (args[0]) {
-			case "cli":
+			if (args[0] == "cli") {
 				uiLoader = new net.mms_projects.tostream.ui.cli.InterfaceLoader(
 						wrapperThread, settings);
-				break;
-			case "swt":
-			default:
+			}
+			else {
 				uiLoader = new net.mms_projects.tostream.ui.swt.InterfaceLoader(
 						wrapperThread, settings);
 			}
