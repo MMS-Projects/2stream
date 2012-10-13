@@ -23,6 +23,7 @@ public class Settings {
 	public static final String RESOLUTION = "resolution";
 	public static final String LOCATION = "location";
 	public static final String STREAM_URL = "streamUrl";
+	public static final String SHOW_DEBUGCONSOLE = "showDebugconsole";
 	
 	private Properties properties;
 
@@ -33,6 +34,7 @@ public class Settings {
 		defaults.setProperty(RESOLUTION, "800,600");
 		defaults.setProperty(LOCATION, "10,10");
 		defaults.setProperty(STREAM_URL, "");
+		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		
 		properties = new Properties(defaults);
 	}
@@ -43,6 +45,10 @@ public class Settings {
 
 	public int getAsInteger(String key) {
 		return Integer.parseInt(get(key));
+	}
+	
+	public boolean getAsBoolean(String key) {
+		return Boolean.parseBoolean(get(key));
 	}
 
 	public Integer[] getAsIntegerArray(String key) {
@@ -63,6 +69,10 @@ public class Settings {
 	}
 
 	public void set(String key, Integer value) throws Exception {
+		set(key, value.toString());
+	}
+	
+	public void set(String key, Boolean value) throws Exception {
 		set(key, value.toString());
 	}
 

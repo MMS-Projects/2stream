@@ -88,6 +88,7 @@ public class MainWindow extends Shell {
 			}
 		});
 		mntmShowDebugconsole.setText("Show debugconsole");
+		mntmShowDebugconsole.setSelection(debugWindow.getVisible());
 		debugWindow.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {

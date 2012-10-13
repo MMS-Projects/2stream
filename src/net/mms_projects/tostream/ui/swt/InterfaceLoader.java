@@ -56,6 +56,7 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 			});
 
 			DebugConsole debugWindow = new DebugConsole(display, wrapperThread);
+			debugWindow.setVisible(settings.getAsBoolean(Settings.SHOW_DEBUGCONSOLE));
 
 			MainWindow shell = new MainWindow(display, wrapperThread, settings, debugWindow);
 			shell.open();
