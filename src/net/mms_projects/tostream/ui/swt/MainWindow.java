@@ -9,6 +9,9 @@ import net.mms_projects.tostream.Settings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -26,6 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class MainWindow extends Shell {
 
@@ -45,9 +49,10 @@ public class MainWindow extends Shell {
 	 * Create the shell.
 	 * 
 	 * @param display
+	 * @param debugWindow 
 	 */
 	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper,
-			final Settings settings) {
+			final Settings settings, final DebugConsole debugWindow) {
 		super(display, SWT.SHELL_TRIM);
 		this.ffmpegWrapper = ffmpegWrapper;
 		setLayout(new GridLayout(2, false));
@@ -63,6 +68,34 @@ public class MainWindow extends Shell {
 
 		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
 		mntmQuit.setText("Quit");
+		
+		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
+		mntmHelp.setText("Help");
+		
+		Menu menu_2 = new Menu(mntmHelp);
+		mntmHelp.setMenu(menu_2);
+		
+		final MenuItem mntmShowDebugconsole = new MenuItem(menu_2, SWT.CHECK);
+		mntmShowDebugconsole.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (mntmShowDebugconsole.getSelection()) {
+					debugWindow.open();
+				}
+				else {
+					debugWindow.close();
+				}
+			}
+		});
+		mntmShowDebugconsole.setText("Show debugconsole");
+		debugWindow.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent arg0) {
+				arg0.doit = false;
+				debugWindow.setVisible(false);
+				mntmShowDebugconsole.setSelection(false);
+			}
+		});
 
 		Label lblVideoBitrate = new Label(this, SWT.NONE);
 		lblVideoBitrate.setText("Video bitrate");

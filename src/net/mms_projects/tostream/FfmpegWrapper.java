@@ -129,11 +129,25 @@ public class FfmpegWrapper extends Thread {
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
 		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
 		
+		if (resolution[0] % 2 == 1) {
+			resolution[0] -= 1;
+		}
+		if (resolution[1] % 2 == 1) {
+			resolution[1] -= 1;
+		}
+		
 		command.add("-s");
 		command.add(resolution[0] + "x" + resolution[1]);
 		
 		command.add("-i");
 		command.add(":0.0+" + Integer.toString(location[0]) + "," + Integer.toString(location[1]));
+		
+		command.add("-vcodec");
+		command.add("libx264");
+		
+		command.add("-s");
+		command.add(resolution[0] + "x" + resolution[1]);
+		
 		if (!settings.get(Settings.BITRATE).isEmpty()) {
 			command.add("-b");
 			command.add(settings.get(Settings.BITRATE));
@@ -144,14 +158,6 @@ public class FfmpegWrapper extends Thread {
 			command.add("-bufsize");
 			command.add(settings.get(Settings.BUFFER_SIZE));
 		}
-		
-		command.add("-vcodec");
-		command.add("libx264");
-		
-		
-		
-		command.add("-s");
-		command.add(resolution[0] + "x" + resolution[1]);
 		
 		command.add("-f");
 		command.add("flv");

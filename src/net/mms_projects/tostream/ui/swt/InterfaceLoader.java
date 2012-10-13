@@ -56,10 +56,8 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 			});
 
 			DebugConsole debugWindow = new DebugConsole(display, wrapperThread);
-			debugWindow.setVisible(true);
-			debugWindow.layout();
 
-			MainWindow shell = new MainWindow(display, wrapperThread, settings);
+			MainWindow shell = new MainWindow(display, wrapperThread, settings, debugWindow);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {

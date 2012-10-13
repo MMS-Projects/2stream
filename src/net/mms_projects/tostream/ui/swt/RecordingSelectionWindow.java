@@ -90,7 +90,9 @@ public class RecordingSelectionWindow extends Shell {
 			public void event(ControlEvent arg0) {
 				if (notifyListeners) {
 					for (RecordingSelectionListener listener : listeners) {
-						listener.selectionChanged(shell.getLocation(), shell.getSize());
+						Point size = shell.getSize();
+						size.x -= 2;
+						listener.selectionChanged(shell.getLocation(), size);
 					}
 				}
 			}
