@@ -6,10 +6,11 @@
 	<target name="all" depends="linux, windows" />
 
 	<target name="linux" depends="linux-x86, linux-x86_64" />
-	<target name="windows" depends="windows-x86_64" />
+	<target name="windows" depends="windows-x86, windows-x86_64" />
 
 	<target name="linux-x86_64" depends="linux-x86_64-jar" />
 	<target name="linux-x86" depends="linux-x86-jar" />
+	<target name="windows-x86" depends="windows-x86-jar" />
 	<target name="windows-x86_64" depends="windows-x86_64-jar" />
 
 	<path id="global-classpath">
@@ -24,7 +25,11 @@
 		<fileset file="lib/swt-4.2-gtk-linux-x86_64.jar" />
 	</path>
 
-	<path id="windows-64bit-classpath">
+	<path id="windows-x86-classpath">
+		<fileset file="lib/swt-4.2.1-win32-win32-x86.jar" />
+	</path>
+
+	<path id="windows-x86_64-classpath">
 		<fileset file="lib/swt-4.2-win32-win32-x86_64.jar" />
 	</path>
 
@@ -68,12 +73,32 @@
 		</jar>
 	</target>
 
+	<target name="windows-x86-compile" depends="clean">
+		<mkdir dir="build/classes" />
+		<!-- . is used for pointing to the current directory -->
+		<javac srcdir="src" destdir="build/classes">
+			<classpath refid="global-classpath" />
+			<classpath refid="windows-x86-classpath" />
+		</javac>
+	</target>
+
+	<target name="windows-x86-jar" depends="windows-x86-compile">
+		<jar destfile="build/2stream-windows-x86.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2.1-win32-win32-x86.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
+		</jar>
+	</target>
+
 	<target name="windows-x86_64-compile" depends="clean">
 		<mkdir dir="build/classes" />
 		<!-- . is used for pointing to the current directory -->
 		<javac srcdir="src" destdir="build/classes">
 			<classpath refid="global-classpath" />
-			<classpath refid="windows-64bit-classpath" />
+			<classpath refid="windows-x86_64-classpath" />
 		</javac>
 	</target>
 
@@ -87,9 +112,9 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
 	</target>
-	
+
 	<target name="clean">
-        <delete dir="build/classes"/>
-    </target>
+		<delete dir="build/classes" />
+	</target>
 
 </project>
