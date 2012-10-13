@@ -1,27 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project name="Create Runnable Jar for Project 2stream">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <target name="windows-64bit">
-        <jar destfile="build/2stream-windows-64bit.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="net.mms_projects.tostream.ToStream"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-win32-win32-x86_64.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar"/>
-            <fileset dir="bin"/>
-        </jar>
-    </target>
-	<target name="linux-64bit">
-		<jar destfile="build/2stream-linux-64bit.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="net.mms_projects.tostream.ToStream"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-gtk-linux-x86_64.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar"/>
-            <fileset dir="bin"/>
-        </jar>
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+
+	<path id="global-classpath">
+		<fileset file="lib/swing2swt.jar" />
+	</path>
+
+	<target name="compile">
+		<mkdir dir="build/classes" />
+		<!-- . is used for pointing to the current directory -->
+		<javac srcdir="src" destdir="build/classes">
+			<classpath refid="global-classpath" />
+		</javac>
 	</target>
+
+	<target name="windows-64bit" depends="compile" if="isWindows">
+		<jar destfile="build/2stream-windows-64bit.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-win32-win32-x86_64.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
+		</jar>
+	</target>
+
+	<target name="linux-64bit" depends="compile" if="isLinux">
+		<jar destfile="build/2stream-linux-64bit.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-gtk-linux-x86_64.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
+		</jar>
+	</target>
+
+	<target name="build">
+		<condition property="isMac">
+			<os family="mac" />
+		</condition>
+
+		<condition property="isLinux">
+			<and>
+				<os family="unix" />
+				<not>
+					<os family="mac" />
+				</not>
+			</and>
+		</condition>
+
+		<condition property="isWindows">
+			<os family="windows" />
+		</condition>
+
+		<antcall target="linux-64bit" />
+		<antcall target="windows-64bit" />
+	</target>
+
 </project>
