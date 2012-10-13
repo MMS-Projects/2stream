@@ -55,6 +55,9 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 					} catch (Exception e) {
 						System.out.println("An error occurred: " + e.getMessage());
 					}
+				} else if (tokens[0].contains("quit")) {
+					System.out.println("Have a nice day!");
+					break;
 				}
 			}
 		} catch (IOException e) {
