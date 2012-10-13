@@ -1,6 +1,8 @@
 package net.mms_projects.tostream;
 
-import net.mms_projects.tostream.InterfaceLoader;
+import net.mms_projects.tostream.ui.InterfaceLoader;
+import net.mms_projects.tostream.ui.cli.CliInterface;
+import net.mms_projects.tostream.ui.swt.SwtInterface;
 
 public class ToStream {
 
@@ -18,15 +20,15 @@ public class ToStream {
 		InterfaceLoader uiLoader;
 		if (args.length != 0) {
 			if (args[0] == "cli") {
-				uiLoader = new net.mms_projects.tostream.ui.cli.InterfaceLoader(
+				uiLoader = new CliInterface(
 						wrapperThread, settings);
 			}
 			else {
-				uiLoader = new net.mms_projects.tostream.ui.swt.InterfaceLoader(
+				uiLoader = new SwtInterface(
 						wrapperThread, settings);
 			}
 		} else {
-			uiLoader = new net.mms_projects.tostream.ui.swt.InterfaceLoader(
+			uiLoader = new SwtInterface(
 					wrapperThread, settings);
 		}
 	}

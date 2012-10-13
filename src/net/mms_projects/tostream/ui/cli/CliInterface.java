@@ -11,9 +11,11 @@ import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ToStream;
 
-public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
+public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 
-	public InterfaceLoader(FfmpegWrapper ffmpegWrapper, Settings settings) {
+	public CliInterface(FfmpegWrapper ffmpegWrapper, Settings settings) {
+		super(ffmpegWrapper, settings);
+		
 		ffmpegWrapper.addListener(new EncoderOutputListener() {
 			public void onStatusUpdate(final int frame, final int framerate) {
 				System.out.println("FPS: " + framerate + " - Frame: "

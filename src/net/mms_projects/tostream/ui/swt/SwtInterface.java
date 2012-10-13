@@ -1,22 +1,23 @@
 package net.mms_projects.tostream.ui.swt;
 
-import net.mms_projects.tostream.EncoderOutputListener;
-import net.mms_projects.tostream.FfmpegWrapper;
-import net.mms_projects.tostream.Settings;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
-public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
+import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.FfmpegWrapper;
+import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.ui.InterfaceLoader;
 
-	public InterfaceLoader(FfmpegWrapper wrapperThread, Settings settings) {
+public class SwtInterface extends InterfaceLoader {
+
+	public SwtInterface(FfmpegWrapper wrapperThread, Settings settings) {
+		super(wrapperThread, settings);
+
 		try {
 			final Display display = Display.getDefault();
 
