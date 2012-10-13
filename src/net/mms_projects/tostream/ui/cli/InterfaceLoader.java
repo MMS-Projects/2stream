@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.ToStream;
 
 public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 
@@ -20,6 +21,8 @@ public class InterfaceLoader extends net.mms_projects.tostream.InterfaceLoader {
 			}
 		});
 
+		System.out.println("Running " + ToStream.getApplicationName() + " version " + ToStream.getVersion());
+		
 		try {
 			while (true) {
 				BufferedReader br = new BufferedReader(new InputStreamReader(

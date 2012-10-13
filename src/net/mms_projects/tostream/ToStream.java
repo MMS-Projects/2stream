@@ -19,7 +19,7 @@ public class ToStream {
 		if (args.length != 0) {
 			switch (args[0]) {
 			case "cli":
-				uiLoader = new net.mms_projects.tostream.ui.swt.InterfaceLoader(
+				uiLoader = new net.mms_projects.tostream.ui.cli.InterfaceLoader(
 						wrapperThread, settings);
 				break;
 			case "swt":
@@ -31,6 +31,14 @@ public class ToStream {
 			uiLoader = new net.mms_projects.tostream.ui.swt.InterfaceLoader(
 					wrapperThread, settings);
 		}
+	}
+
+	public static String getApplicationName() {
+		return "2STREAM";
+	}
+
+	public static String getVersion() {
+		return "0.0.1";
 	}
 
 }
