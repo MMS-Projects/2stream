@@ -31,11 +31,11 @@ public class Settings {
 	private Properties properties;
 
 	public Settings() {
-		defaults.setProperty(BITRATE, "250k");
+		defaults.setProperty(BITRATE, "1168k");
 		defaults.setProperty(BUFFER_SIZE, "1835k");
 		defaults.setProperty(FRAME_RATE, "30");
-		defaults.setProperty(RESOLUTION, "800,600");
-		defaults.setProperty(LOCATION, "10,10");
+		defaults.setProperty(RESOLUTION, "1024,768");
+		defaults.setProperty(LOCATION, "0,0");
 		defaults.setProperty(STREAM_URL, "");
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
