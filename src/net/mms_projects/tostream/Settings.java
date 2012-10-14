@@ -82,12 +82,11 @@ public class Settings {
 
 	public void set(String key, Integer[] array) throws Exception {
 		String value = "";
-		Iterator<Integer> itemIterator = Arrays.asList(array).iterator();
 		
         for (int i = 0; i < array.length; i++) {
             value += array[i] + ",";
         }
-        value = value.substring(0, s.length() - 1);
+        value = value.substring(0, value.length() - 1);
         
 		set(key, value);
 	}
