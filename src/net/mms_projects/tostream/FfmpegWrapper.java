@@ -116,10 +116,20 @@ public class FfmpegWrapper extends Thread {
 	public List<String> compileSettings()
 	{
 		List<String> command = new ArrayList<String>();
-		command.add("ffmpeg");
+		if (OSValidator.isUnix()) {
+			command.add("ffmpeg");
+		} else if (OSValidator.isWindows()) {
+			command.add("ffmpeg.exe");
+		}
 		command.add("-y");
 		command.add("-f");
-		command.add("x11grab");
+		if (OSValidator.isUnix()) {
+			command.add("x11grab");
+		} else if (OSValidator.isWindows()) {
+			command.add("dshow");
+			command.add("-i");
+			command.add("video=\"" + settings.get("windowsVideo") + "\":audio=\"" + settings.get("windowsAudio") +"\"");
+		}
 		
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
 			command.add("-r");
