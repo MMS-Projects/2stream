@@ -8,16 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Properties;
 
-public class Settings {
+public class Settings extends Properties {
 
 	public Integer[] videoResolution = new Integer[2];
-
-	private Properties defaults = new Properties();
+	
+	public Properties defaults = new Properties();
 
 	public static final String BITRATE = "bitrate";
 	public static final String BUFFER_SIZE = "bufferSize";
@@ -25,34 +23,24 @@ public class Settings {
 	public static final String RESOLUTION = "resolution";
 	public static final String LOCATION = "location";
 	public static final String STREAM_URL = "streamUrl";
-	public static final String SHOW_DEBUGCONSOLE = "showDebugconsole";
-	public static final String DEFAULT_INTERFACE = "defaultInterface";
-
-	private Properties properties;
 
 	public Settings() {
-		defaults.setProperty(BITRATE, "1168k");
-		defaults.setProperty(BUFFER_SIZE, "1835k");
-		defaults.setProperty(FRAME_RATE, "30");
-		defaults.setProperty(RESOLUTION, "1024,768");
-		defaults.setProperty(LOCATION, "0,0");
-		defaults.setProperty(STREAM_URL, "");
-		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
-		defaults.setProperty(DEFAULT_INTERFACE, "swt");
+		super();
 
-		properties = new Properties(defaults);
+		defaults.setProperty(Settings.BITRATE, "250k");
+		defaults.setProperty(Settings.BUFFER_SIZE, "1835k");
+		defaults.setProperty(Settings.FRAME_RATE, "30");
+		defaults.setProperty(Settings.RESOLUTION, "800,600");
+		defaults.setProperty(Settings.LOCATION, "10,10");
+		defaults.setProperty(Settings.STREAM_URL, "");
 	}
 
 	public String get(String key) {
-		return properties.getProperty(key);
+		return getProperty(key);
 	}
 
 	public int getAsInteger(String key) {
 		return Integer.parseInt(get(key));
-	}
-
-	public boolean getAsBoolean(String key) {
-		return Boolean.parseBoolean(get(key));
 	}
 
 	public Integer[] getAsIntegerArray(String key) {
@@ -68,15 +56,11 @@ public class Settings {
 		if (!defaults.containsKey(key)) {
 			throw new Exception("Tried to set unknown setting");
 		}
-		properties.setProperty(key, value);
+		setProperty(key, value);
 		saveProperties();
 	}
 
 	public void set(String key, Integer value) throws Exception {
-		set(key, value.toString());
-	}
-
-	public void set(String key, Boolean value) throws Exception {
 		set(key, value.toString());
 	}
 
@@ -87,21 +71,9 @@ public class Settings {
         for (int i = 0; i < array.length; i++) {
             value += array[i] + ",";
         }
-        value = value.substring(0, s.length() - 1);
+        value = value.substring(0, value.length() - 1);
         
 		set(key, value);
-	}
-
-	public LinkedHashMap<String, String> getSettings() {
-		LinkedHashMap settings = new LinkedHashMap<String, String>();
-		Enumeration<Object> keys = properties.keys();
-		Enumeration<Object> values = properties.elements();
-		while (values.hasMoreElements()) {
-			String key = (String) keys.nextElement();
-			String value = (String) values.nextElement();
-			settings.put(key, value);
-		}
-		return settings;
 	}
 
 	public void loadProperties() {
@@ -109,7 +81,7 @@ public class Settings {
 		try {
 			stream = new BufferedInputStream(new FileInputStream(
 					getConfigDirectory() + "options.properties"));
-			properties.load(stream);
+			this.load(stream);
 			stream.close();
 		} catch (FileNotFoundException e) {
 			// having no properties file is OK
@@ -130,7 +102,7 @@ public class Settings {
 			stream = new BufferedOutputStream(new FileOutputStream(file));
 			// TODO describe properties in comments
 			String comments = "";
-			properties.store(stream, comments);
+			store(stream, comments);
 		} catch (FileNotFoundException e) {
 			// we checked this first so this shouldn't occurs
 		} catch (IOException e) {
