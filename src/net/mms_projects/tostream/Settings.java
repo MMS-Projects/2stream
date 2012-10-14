@@ -24,6 +24,7 @@ public class Settings {
 	public static final String LOCATION = "location";
 	public static final String STREAM_URL = "streamUrl";
 	public static final String SHOW_DEBUGCONSOLE = "showDebugconsole";
+	public static final String DEFAULT_INTERFACE = "defaultInterface";
 	
 	private Properties properties;
 
@@ -35,6 +36,7 @@ public class Settings {
 		defaults.setProperty(LOCATION, "10,10");
 		defaults.setProperty(STREAM_URL, "");
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
+		defaults.setProperty(DEFAULT_INTERFACE, "swt");
 		
 		properties = new Properties(defaults);
 	}

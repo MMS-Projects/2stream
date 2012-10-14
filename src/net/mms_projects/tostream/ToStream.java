@@ -19,18 +19,24 @@ public class ToStream {
 
 		InterfaceLoader uiLoader;
 		if (args.length != 0) {
-			if (args[0].equalsIgnoreCase("cli")) {
-				uiLoader = new CliInterface(
-						wrapperThread, settings);
-			}
-			else {
-				uiLoader = new SwtInterface(
-						wrapperThread, settings);
-			}
+			uiLoader = getInterface(args[0], wrapperThread, settings);
 		} else {
-			uiLoader = new SwtInterface(
-					wrapperThread, settings);
+			uiLoader = getInterface(settings.get(Settings.DEFAULT_INTERFACE), wrapperThread, settings);
 		}
+		if (uiLoader == null) {
+			System.out.println("Unknown interface: " + args[0]);
+		}
+	}
+
+	public static InterfaceLoader getInterface(String name,
+			FfmpegWrapper wrapperThread, Settings settings) {
+		if (name.equalsIgnoreCase("cli")) {
+			return new CliInterface(wrapperThread, settings);
+		}
+		if (name.equalsIgnoreCase("swt")) {
+			return new SwtInterface(wrapperThread, settings);
+		}
+		return null;
 	}
 
 	public static String getApplicationName() {
@@ -41,13 +47,13 @@ public class ToStream {
 		String version = "";
 		if (ToStream.class.getPackage().getSpecificationVersion() != null) {
 			version += ToStream.class.getPackage().getSpecificationVersion();
-		}
-		else {
+		} else {
 			version += "0.0.1";
 		}
-		
+
 		if (ToStream.class.getPackage().getImplementationVersion() != null) {
-			version += "-" + ToStream.class.getPackage().getImplementationVersion();
+			version += "-"
+					+ ToStream.class.getPackage().getImplementationVersion();
 		}
 		return version;
 	}
