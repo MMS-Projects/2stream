@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
 
 import org.eclipse.swt.SWT;
@@ -155,6 +156,12 @@ public class MainWindow extends Shell {
 			}
 		});
 		settingBitrate.setText(settings.get(Settings.BITRATE));
+		settings.addListener(Settings.BITRATE, new SettingsListener() {
+			@Override
+			public void settingSet(String value) {
+				settingBitrate.setText(value);
+			}
+		});
 
 		Label lblVideoEncodePreset = new Label(this, SWT.NONE);
 		lblVideoEncodePreset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
@@ -256,6 +263,15 @@ public class MainWindow extends Shell {
 		});
 		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 1, 1));
+		
+		settings.addListener(Settings.RESOLUTION, new SettingsListener() {
+			@Override
+			public void settingSet(String value) {
+				String[] resolution = value.split(",");
+				settingsResolutionX.setText(resolution[0]);
+				settingsResolutionY.setText(resolution[1]);
+			}
+		});
 
 		Button btnSelectRegion = new Button(compositeVideoResolution, SWT.NONE);
 		btnSelectRegion.addSelectionListener(new SelectionAdapter() {
@@ -307,6 +323,16 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
+		
+		settings.addListener(Settings.LOCATION, new SettingsListener() {
+			@Override
+			public void settingSet(String value) {
+				String[] resolution = value.split(",");
+				settingsLocationX.setText(resolution[0]);
+				settingsLocationY.setText(resolution[1]);
+			}
+		});
+		
 		new Label(compositeVideoResolution, SWT.NONE);
 
 		Label lblVideoFrameRate = new Label(this, SWT.NONE);
@@ -325,6 +351,12 @@ public class MainWindow extends Shell {
 		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
+		settings.addListener(Settings.FRAME_RATE, new SettingsListener() {
+			@Override
+			public void settingSet(String value) {
+				settingFramerate.setText(value);
+			}
+		});
 
 		Label lblAudioBitrate = new Label(this, SWT.NONE);
 		lblAudioBitrate.setText("Audio bitrate");
@@ -354,6 +386,13 @@ public class MainWindow extends Shell {
 		if (settings.get(settings.STREAM_URL) != null) {
 			settingStreamUrl.setText(settings.get(settings.STREAM_URL));
 		}
+		settings.addListener(Settings.STREAM_URL, new SettingsListener() {
+			@Override
+			public void settingSet(String value) {
+				settingStreamUrl.setText(value);
+			}
+		});
+		
 		new Label(this, SWT.NONE);
 
 		Composite composite = new Composite(this, SWT.NONE);

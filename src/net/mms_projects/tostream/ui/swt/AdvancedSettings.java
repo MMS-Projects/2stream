@@ -38,7 +38,7 @@ public class AdvancedSettings extends Dialog {
 		
 		this.settings = settings;
 		
-		setText(ToStream.getApplicationName() + " - Advanced settngs");
+		setText(ToStream.getApplicationName() + " - Advanced settings");
 	}
 
 	/**

@@ -7,14 +7,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 
+import org.eclipse.swt.widgets.Text;
+
 public class Settings {
 
+	private LinkedHashMap<String, SettingsListener> listeners = new LinkedHashMap<String, SettingsListener>();
+	private boolean notifyListeners = true;
+	
 	public Integer[] videoResolution = new Integer[2];
 
 	private Properties defaults = new Properties();
@@ -69,6 +75,15 @@ public class Settings {
 			throw new Exception("Tried to set unknown setting");
 		}
 		properties.setProperty(key, value);
+		if (notifyListeners) {
+			notifyListeners = false;
+			for (String listenerKey : listeners.keySet()) {
+				if (listenerKey.startsWith(key)) {
+					listeners.get(listenerKey).settingSet(value);
+				}
+			}
+			notifyListeners = true;
+		}
 		saveProperties();
 	}
 
@@ -138,6 +153,10 @@ public class Settings {
 		}
 	}
 
+	public void addListener(String key, SettingsListener listener) {
+		listeners.put(key + "-" + listener.toString(), listener);
+	}
+	
 	public String getConfigDirectory() {
 		return "." + System.getProperty("file.separator");
 	}
