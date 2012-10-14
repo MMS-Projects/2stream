@@ -10,11 +10,23 @@ import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ToStream;
+import net.mms_projects.tostream.ui.cli.commands.*;
 
 public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 
 	public CliInterface(FfmpegWrapper ffmpegWrapper, Settings settings) {
 		super(ffmpegWrapper, settings);
+		
+		ResourcePasser resources = new ResourcePasser();
+		resources.ffmpegWrapper = ffmpegWrapper;
+		resources.settings = settings;
+		
+		CommandManager commandManager = new CommandManager();
+		commandManager.addCommand(new Start());
+		commandManager.addCommand(new Stop());
+		commandManager.addCommand(new Set());
+		commandManager.addCommand(new Quit());
+		
 		
 		ffmpegWrapper.addListener(new EncoderOutputListener() {
 			public void onStatusUpdate(final int frame, final int framerate) {
@@ -26,7 +38,8 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 		System.out.println("Running " + ToStream.getApplicationName() + " version " + ToStream.getVersion());
 		
 		try {
-			while (true) {
+			resources.loopRunning = true;
+			while (resources.loopRunning) {
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 						System.in));
 				String str;
@@ -34,35 +47,10 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 				str = br.readLine().trim();
 				String[] tokens = str.split(" ");
 				System.out.println("input: '" + tokens[0] + "'");
-				if (tokens[0].contains("start")) {
-					System.out.println("Starting FFmpeg...");
-					try {
-						ffmpegWrapper.startEncoder();
-					} catch (Exception e) {
-						System.out.println("Error trying to run FFmpeg: " + e.getMessage());
-					}
-				} else if (tokens[0].contains("stop")) {
-					System.out.println("Stopping FFmpeg...");
-					try {
-						ffmpegWrapper.stopEncoder();
-					} catch (Exception e) {
-						System.out.println("Error trying to stop FFmpeg: " + e.getMessage());
-					}
-				} else if (tokens[0].contains("set")) {
-					try {
-						settings.set(tokens[1], tokens[2]);
-						System.out.println("Set " + tokens[1] + " to: " + tokens[2]);
-					} catch (Exception e) {
-						System.out.println("An error occurred: " + e.getMessage());
-					}
-				} else if (tokens[0].contains("quit")) {
-					System.out.println("Have a nice day!");
-					break;
-				}
+				
+				commandManager.executeCommand(tokens, resources);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
