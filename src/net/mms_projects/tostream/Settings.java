@@ -67,22 +67,12 @@ public class Settings extends Properties {
 	public void set(String key, Integer[] array) throws Exception {
 		String value = "";
 		Iterator<Integer> itemIterator = Arrays.asList(array).iterator();
-		Integer number;
-
-		if (itemIterator.hasNext()) {
-			number = itemIterator.next();
-			if (number == null) {
-				number = 0;
-			}
-			value += number.toString();
-			while (itemIterator.hasNext()) {
-				number = itemIterator.next();
-				if (number == null) {
-					number = 0;
-				}
-				value += "," + number.toString();
-			}
-		}
+		
+        for (int i = 0; i < array.length; i++) {
+            value += array[i] + ",";
+        }
+        value = value.substring(0, s.length() - 1);
+        
 		set(key, value);
 	}
 
