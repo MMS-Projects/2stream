@@ -10,6 +10,7 @@ public class ToStream {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.out.println(ToStream.class.getPackage().getImplementationVersion());
 		Settings settings = new Settings();
 		settings.loadProperties();
 
@@ -38,7 +39,11 @@ public class ToStream {
 	}
 
 	public static String getVersion() {
-		return "0.0.1";
+		String version = ToStream.class.getPackage().getSpecificationVersion();
+		if (!ToStream.class.getPackage().getImplementationVersion().isEmpty()) {
+			version += "-" + ToStream.class.getPackage().getImplementationVersion();
+		}
+		return version;
 	}
 
 }

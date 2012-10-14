@@ -3,6 +3,13 @@
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                        -->
 
+	<property name="version" value="0.0.1" />
+	
+	<property environment="env" />
+	<condition property="build.number" value="${env.BUILD_NUMBER}" else="ant">
+	    <isset property="env.BUILD_NUMBER" />
+	</condition>
+	
 	<target name="all" depends="linux, windows" />
 
 	<target name="linux" depends="linux-x86, linux-x86_64" />
@@ -43,11 +50,7 @@
 	</target>
 
 	<target name="linux-x86-jar" depends="linux-x86-compile">
-		<jar destfile="build/2stream-linux-x86.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
-			<manifest>
-				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
-				<attribute name="Class-Path" value="." />
-			</manifest>
+		<jar manifest="build/META-INF/MANIFEST.MF" destfile="build/2stream-linux-x86.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
 			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2.1-gtk-linux-x86.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
@@ -63,11 +66,8 @@
 	</target>
 
 	<target name="linux-x86_64-jar" depends="linux-x86_64-compile">
-		<jar destfile="build/2stream-linux-x86_64.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
-			<manifest>
-				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
-				<attribute name="Class-Path" value="." />
-			</manifest>
+		<antcall target="global-manifest" />
+		<jar manifest="build/META-INF/MANIFEST.MF" destfile="build/2stream-linux-x86_64.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
 			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-gtk-linux-x86_64.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
@@ -83,11 +83,7 @@
 	</target>
 
 	<target name="windows-x86-jar" depends="windows-x86-compile">
-		<jar destfile="build/2stream-windows-x86.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
-			<manifest>
-				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
-				<attribute name="Class-Path" value="." />
-			</manifest>
+		<jar manifest="build/META-INF/MANIFEST.MF" destfile="build/2stream-windows-x86.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
 			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2.1-win32-win32-x86.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
@@ -103,11 +99,8 @@
 	</target>
 
 	<target name="windows-x86_64-jar" depends="windows-x86_64-compile">
-		<jar destfile="build/2stream-windows-x86_64.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
-			<manifest>
-				<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
-				<attribute name="Class-Path" value="." />
-			</manifest>
+		<antcall target="global-manifest" />
+		<jar manifest="build/META-INF/MANIFEST.MF" destfile="build/2stream-windows-x86_64.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
 			<zipfileset excludes="META-INF/*.SF" src="lib/swt-4.2-win32-win32-x86_64.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 		</jar>
@@ -115,6 +108,16 @@
 
 	<target name="clean">
 		<delete dir="build/classes" />
+	</target>
+
+	<target name="global-manifest">
+		<mkdir dir="build/META-INF"/>
+		<manifest file="build/META-INF/MANIFEST.MF">
+			<attribute name="Main-Class" value="net.mms_projects.tostream.ToStream" />
+			<attribute name="Class-Path" value="." />
+			<attribute name="Specification-Version" value="${version}" />
+			<attribute name="Implementation-Version" value="${build.number}" />
+		</manifest>
 	</target>
 
 </project>
