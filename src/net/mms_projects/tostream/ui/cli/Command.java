@@ -9,7 +9,6 @@ public class Command {
 	
 	public boolean run(String[] args, ResourcePasser resources) {
 		return false;
-		
 	}
 
 }

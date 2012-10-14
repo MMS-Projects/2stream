@@ -25,8 +25,9 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 		commandManager.addCommand(new Start());
 		commandManager.addCommand(new Stop());
 		commandManager.addCommand(new Set());
-		commandManager.addCommand(new Quit());
+		commandManager.addCommand(new Quit());		
 		
+		resources.commandManager = commandManager;
 		
 		ffmpegWrapper.addListener(new EncoderOutputListener() {
 			public void onStatusUpdate(final int frame, final int framerate) {

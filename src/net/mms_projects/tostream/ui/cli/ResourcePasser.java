@@ -7,6 +7,7 @@ public class ResourcePasser {
 
 	public FfmpegWrapper ffmpegWrapper;
 	public Settings settings;
+	public CommandManager commandManager;
 	public boolean loopRunning = false;
 
 }

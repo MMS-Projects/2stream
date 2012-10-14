@@ -23,6 +23,11 @@ public class CommandManager {
 		}
 	}
 	
+	public void executeCommand(String command, ResourcePasser resources) {
+		String[] args = {command};
+		executeCommand(args, resources);
+	}
+	
 	public void addCommand(Command command) {
 		commands.add(command);
 	}

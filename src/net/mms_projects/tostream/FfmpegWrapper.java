@@ -27,7 +27,7 @@ public class FfmpegWrapper extends Thread {
 	InputStream input;
 	BufferedReader reader;
 	Settings settings;
-	boolean running = false;
+	public boolean running = false;
 
 	public FfmpegWrapper(Settings settings) {
 		super();
