@@ -127,8 +127,6 @@ public class FfmpegWrapper extends Thread {
 			command.add("x11grab");
 		} else if (OSValidator.isWindows()) {
 			command.add("dshow");
-			command.add("-i");
-			command.add("video=\"" + settings.get("windowsVideo") + "\":audio=\"" + settings.get("windowsAudio") +"\"");
 		}
 		
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
@@ -150,7 +148,11 @@ public class FfmpegWrapper extends Thread {
 		command.add(resolution[0] + "x" + resolution[1]);
 		
 		command.add("-i");
-		command.add(":0.0+" + Integer.toString(location[0]) + "," + Integer.toString(location[1]));
+		if (OSValidator.isUnix()) {
+			command.add(":0.0+" + Integer.toString(location[0]) + "," + Integer.toString(location[1]));
+		} else if (OSValidator.isWindows()) {
+			command.add("video=\"" + settings.get("windowsVideo") + "\":audio=\"" + settings.get("windowsAudio") +"\"");
+		}
 		
 		command.add("-vcodec");
 		command.add("libx264");
