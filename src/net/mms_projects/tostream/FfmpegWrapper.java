@@ -143,7 +143,7 @@ public class FfmpegWrapper extends Thread {
 		if (OSValidator.isUnix()) {
 			command.add(":0.0+" + Integer.toString(location[0]) + "," + Integer.toString(location[1]));
 		} else if (OSValidator.isWindows()) {
-			command.add("video=\"" + settings.get("windowsVideo") + "\":audio=\"" + settings.get("windowsAudio") +"\"");
+			command.add("video=" + settings.get("windowsVideo") + ":audio=" + settings.get("windowsAudio") +"");
 		}
 		
 		
