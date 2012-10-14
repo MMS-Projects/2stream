@@ -8,13 +8,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Properties;
 
 public class Settings {
 
 	public Integer[] videoResolution = new Integer[2];
-	
+
 	private Properties defaults = new Properties();
 
 	public static final String BITRATE = "bitrate";
@@ -25,7 +27,7 @@ public class Settings {
 	public static final String STREAM_URL = "streamUrl";
 	public static final String SHOW_DEBUGCONSOLE = "showDebugconsole";
 	public static final String DEFAULT_INTERFACE = "defaultInterface";
-	
+
 	private Properties properties;
 
 	public Settings() {
@@ -37,7 +39,7 @@ public class Settings {
 		defaults.setProperty(STREAM_URL, "");
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
-		
+
 		properties = new Properties(defaults);
 	}
 
@@ -48,7 +50,7 @@ public class Settings {
 	public int getAsInteger(String key) {
 		return Integer.parseInt(get(key));
 	}
-	
+
 	public boolean getAsBoolean(String key) {
 		return Boolean.parseBoolean(get(key));
 	}
@@ -73,7 +75,7 @@ public class Settings {
 	public void set(String key, Integer value) throws Exception {
 		set(key, value.toString());
 	}
-	
+
 	public void set(String key, Boolean value) throws Exception {
 		set(key, value.toString());
 	}
@@ -98,6 +100,18 @@ public class Settings {
 			}
 		}
 		set(key, value);
+	}
+
+	public LinkedHashMap<String, String> getSettings() {
+		LinkedHashMap settings = new LinkedHashMap<String, String>();
+		Enumeration<Object> keys = properties.keys();
+		Enumeration<Object> values = properties.elements();
+		while (values.hasMoreElements()) {
+			String key = (String) keys.nextElement();
+			String value = (String) values.nextElement();
+			settings.put(key, value);
+		}
+		return settings;
 	}
 
 	public void loadProperties() {

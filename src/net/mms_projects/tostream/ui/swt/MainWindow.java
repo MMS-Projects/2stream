@@ -110,6 +110,16 @@ public class MainWindow extends Shell {
 		mntmShowDebugconsole.setText("Show debugconsole");
 		mntmShowDebugconsole.setSelection(debugWindow.getVisible());
 		
+		MenuItem mntmAdvancedSettings = new MenuItem(menu_2, SWT.NONE);
+		mntmAdvancedSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				AdvancedSettings advancedSettings = new AdvancedSettings(arg0.display.getActiveShell(), settings);
+				advancedSettings.open();
+			}
+		});
+		mntmAdvancedSettings.setText("Advanced settings");
+		
 		new MenuItem(menu_2, SWT.SEPARATOR);
 		
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
