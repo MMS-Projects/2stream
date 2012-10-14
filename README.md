@@ -3,7 +3,7 @@
 
 2STREAM is a application that allows you to live stream video. It is still in alpha but please don't hesitate to test it.
 
-Jenskins build status: [![Build Status](http://jenkins.marlinc.nl/job/2STREAM/badge/icon)](http://jenkins.marlinc.nl/job/2STREAM/)
+Jenkins build status: [![Build Status](http://jenkins.marlinc.nl/job/2STREAM/badge/icon)](http://jenkins.marlinc.nl/job/2STREAM/)
 
 You can find our Jenkins Build-Bot job over [here](http://jenkins.marlinc.nl/job/2STREAM/).
 We don't have a Travis-CI test-set yet but this may come in the future.
