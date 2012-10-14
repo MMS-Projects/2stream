@@ -55,6 +55,19 @@ public class MainWindow extends Shell {
 	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper,
 			final Settings settings, final DebugConsole debugWindow) {
 		super(display, SWT.SHELL_TRIM);
+		addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent arg0) {
+				if (ffmpegWrapper.running) {
+					try {
+						ffmpegWrapper.stopEncoder();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 		this.ffmpegWrapper = ffmpegWrapper;
 		setLayout(new GridLayout(2, false));
 
