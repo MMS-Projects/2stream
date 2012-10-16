@@ -175,7 +175,9 @@ public class MainWindow extends Shell {
 		settings.addListener(Settings.BITRATE, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {
-				settingBitrate.setText(value);
+				if (!OSValidator.isWindows()) {
+					settingBitrate.setText(value);
+				}
 			}
 		});
 
@@ -284,8 +286,10 @@ public class MainWindow extends Shell {
 			@Override
 			public void settingSet(String value) {
 				String[] resolution = value.split(",");
-				settingsResolutionX.setText(resolution[0]);
-				settingsResolutionY.setText(resolution[1]);
+				if (!OSValidator.isWindows()) {
+					settingsResolutionX.setText(resolution[0]);
+					settingsResolutionY.setText(resolution[1]);
+				}
 			}
 		});
 
@@ -344,8 +348,10 @@ public class MainWindow extends Shell {
 			@Override
 			public void settingSet(String value) {
 				String[] resolution = value.split(",");
-				settingsLocationX.setText(resolution[0]);
-				settingsLocationY.setText(resolution[1]);
+				if (!OSValidator.isWindows()) {
+					settingsLocationX.setText(resolution[0]);
+					settingsLocationY.setText(resolution[1]);
+				}
 			}
 		});
 		
@@ -370,7 +376,9 @@ public class MainWindow extends Shell {
 		settings.addListener(Settings.FRAME_RATE, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {
-				settingFramerate.setText(value);
+				if (!OSValidator.isWindows()) {
+					settingFramerate.setText(value);
+				}
 			}
 		});
 
@@ -405,7 +413,9 @@ public class MainWindow extends Shell {
 		settings.addListener(Settings.STREAM_URL, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {
-				settingStreamUrl.setText(value);
+				if (!OSValidator.isWindows()) {
+					settingStreamUrl.setText(value);
+				}
 			}
 		});
 		
