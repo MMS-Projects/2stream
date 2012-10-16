@@ -122,15 +122,17 @@ public class FfmpegWrapper extends Thread {
 			command.add("ffmpeg.exe");
 		}
 		command.add("-y");
-		command.add("-f");
+		/*command.add("-f");
 		if (OSValidator.isUnix()) {
 			command.add("x11grab");
 		} else if (OSValidator.isWindows()) {
 			command.add("dshow");
-		}
-
+		}*/
+		
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
 		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
+		
+		command.addAll(DeviceManager.buildDeviceString(settings, location));
 		
 		if (resolution[0] % 2 == 1) {
 			resolution[0] -= 1;
@@ -139,12 +141,12 @@ public class FfmpegWrapper extends Thread {
 			resolution[1] -= 1;
 		}
 		
-		command.add("-i");
+		/*command.add("-i");
 		if (OSValidator.isUnix()) {
 			command.add(":0.0+" + Integer.toString(location[0]) + "," + Integer.toString(location[1]));
 		} else if (OSValidator.isWindows()) {
 			command.add("video=" + settings.get("windowsVideo") + ":audio=" + settings.get("windowsAudio") +"");
-		}
+		}*/
 		
 		
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {

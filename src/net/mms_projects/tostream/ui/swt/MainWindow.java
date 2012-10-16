@@ -2,8 +2,10 @@ package net.mms_projects.tostream.ui.swt;
 
 import java.io.IOException;
 
+import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.FfmpegWrapper;
+import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
@@ -140,6 +142,20 @@ public class MainWindow extends Shell {
 				mntmShowDebugconsole.setSelection(false);
 			}
 		});
+		
+		Label lblVideoDevice = new Label(this, SWT.NONE);
+		lblVideoDevice.setText("Video device");
+		
+		final Combo settingVideoDevice = new Combo(this, SWT.READ_ONLY);
+		settingVideoDevice.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				DeviceManager.setVideoDevice(settingVideoDevice.getText(), settings);
+			}
+		});
+		settingVideoDevice.setItems(DeviceManager.getVideoDevices());
+		settingVideoDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingVideoDevice.select(DeviceManager.getVideoDeviceIndex(settings));
 
 		Label lblVideoBitrate = new Label(this, SWT.NONE);
 		lblVideoBitrate.setText("Video bitrate");
@@ -178,7 +194,7 @@ public class MainWindow extends Shell {
 
 		Composite compositeVideoResolution = new Composite(this, SWT.NONE);
 		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-				false, false, 1, 1));
+				true, false, 1, 1));
 		compositeVideoResolution.setLayout(new GridLayout(4, false));
 
 		settingsResolutionX = new Text(compositeVideoResolution, SWT.BORDER);

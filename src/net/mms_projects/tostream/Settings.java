@@ -33,6 +33,8 @@ public class Settings {
 	public static final String STREAM_URL = "streamUrl";
 	public static final String SHOW_DEBUGCONSOLE = "showDebugconsole";
 	public static final String DEFAULT_INTERFACE = "defaultInterface";
+	public static final String VIDEO_DEVICE_WINDOWS = "windowsVideoDevice";
+	public static final String VIDEO_DEVICE_LINUX = "linuxVideoDevice";
 
 	private Properties properties;
 
@@ -45,6 +47,8 @@ public class Settings {
 		defaults.setProperty(STREAM_URL, "");
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
+		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "swt");
+		defaults.setProperty(VIDEO_DEVICE_LINUX,   "x11grab");
 
 		properties = new Properties(defaults);
 	}
