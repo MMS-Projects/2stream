@@ -1,10 +1,19 @@
 package net.mms_projects.tostream;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DeviceManager {
 
+	private static String[] _windowsVideo = null;
+	private static String[] _windowsAudio = null;
+	
 	public static String getVideoDevice(Settings settings) {
 		if (OSValidator.isUnix()) {
 			return settings.get(Settings.VIDEO_DEVICE_LINUX);
@@ -39,9 +48,9 @@ public class DeviceManager {
 
 	public static String[] getVideoDevices() {
 		if (OSValidator.isUnix()) {
-			return new String[] { "x11grab", "/dev/video0" };
+			return new String[] {"x11grab", "/dev/video0"};
 		} else if (OSValidator.isWindows()) {
-			return new String[] { "None" };
+			return DeviceManager._getWindowsDevices()[0];
 		}
 		return new String[] {};
 	}
@@ -91,6 +100,61 @@ public class DeviceManager {
 			Integer[] location) {
 		return buildDeviceString(DeviceManager.getVideoDevice(settings),
 				DeviceManager.getAudioDevice(settings), location);
+	}
+	
+	private static String[][] _getWindowsDevices() {
+		ArrayList<String> videoDevices = new ArrayList<String>();
+		ArrayList<String> audioDevices = new ArrayList<String>();
+		if ((_windowsVideo == null) || (_windowsAudio == null)) {
+			try {
+				Pattern dshowInfo = Pattern.compile(
+					"dshow\\s\\@\\s(.*)\\]\\s(.*)", Pattern.CASE_INSENSITIVE
+			    );
+				Pattern removeQuotes = Pattern.compile(
+					"\\\"(.*)\\\"", Pattern.CASE_INSENSITIVE
+			    );
+				Matcher matcher;
+				ProcessBuilder builder = new ProcessBuilder(new String[] {"ffmpeg.exe", "-f", "dshow", "-list_devices", "true", "-i", "dummy"});
+				builder.redirectErrorStream(true);
+				Process process = builder.start();
+				InputStream input = process.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+				String line;
+				int type = -1;
+				while ((line = reader.readLine()) != null) {
+					matcher = dshowInfo.matcher(line);
+					if (matcher.find()) {
+						line = matcher.group(2).trim();
+						matcher = removeQuotes.matcher(line);
+						if (matcher.find()) {
+							if (type == 1) {
+								videoDevices.add(matcher.group(1));
+							} else if (type == 2) {
+								audioDevices.add(matcher.group(1));
+							}
+						} else {
+							if (line.contains("video")) {
+								type = 1;
+							} else if (line.contains("audio")) {
+								type = 2;
+							}
+						}
+					}
+				}
+				_windowsVideo = new String[videoDevices.size()];
+				for (int i = 0; i < videoDevices.size(); i++) {
+					_windowsVideo[i] = videoDevices.get(i);
+				}
+				_windowsAudio = new String[audioDevices.size()];
+				for (int i = 0; i < audioDevices.size(); i++) {
+					_windowsAudio[i] = audioDevices.get(i);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return new String[][] {_windowsVideo, _windowsAudio};
 	}
 
 }
