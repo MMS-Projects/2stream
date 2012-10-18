@@ -132,6 +132,14 @@ public class FfmpegWrapper extends Thread {
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
 		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
 		
+		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
+			command.add("-r");
+			command.add(settings.get(Settings.FRAME_RATE));
+		}
+		
+		command.add("-s");
+		command.add(resolution[0] + "x" + resolution[1]);
+		
 		command.addAll(DeviceManager.buildDeviceString(settings, location));
 		
 		if (resolution[0] % 2 == 1) {
@@ -147,15 +155,6 @@ public class FfmpegWrapper extends Thread {
 		} else if (OSValidator.isWindows()) {
 			command.add("video=" + settings.get("windowsVideo") + ":audio=" + settings.get("windowsAudio") +"");
 		}*/
-		
-		
-		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
-			command.add("-r");
-			command.add(settings.get(Settings.FRAME_RATE));
-		}
-		
-		command.add("-s");
-		command.add(resolution[0] + "x" + resolution[1]);
 		
 		command.add("-vcodec");
 		command.add("libx264");
