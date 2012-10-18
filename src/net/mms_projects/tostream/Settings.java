@@ -51,8 +51,8 @@ public class Settings {
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
 		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "swt");
 		defaults.setProperty(VIDEO_DEVICE_LINUX,   "x11grab");
-		//defaults.setProperty(AUDIO_DEVICE_WINDOWS, "");
-		defaults.setProperty(AUDIO_DEVICE_LINUX,   "pulse");
+		defaults.setProperty(AUDIO_DEVICE_WINDOWS, "");
+		defaults.setProperty(AUDIO_DEVICE_LINUX,   "default");
 		
 		properties = new Properties(defaults);
 	}
@@ -80,7 +80,7 @@ public class Settings {
 
 	public void set(String key, String value) throws Exception {
 		if (!defaults.containsKey(key)) {
-			throw new Exception("Tried to set unknown setting");
+			System.out.println("Tried to set unknown setting \"" + key + "\".");
 		}
 		properties.setProperty(key, value);
 		if (notifyListeners) {
