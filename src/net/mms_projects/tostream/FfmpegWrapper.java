@@ -21,6 +21,9 @@ public class FfmpegWrapper extends Thread {
     private static final Pattern FRAME_RATE_PATTERN = Pattern.compile(
         "fps(\\s*)=(\\s+)(\\d+)", Pattern.CASE_INSENSITIVE
     );
+    private static final Pattern BITRATE_PATTERN = Pattern.compile(
+        "bitrate(\\s*)=(\\s+)(.*)kbits\\/s", Pattern.CASE_INSENSITIVE
+    );
 
 	List<EncoderOutputListener> listeners = new ArrayList<EncoderOutputListener>();
 	Process process;
@@ -85,6 +88,7 @@ public class FfmpegWrapper extends Thread {
 							
 							int framerate = -1;
 							int frame     = 0;
+							double bitrate = 0;
 							matcher = FRAME_RATE_PATTERN.matcher(line);
 							if (matcher.find()) {
 								framerate = Integer.parseInt(matcher.group(3));
@@ -93,10 +97,16 @@ public class FfmpegWrapper extends Thread {
 							if (matcher.find()) {
 								frame = Integer.parseInt(matcher.group(3));
 							}
+							matcher = BITRATE_PATTERN.matcher(line);
+							if (matcher.find()) {
+								bitrate = Double.parseDouble(matcher.group(3));
+							}
+							
+							System.out.println(bitrate);
 							
 							for (EncoderOutputListener listener : listeners) {
 								if (framerate != -1) {
-									listener.onStatusUpdate(frame, framerate);
+									listener.onStatusUpdate(frame, framerate, bitrate);
 								}
 								listener.onOutput(line + "\n");
 							}

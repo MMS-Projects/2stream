@@ -29,7 +29,7 @@ public class SwtInterface extends InterfaceLoader {
 			sfiLoop.start();
 
 			wrapperThread.addListener(new EncoderOutputListener() {
-				public void onStatusUpdate(final int frame, final int framerate) {
+				public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {

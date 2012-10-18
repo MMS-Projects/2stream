@@ -480,15 +480,16 @@ public class MainWindow extends Shell {
 		new Label(this, SWT.NONE);
 
 		final Label lblStatus = new Label(this, SWT.NONE);
+		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblStatus.setText("Please start to get the status");
 
 		this.ffmpegWrapper.addListener(new EncoderOutputListener() {
-			public void onStatusUpdate(final int frame, final int framerate) {
+			public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
 						lblStatus.setText("FPS: " + framerate + " - Frame: "
-								+ frame);
+								+ frame + " - Bitrate: " + bitrate + " kbit/s");
 					}
 				});
 			}

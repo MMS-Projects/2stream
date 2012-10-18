@@ -6,7 +6,7 @@ public class EncoderOutputListener {
 		
 	}
 	
-	public void onStatusUpdate(int frame, int framerate) {
+	public void onStatusUpdate(int frame, int framerate, double bitrate) {
     	
     }
     
