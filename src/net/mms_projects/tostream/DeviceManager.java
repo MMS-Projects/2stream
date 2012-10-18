@@ -13,6 +13,7 @@ public class DeviceManager {
 
 	private static String[] _windowsVideo = null;
 	private static String[] _windowsAudio = null;
+	private static String[] _linuxAudio = null;
 	
 	public static String getVideoDevice(Settings settings) {
 		if (OSValidator.isUnix()) {
@@ -71,7 +72,7 @@ public class DeviceManager {
 	
 	public static String[] getAudioDevices() {
 		if (OSValidator.isUnix()) {
-			return new String[] {"None", "pulse"};
+			return DeviceManager._getLinuxAudioDevices();
 		} else if (OSValidator.isWindows()) {
 			return DeviceManager._getWindowsDevices()[1];
 		}
@@ -122,11 +123,11 @@ public class DeviceManager {
 				command.add("-i");
 				command.add(deviceVideo);
 			}
-			if (deviceAudio.equalsIgnoreCase("pulse")) {
+			if (!deviceAudio.equalsIgnoreCase("none")) {
 				command.add("-f");
-				command.add("alsa");
-				command.add("-i");
 				command.add("pulse");
+				command.add("-i");
+				command.add(deviceAudio);
 				command.add("-ab");
 				command.add("64k");
 				command.add("-ar");
@@ -201,6 +202,46 @@ public class DeviceManager {
 			}
 		}
 		return new String[][] {_windowsVideo, _windowsAudio};
+	}
+	
+	private static String[] _getLinuxAudioDevices() {
+		ArrayList<String> audioDevices = new ArrayList<String>();
+		if (_windowsAudio == null) {
+			try {
+				Pattern deviceInfo = Pattern.compile(
+					"Name\\:", Pattern.CASE_INSENSITIVE
+			    );
+				Pattern removeNaming = Pattern.compile(
+					"(.*)Name\\:\\s(.*)", Pattern.CASE_INSENSITIVE
+			    );
+				Matcher matcher;
+				ProcessBuilder builder = new ProcessBuilder(new String[] {"pactl" ,"list", "sources"});
+				builder.redirectErrorStream(true);
+				Process process = builder.start();
+				InputStream input = process.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+				String line;
+				int type = -1;
+				while ((line = reader.readLine()) != null) {
+					matcher = deviceInfo.matcher(line);
+					if (matcher.find()) {
+						matcher = removeNaming.matcher(line);
+						if (matcher.find()) {
+							audioDevices.add(matcher.group(2));
+						}
+					}
+				}
+				audioDevices.add(0, "None");
+				_linuxAudio = new String[audioDevices.size()];
+				for (int i = 0; i < audioDevices.size(); i++) {
+					_linuxAudio[i] = audioDevices.get(i);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return _linuxAudio;
 	}
 
 }
