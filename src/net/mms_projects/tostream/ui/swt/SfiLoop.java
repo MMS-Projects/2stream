@@ -6,6 +6,11 @@ import javax.sound.sampled.LineUnavailableException;
 
 import net.mms_projects.tostream.Tone;
 
+/*
+ * SFI
+ * Sound based Frame rate Indicator
+ */
+
 public class SfiLoop extends Thread {
 
 	private int frame;
