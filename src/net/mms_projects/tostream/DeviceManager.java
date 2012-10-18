@@ -13,6 +13,7 @@ public class DeviceManager {
 
 	private static String[] _windowsVideo = null;
 	private static String[] _windowsAudio = null;
+	private static String[] _linuxVideo = null;
 	private static String[] _linuxAudio = null;
 	
 	public static String getVideoDevice(Settings settings) {
@@ -63,7 +64,7 @@ public class DeviceManager {
 
 	public static String[] getVideoDevices() {
 		if (OSValidator.isUnix()) {
-			return new String[] {"x11grab", "/dev/video0"};
+			return DeviceManager._getLinuxVideoDevices();
 		} else if (OSValidator.isWindows()) {
 			return DeviceManager._getWindowsDevices()[0];
 		}
@@ -89,6 +90,8 @@ public class DeviceManager {
 		try {
 			settings.set(setting, device);
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -102,6 +105,8 @@ public class DeviceManager {
 		try {
 			settings.set(setting, device);
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -206,7 +211,7 @@ public class DeviceManager {
 	
 	private static String[] _getLinuxAudioDevices() {
 		ArrayList<String> audioDevices = new ArrayList<String>();
-		if (_windowsAudio == null) {
+		if (_linuxAudio == null) {
 			try {
 				Pattern deviceInfo = Pattern.compile(
 					"Name\\:", Pattern.CASE_INSENSITIVE
@@ -244,4 +249,41 @@ public class DeviceManager {
 		return _linuxAudio;
 	}
 
+	private static String[] _getLinuxVideoDevices() {
+		ArrayList<String> videoDevices = new ArrayList<String>();
+		if (_linuxVideo == null) {
+			try {
+				Pattern videoDevice = Pattern.compile(
+					"video", Pattern.CASE_INSENSITIVE
+			    );
+				Pattern removeNaming = Pattern.compile(
+					"(.*)Name\\:\\s(.*)", Pattern.CASE_INSENSITIVE
+			    );
+				Matcher matcher;
+				ProcessBuilder builder = new ProcessBuilder(new String[] {"ls", "/dev/"});
+				builder.redirectErrorStream(true);
+				Process process = builder.start();
+				InputStream input = process.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+				String line;
+				int type = -1;
+				while ((line = reader.readLine()) != null) {
+					matcher = videoDevice.matcher(line);
+					if (matcher.find()) {
+						videoDevices.add("/dev/" + line);
+					}
+				}
+				videoDevices.add(0, "x11grab");
+				_linuxVideo = new String[videoDevices.size()];
+				for (int i = 0; i < videoDevices.size(); i++) {
+					_linuxVideo[i] = videoDevices.get(i);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return _linuxVideo;
+	}
+	
 }
