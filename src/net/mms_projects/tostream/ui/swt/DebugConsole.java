@@ -25,7 +25,7 @@ public class DebugConsole extends Shell {
 		this.ffmpegWrapper = ffmpegWrapper;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		final Text text = new Text(this, SWT.BORDER | SWT.MULTI);
+		final Text text = new Text(this, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		
 		this.ffmpegWrapper.addListener(new EncoderOutputListener() {
 		    @Override
@@ -46,7 +46,7 @@ public class DebugConsole extends Shell {
 	 */
 	protected void createContents() {
 		setText("SWT Application");
-		setSize(450, 300);
+		setSize(600, 300);
 
 	}
 
