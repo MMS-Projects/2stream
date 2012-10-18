@@ -156,7 +156,22 @@ public class MainWindow extends Shell {
 		settingVideoDevice.setItems(DeviceManager.getVideoDevices());
 		settingVideoDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		settingVideoDevice.select(DeviceManager.getVideoDeviceIndex(settings));
-
+		
+		Label labelAudioDevice = new Label(this, SWT.NONE);
+		labelAudioDevice.setText("Audio device");
+		
+		final Combo settingAudioDevice = new Combo(this, SWT.READ_ONLY);
+		settingAudioDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingAudioDevice.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				DeviceManager.setAudioDevice(settingAudioDevice.getText(), settings);
+			}
+		});
+		settingAudioDevice.setItems(DeviceManager.getAudioDevices());
+		settingAudioDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		settingAudioDevice.select(DeviceManager.getAudioDeviceIndex(settings));
+		
 		Label lblVideoBitrate = new Label(this, SWT.NONE);
 		lblVideoBitrate.setText("Video bitrate");
 
@@ -391,8 +406,6 @@ public class MainWindow extends Shell {
 		new Label(this, SWT.NONE);
 
 		Label lblStreamUrl = new Label(this, SWT.NONE);
-		lblStreamUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-				false, 1, 1));
 		lblStreamUrl.setText("Stream URL");
 
 		settingStreamUrl = new Text(this, SWT.BORDER);
@@ -536,7 +549,7 @@ public class MainWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText("2STREAM");
-		setSize(600, 400);
+		setSize(600, 425);
 
 	}
 

@@ -35,7 +35,9 @@ public class Settings {
 	public static final String DEFAULT_INTERFACE = "defaultInterface";
 	public static final String VIDEO_DEVICE_WINDOWS = "windowsVideoDevice";
 	public static final String VIDEO_DEVICE_LINUX = "linuxVideoDevice";
-
+	public static final String AUDIO_DEVICE_WINDOWS = "windowsAudioDevice";
+	public static final String AUDIO_DEVICE_LINUX = "linuxAudioDevice";
+	
 	private Properties properties;
 
 	public Settings() {
@@ -49,7 +51,9 @@ public class Settings {
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
 		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "swt");
 		defaults.setProperty(VIDEO_DEVICE_LINUX,   "x11grab");
-
+		//defaults.setProperty(AUDIO_DEVICE_WINDOWS, "");
+		defaults.setProperty(AUDIO_DEVICE_LINUX,   "pulse");
+		
 		properties = new Properties(defaults);
 	}
 

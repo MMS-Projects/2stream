@@ -25,9 +25,9 @@ public class DeviceManager {
 	
 	public static String getAudioDevice(Settings settings) {
 		if (OSValidator.isUnix()) {
-			return null;
+			return settings.get(Settings.AUDIO_DEVICE_LINUX);
 		} else if (OSValidator.isWindows()) {
-			return settings.get("windowsAudio");
+			return settings.get(Settings.AUDIO_DEVICE_WINDOWS);
 		}
 		return null;
 	}
@@ -41,9 +41,23 @@ public class DeviceManager {
 		}
 		return -1;
 	}
+	
+	public static int getAudioDeviceIndex(String device) {
+		String[] devices = getAudioDevices();
+		for (int i = 0; i < devices.length; i++) {
+			if (devices[i].equalsIgnoreCase(device)) {
+				return i;
+			}
+		}
+		return -1;
+	}
 
 	public static int getVideoDeviceIndex(Settings settings) {
 		return getVideoDeviceIndex(DeviceManager.getVideoDevice(settings));
+	}
+	
+	public static int getAudioDeviceIndex(Settings settings) {
+		return getAudioDeviceIndex(DeviceManager.getAudioDevice(settings));
 	}
 
 	public static String[] getVideoDevices() {
@@ -54,6 +68,15 @@ public class DeviceManager {
 		}
 		return new String[] {};
 	}
+	
+	public static String[] getAudioDevices() {
+		if (OSValidator.isUnix()) {
+			return new String[] {"None", "pulse"};
+		} else if (OSValidator.isWindows()) {
+			return DeviceManager._getWindowsDevices()[1];
+		}
+		return new String[] {};
+	}
 
 	public static void setVideoDevice(String device, Settings settings) {
 		String setting = null;
@@ -61,6 +84,19 @@ public class DeviceManager {
 			setting = Settings.VIDEO_DEVICE_LINUX;
 		} else if (OSValidator.isWindows()) {
 			setting = Settings.VIDEO_DEVICE_WINDOWS;
+		}
+		try {
+			settings.set(setting, device);
+		} catch (Exception e) {
+		}
+	}
+	
+	public static void setAudioDevice(String device, Settings settings) {
+		String setting = null;
+		if (OSValidator.isUnix()) {
+			setting = Settings.AUDIO_DEVICE_LINUX;
+		} else if (OSValidator.isWindows()) {
+			setting = Settings.AUDIO_DEVICE_WINDOWS;
 		}
 		try {
 			settings.set(setting, device);
@@ -85,6 +121,16 @@ public class DeviceManager {
 
 				command.add("-i");
 				command.add(deviceVideo);
+			}
+			if (deviceAudio.equalsIgnoreCase("pulse")) {
+				command.add("-f");
+				command.add("alsa");
+				command.add("-i");
+				command.add("pulse");
+				command.add("-ab");
+				command.add("64k");
+				command.add("-ar");
+				command.add("22050");
 			}
 		} else if (OSValidator.isWindows()) {
 			command.add("-f");
