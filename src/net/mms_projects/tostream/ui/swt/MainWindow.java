@@ -41,15 +41,15 @@ public class MainWindow extends Shell {
 
 	Encoder ffmpegWrapper;
 	private Text settingBitrate;
-	private Text settingsResolutionX;
-	private Text settingsResolutionY;
+	private Text settingResolutionX;
+	private Text settingResolutionY;
 	private Text settingFramerate;
 	private Text settingStreamUrl;
 
 	private RecordingSelectionWindow regionSelectionWindow = new RecordingSelectionWindow(
 			getDisplay());
-	private Text settingsLocationX;
-	private Text settingsLocationY;
+	private Text settingLocationX;
+	private Text settingLocationY;
 
 	/**
 	 * Create the shell.
@@ -169,8 +169,8 @@ public class MainWindow extends Shell {
 		tabStandard.setControl(compositeStandard);
 		compositeStandard.setLayout(new GridLayout(2, false));
 
-		Label lblVideoDevice = new Label(compositeStandard, SWT.NONE);
-		lblVideoDevice.setText(Messages.getString("videoDevice"));
+		Label labelVideoDevice = new Label(compositeStandard, SWT.NONE);
+		labelVideoDevice.setText(Messages.getString("videoDevice"));
 
 		final Combo settingVideoDevice = new Combo(compositeStandard,
 				SWT.READ_ONLY);
@@ -201,31 +201,31 @@ public class MainWindow extends Shell {
 		settingAudioDevice.setItems(DeviceManager.getAudioDevices());
 		settingAudioDevice.select(DeviceManager.getAudioDeviceIndex(settings));
 
-		Label lblVideoEncodePreset = new Label(compositeStandard, SWT.NONE);
-		lblVideoEncodePreset.setText("Video encode preset");
+		Label labelVideoEncodePreset = new Label(compositeStandard, SWT.NONE);
+		labelVideoEncodePreset.setText("Video encode preset");
 
 		Combo settingVideoEncodePreset = new Combo(compositeStandard,
 				SWT.READ_ONLY);
 		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" }); //$NON-NLS-2$ //$NON-NLS-3$
 
-		Label lblVideoResolution = new Label(compositeStandard, SWT.NONE);
-		lblVideoResolution.setText(Messages.getString("videoResolution"));
+		Label labelVideoResolution = new Label(compositeStandard, SWT.NONE);
+		labelVideoResolution.setText(Messages.getString("videoResolution"));
 
 		Composite compositeVideoResolution = new Composite(compositeStandard,
 				SWT.NONE);
 		compositeVideoResolution.setLayout(new GridLayout(4, false));
 
-		settingsResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsResolutionX.setText(Integer.toString(settings
+		settingResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
+		settingResolutionX.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.RESOLUTION)[0]));
-		settingsResolutionX.addModifyListener(new ModifyListener() {
+		settingResolutionX.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.videoResolution[0] = Integer
-							.parseInt(settingsResolutionX.getText());
+							.parseInt(settingResolutionX.getText());
 				} catch (java.lang.NumberFormatException e) {
-					settingsResolutionX.setText("0");
+					settingResolutionX.setText("0");
 				}
 				try {
 					settings.set(Settings.RESOLUTION, settings.videoResolution);
@@ -233,7 +233,7 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingsResolutionX.addVerifyListener(new VerifyListener() {
+		settingResolutionX.addVerifyListener(new VerifyListener() {
 			@Override
 			public void verifyText(final VerifyEvent event) {
 				switch (event.keyCode) {
@@ -254,25 +254,25 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingsResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+		settingResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 1, 1));
 
-		Label lblX = new Label(compositeVideoResolution, SWT.NONE);
-		lblX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1,
+		Label labelX = new Label(compositeVideoResolution, SWT.NONE);
+		labelX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1,
 				1));
-		lblX.setText("X");
+		labelX.setText("X");
 
-		settingsResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsResolutionY.setText(Integer.toString(settings
+		settingResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
+		settingResolutionY.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.RESOLUTION)[1]));
-		settingsResolutionY.addModifyListener(new ModifyListener() {
+		settingResolutionY.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.videoResolution[1] = Integer
-							.parseInt(settingsResolutionY.getText());
+							.parseInt(settingResolutionY.getText());
 				} catch (java.lang.NumberFormatException e) {
-					settingsResolutionY.setText("0");
+					settingResolutionY.setText("0");
 				}
 				try {
 					settings.set(Settings.RESOLUTION, settings.videoResolution);
@@ -280,7 +280,7 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingsResolutionY.addVerifyListener(new VerifyListener() {
+		settingResolutionY.addVerifyListener(new VerifyListener() {
 			@Override
 			public void verifyText(final VerifyEvent event) {
 				switch (event.keyCode) {
@@ -300,7 +300,7 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingsResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+		settingResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 1, 1));
 
 		Button btnSelectRegion = new Button(compositeVideoResolution, SWT.NONE);
@@ -318,20 +318,20 @@ public class MainWindow extends Shell {
 		});
 		btnSelectRegion.setText("Select region");
 
-		settingsLocationX = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsLocationX.setText(Integer.toString(settings
+		settingLocationX = new Text(compositeVideoResolution, SWT.BORDER);
+		settingLocationX.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.LOCATION)[0]));
-		settingsLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+		settingLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 1, 1));
-		settingsLocationX.addModifyListener(new ModifyListener() {
+		settingLocationX.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
 				Integer[] location = settings
 						.getAsIntegerArray(Settings.LOCATION);
 				try {
-					location[0] = Integer.parseInt(settingsLocationX.getText());
+					location[0] = Integer.parseInt(settingLocationX.getText());
 				} catch (java.lang.NumberFormatException e) {
-					settingsLocationX.setText("0");
+					settingLocationX.setText("0");
 				}
 				try {
 					settings.set(Settings.LOCATION, location);
@@ -339,25 +339,25 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		Label lblLocation = new Label(compositeVideoResolution, SWT.NONE);
-		lblLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+		Label labelLocation = new Label(compositeVideoResolution, SWT.NONE);
+		labelLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblLocation.setText(",");
+		labelLocation.setText(",");
 
-		settingsLocationY = new Text(compositeVideoResolution, SWT.BORDER);
-		settingsLocationY.setText(Integer.toString(settings
+		settingLocationY = new Text(compositeVideoResolution, SWT.BORDER);
+		settingLocationY.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.LOCATION)[1]));
-		settingsLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+		settingLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 1, 1));
-		settingsLocationY.addModifyListener(new ModifyListener() {
+		settingLocationY.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
 				Integer[] location = settings
 						.getAsIntegerArray(Settings.LOCATION);
 				try {
-					location[1] = Integer.parseInt(settingsLocationY.getText());
+					location[1] = Integer.parseInt(settingLocationY.getText());
 				} catch (java.lang.NumberFormatException e) {
-					settingsLocationY.setText("0");
+					settingLocationY.setText("0");
 				}
 				try {
 					settings.set(Settings.LOCATION, location);
@@ -368,8 +368,8 @@ public class MainWindow extends Shell {
 
 		new Label(compositeVideoResolution, SWT.NONE);
 
-		Label lblVideoFrameRate = new Label(compositeStandard, SWT.NONE);
-		lblVideoFrameRate.setText(Messages.getString("videoFrameRate"));
+		Label labelVideoFrameRate = new Label(compositeStandard, SWT.NONE);
+		labelVideoFrameRate.setText(Messages.getString("videoFrameRate"));
 
 		settingFramerate = new Text(compositeStandard, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
@@ -384,18 +384,18 @@ public class MainWindow extends Shell {
 		});
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
 
-		Label lblAudioBitrate = new Label(compositeStandard, SWT.NONE);
-		lblAudioBitrate.setText(Messages.getString("audioBitrate"));
+		Label labelAudioBitrate = new Label(compositeStandard, SWT.NONE);
+		labelAudioBitrate.setText(Messages.getString("audioBitrate"));
 		
 		new Label(compositeStandard, SWT.NONE);
 
-		Label lblAudioChannels = new Label(compositeStandard, SWT.NONE);
-		lblAudioChannels.setText(Messages.getString("audioChannels"));
+		Label labelAudioChannels = new Label(compositeStandard, SWT.NONE);
+		labelAudioChannels.setText(Messages.getString("audioChannels"));
 		
 		new Label(compositeStandard, SWT.NONE);
 
-		Label lblStreamUrl = new Label(compositeStandard, SWT.NONE);
-		lblStreamUrl.setText("Stream URL");
+		Label labelStreamUrl = new Label(compositeStandard, SWT.NONE);
+		labelStreamUrl.setText("Stream URL");
 
 		settingStreamUrl = new Text(compositeStandard, SWT.BORDER);
 		settingStreamUrl.addModifyListener(new ModifyListener() {
@@ -417,8 +417,8 @@ public class MainWindow extends Shell {
 		tabAdvanced.setControl(compositeAdvanced);
 		compositeAdvanced.setLayout(new GridLayout(2, false));
 		
-		Label lblVideoBitrate = new Label(compositeAdvanced, SWT.NONE);
-		lblVideoBitrate.setText(Messages.getString("videoBitrate"));
+		Label labelVideoBitrate = new Label(compositeAdvanced, SWT.NONE);
+		labelVideoBitrate.setText(Messages.getString("videoBitrate"));
 
 		settingBitrate = new Text(compositeAdvanced, SWT.BORDER);
 		settingBitrate.addModifyListener(new ModifyListener() {
@@ -478,8 +478,8 @@ public class MainWindow extends Shell {
 				1, 1));
 		buttonStop.setText("Stop");
 
-		final Label lblStatus = new Label(composite_1, SWT.NONE);
-		lblStatus.setText("Please start to get the status");
+		final Label labelStatus = new Label(composite_1, SWT.NONE);
+		labelStatus.setText("Please start to get the status");
 		settings.addListener(Settings.BITRATE, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {
@@ -494,8 +494,8 @@ public class MainWindow extends Shell {
 			public void settingSet(String value) {
 				String[] resolution = value.split(",");
 				if (!OSValidator.isWindows()) {
-					settingsResolutionX.setText(resolution[0]);
-					settingsResolutionY.setText(resolution[1]);
+					settingResolutionX.setText(resolution[0]);
+					settingResolutionY.setText(resolution[1]);
 				}
 			}
 		});
@@ -505,8 +505,8 @@ public class MainWindow extends Shell {
 			public void settingSet(String value) {
 				String[] resolution = value.split(",");
 				if (!OSValidator.isWindows()) {
-					settingsLocationX.setText(resolution[0]);
-					settingsLocationY.setText(resolution[1]);
+					settingLocationX.setText(resolution[0]);
+					settingLocationY.setText(resolution[1]);
 				}
 			}
 		});
@@ -537,7 +537,7 @@ public class MainWindow extends Shell {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						lblStatus.setText("FPS: " + framerate + " - Frame: " //$NON-NLS-2$
+						labelStatus.setText("FPS: " + framerate + " - Frame: " //$NON-NLS-2$
 								+ frame + " - Bitrate: " + bitrate + " kbit/s"); //$NON-NLS-2$
 					}
 				});
@@ -575,11 +575,11 @@ public class MainWindow extends Shell {
 
 					@Override
 					public void run() {
-						settingsResolutionX.setText(Integer.toString(size.x));
-						settingsResolutionY.setText(Integer.toString(size.y));
+						settingResolutionX.setText(Integer.toString(size.x));
+						settingResolutionY.setText(Integer.toString(size.y));
 
-						settingsLocationX.setText(Integer.toString(location.x));
-						settingsLocationY.setText(Integer.toString(location.y));
+						settingLocationX.setText(Integer.toString(location.x));
+						settingLocationY.setText(Integer.toString(location.y));
 
 						Integer[] resolution = { size.x, size.y };
 						Integer[] locationArray = { location.x, location.y };
