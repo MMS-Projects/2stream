@@ -1,11 +1,12 @@
 package net.mms_projects.tostream.ui;
 
-import net.mms_projects.tostream.FfmpegWrapper;
+import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.encoders.Ffmpeg;
 
 public class InterfaceLoader {
 
-	public InterfaceLoader(FfmpegWrapper wrapperThread, Settings settings) {
+	public InterfaceLoader(Encoder wrapperThread, Settings settings) {
 	}
 
 }

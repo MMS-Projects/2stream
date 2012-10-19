@@ -3,12 +3,13 @@ package net.mms_projects.tostream.ui.swt;
 import java.io.IOException;
 
 import net.mms_projects.tostream.DeviceManager;
+import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
-import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
+import net.mms_projects.tostream.encoders.Ffmpeg;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,7 +38,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class MainWindow extends Shell {
 
-	FfmpegWrapper ffmpegWrapper;
+	Encoder ffmpegWrapper;
 	private Text settingBitrate;
 	private Text settingsResolutionX;
 	private Text settingsResolutionY;
@@ -55,15 +56,15 @@ public class MainWindow extends Shell {
 	 * @param display
 	 * @param debugWindow 
 	 */
-	public MainWindow(Display display, final FfmpegWrapper ffmpegWrapper,
+	public MainWindow(Display display, final Encoder wrapperThread,
 			final Settings settings, final DebugConsole debugWindow) {
 		super(display, SWT.SHELL_TRIM);
 		addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
-				if (ffmpegWrapper.running) {
+				if (wrapperThread.isRunning()) {
 					try {
-						ffmpegWrapper.stopEncoder();
+						wrapperThread.stopEncoder();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -71,7 +72,7 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		this.ffmpegWrapper = ffmpegWrapper;
+		this.ffmpegWrapper = wrapperThread;
 		setLayout(new GridLayout(2, false));
 
 		Menu menu = new Menu(this, SWT.BAR);
@@ -444,7 +445,7 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
-					ffmpegWrapper.startEncoder();
+					wrapperThread.startEncoder();
 				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");
@@ -464,7 +465,7 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					ffmpegWrapper.stopEncoder();
+					wrapperThread.stopEncoder();
 				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");

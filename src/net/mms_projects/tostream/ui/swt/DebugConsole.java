@@ -1,7 +1,8 @@
 package net.mms_projects.tostream.ui.swt;
 
-import net.mms_projects.tostream.FfmpegWrapper;
+import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.encoders.Ffmpeg;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -13,21 +14,19 @@ import org.eclipse.swt.layout.FillLayout;
 
 public class DebugConsole extends Shell {
 	
-	FfmpegWrapper ffmpegWrapper;
 	private Text text;
 	
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public DebugConsole(Display display, FfmpegWrapper ffmpegWrapper) {
+	public DebugConsole(Display display, Encoder wrapperThread) {
 		super(display, SWT.SHELL_TRIM);
-		this.ffmpegWrapper = ffmpegWrapper;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		final Text text = new Text(this, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		
-		this.ffmpegWrapper.addListener(new EncoderOutputListener() {
+		wrapperThread.addListener(new EncoderOutputListener() {
 		    @Override
 		    public void onOutput(final String output) {
 		        Display.getDefault().asyncExec(new Runnable() {

@@ -37,6 +37,10 @@ public class Settings {
 	public static final String VIDEO_DEVICE_LINUX = "linuxVideoDevice";
 	public static final String AUDIO_DEVICE_WINDOWS = "windowsAudioDevice";
 	public static final String AUDIO_DEVICE_LINUX = "linuxAudioDevice";
+	public static final String FFMPEG_EXECUTABLE_WINDOWS = "windowsFfmpegExecutable";
+	public static final String FFMPEG_EXECUTABLE_LINUX = "linuxFfmpegExecutable";
+	public static final String AVCONV_EXECUTABLE_WINDOWS = "windowsAvconvExecutable";
+	public static final String AVCONV_EXECUTABLE_LINUX = "linuxAvconvExecutable";
 	
 	private Properties properties;
 
@@ -49,10 +53,16 @@ public class Settings {
 		defaults.setProperty(STREAM_URL, "");
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
+		
 		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "swt");
 		defaults.setProperty(VIDEO_DEVICE_LINUX,   "x11grab");
 		defaults.setProperty(AUDIO_DEVICE_WINDOWS, "");
 		defaults.setProperty(AUDIO_DEVICE_LINUX,   "default");
+		
+		defaults.setProperty(FFMPEG_EXECUTABLE_WINDOWS, "ffmpeg.exe");
+		defaults.setProperty(FFMPEG_EXECUTABLE_LINUX, "ffmpeg");
+		defaults.setProperty(AVCONV_EXECUTABLE_WINDOWS, "avconv.exe");
+		defaults.setProperty(AVCONV_EXECUTABLE_LINUX, "avconv");
 		
 		properties = new Properties(defaults);
 	}

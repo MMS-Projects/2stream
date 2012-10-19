@@ -1,9 +1,5 @@
-package net.mms_projects.tostream;
+package net.mms_projects.tostream.encoders;
 
-import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +9,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FfmpegWrapper extends Thread {
+import net.mms_projects.tostream.DeviceManager;
+import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.OSValidator;
+import net.mms_projects.tostream.Settings;
+
+public class Ffmpeg extends Encoder {
 
     private static final Pattern FRAME_PATTERN = Pattern.compile(
         "frame(\\s*)=(\\s+)(\\d+)", Pattern.CASE_INSENSITIVE
@@ -24,28 +26,30 @@ public class FfmpegWrapper extends Thread {
     private static final Pattern BITRATE_PATTERN = Pattern.compile(
         "bitrate(\\s*)=(\\s+)(.*)kbits\\/s", Pattern.CASE_INSENSITIVE
     );
+    protected String executableName;
 
-	List<EncoderOutputListener> listeners = new ArrayList<EncoderOutputListener>();
 	Process process;
 	InputStream input;
 	BufferedReader reader;
-	Settings settings;
-	public boolean running = false;
 
-	public FfmpegWrapper(Settings settings) {
-		super();
+	public Ffmpeg(Settings settings) {
+		super(settings);
 		
-		this.settings = settings;
-	}
-	
-	public void addListener(EncoderOutputListener toAdd) {
-		listeners.add(toAdd);
+		if (OSValidator.isUnix()) {
+			setExecutable(settings.get(Settings.FFMPEG_EXECUTABLE_LINUX));
+		} else if (OSValidator.isWindows()) {
+			setExecutable(settings.get(Settings.FFMPEG_EXECUTABLE_WINDOWS));
+		}
 	}
 
+	@Override
 	public void startEncoder() throws IOException, Exception
 	{
-		if (running) {
+		if (isRunning()) {
 			throw new Exception("FFmpeg is already running");
+		}
+		if (executableName.isEmpty()) {
+			throw new Exception("The ");
 		}
 		ProcessBuilder builder = new ProcessBuilder(compileSettings());
 		builder.redirectErrorStream(true);
@@ -53,27 +57,34 @@ public class FfmpegWrapper extends Thread {
 			process = builder.start();
 			input = process.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
-			running = true;
+			
 			for (EncoderOutputListener listener : listeners) {
 				listener.onStart();
 			}
+			super.startEncoder();
 		} catch (IOException e) {
 			throw e;
 		}
 	}
 
+	public void setExecutable(String executable) {
+		executableName = executable;
+	}
+	
+	@Override
 	public void stopEncoder() throws Exception
 	{
-		if (!running) {
+		if (!isRunning()) {
 			throw new Exception("FFmpeg is not running");
 		}
 		input  = null;
 		reader = null;
 		process.destroy();
-		running = false;
+		
 		for (EncoderOutputListener listener : listeners) {
 			listener.onStop();
 		}
+		super.stopEncoder();
 	}
 
 	@Override
@@ -126,11 +137,7 @@ public class FfmpegWrapper extends Thread {
 	public List<String> compileSettings()
 	{
 		List<String> command = new ArrayList<String>();
-		if (OSValidator.isUnix()) {
-			command.add("ffmpeg");
-		} else if (OSValidator.isWindows()) {
-			command.add("ffmpeg.exe");
-		}
+		command.add(executableName);
 		command.add("-y");
 		/*command.add("-f");
 		if (OSValidator.isUnix()) {

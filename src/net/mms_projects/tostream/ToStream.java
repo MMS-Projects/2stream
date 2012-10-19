@@ -1,5 +1,7 @@
 package net.mms_projects.tostream;
 
+import net.mms_projects.tostream.encoders.Avconv;
+import net.mms_projects.tostream.encoders.Ffmpeg;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 import net.mms_projects.tostream.ui.cli.CliInterface;
 import net.mms_projects.tostream.ui.swt.SwtInterface;
@@ -13,7 +15,7 @@ public class ToStream {
 		Settings settings = new Settings();
 		settings.loadProperties();
 
-		FfmpegWrapper wrapperThread = new FfmpegWrapper(settings);
+		Encoder wrapperThread = new Ffmpeg(settings);
 		wrapperThread.setDaemon(true);
 		wrapperThread.start();
 
@@ -29,7 +31,7 @@ public class ToStream {
 	}
 
 	public static InterfaceLoader getInterface(String name,
-			FfmpegWrapper wrapperThread, Settings settings) {
+			Encoder wrapperThread, Settings settings) {
 		if (name.equalsIgnoreCase("cli")) {
 			return new CliInterface(wrapperThread, settings);
 		}

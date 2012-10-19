@@ -8,14 +8,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
+import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
-import net.mms_projects.tostream.FfmpegWrapper;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.encoders.Ffmpeg;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 
 public class SwtInterface extends InterfaceLoader {
 
-	public SwtInterface(FfmpegWrapper wrapperThread, Settings settings) {
+	public SwtInterface(Encoder wrapperThread, Settings settings) {
 		super(wrapperThread, settings);
 
 		try {
