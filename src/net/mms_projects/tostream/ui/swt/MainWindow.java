@@ -120,6 +120,16 @@ public class MainWindow extends Shell {
 		});
 		mntmAdvancedSettings.setText(Messages.getString("MainWindow.menuItemAdvancedSettings"));
 		
+		MenuItem mntmSelectEncoder = new MenuItem(menu_2, SWT.NONE);
+		mntmSelectEncoder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				SwitchEncoder switcher = new SwitchEncoder(getShell(), encoderManager);
+				switcher.open();
+			}
+		});
+		mntmSelectEncoder.setText(Messages.getString("MainWindow.mntmSelectEncoder.text")); //$NON-NLS-1$
+		
 		new MenuItem(menu_2, SWT.SEPARATOR);
 		
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);

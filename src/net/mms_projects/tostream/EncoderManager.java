@@ -7,7 +7,7 @@ public class EncoderManager {
 
 	private List<EncoderOutputListener> listeners = new ArrayList<EncoderOutputListener>();
 	private List<Encoder> encoders = new ArrayList<Encoder>();
-	private int currentEncoder = 1;
+	private int currentEncoder = 0;
 	private Settings settings;
 	
 	public EncoderManager(Settings settings) {
@@ -29,8 +29,20 @@ public class EncoderManager {
 		return encoders.get(currentEncoder);
 	}
 	
+	public void setCurrentEncoder(String encoderClass) {
+		for (int i = 0; i < encoders.size(); i++) {
+			if (encoders.get(i).getClass().getName().equalsIgnoreCase(encoderClass)) {
+				currentEncoder = i;
+			}
+		}
+	}
+	
 	public List<EncoderOutputListener> getListeners() {
 		return listeners;
+	}
+	
+	public List<Encoder> getEncoders() {
+		return encoders;
 	}
 
 }
