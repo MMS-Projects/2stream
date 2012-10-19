@@ -1,5 +1,6 @@
 package net.mms_projects.tostream;
 
+import net.mms_projects.tostream.encoders.Avconv;
 import net.mms_projects.tostream.encoders.Ffmpeg;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 import net.mms_projects.tostream.ui.cli.CliInterface;
@@ -14,15 +15,15 @@ public class ToStream {
 		Settings settings = new Settings();
 		settings.loadProperties();
 
-		Encoder wrapperThread = new Ffmpeg(settings);
-		wrapperThread.setDaemon(true);
-		wrapperThread.start();
+		EncoderManager encoderManager = new EncoderManager(settings);
+		encoderManager.addEncoder(new Ffmpeg(encoderManager, settings));
+		encoderManager.addEncoder(new Avconv(encoderManager, settings));
 
 		InterfaceLoader uiLoader;
 		if (args.length != 0) {
-			uiLoader = getInterface(args[0], wrapperThread, settings);
+			uiLoader = getInterface(args[0], encoderManager, settings);
 		} else {
-			uiLoader = getInterface(settings.get(Settings.DEFAULT_INTERFACE), wrapperThread, settings);
+			uiLoader = getInterface(settings.get(Settings.DEFAULT_INTERFACE), encoderManager, settings);
 		}
 		if (uiLoader == null) {
 			System.out.println("Unknown interface: " + args[0]);
@@ -30,12 +31,12 @@ public class ToStream {
 	}
 
 	public static InterfaceLoader getInterface(String name,
-			Encoder wrapperThread, Settings settings) {
+			EncoderManager encoderManager, Settings settings) {
 		if (name.equalsIgnoreCase("cli")) {
-			return new CliInterface(wrapperThread, settings);
+			return new CliInterface(encoderManager, settings);
 		}
 		if (name.equalsIgnoreCase("swt")) {
-			return new SwtInterface(wrapperThread, settings);
+			return new SwtInterface(encoderManager, settings);
 		}
 		return null;
 	}

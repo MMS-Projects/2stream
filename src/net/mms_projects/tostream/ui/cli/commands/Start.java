@@ -13,7 +13,7 @@ public class Start extends Command {
 	public boolean run(String[] args, ResourcePasser resources) {
 		System.out.println("Starting FFmpeg...");
 		try {
-			resources.ffmpegWrapper.startEncoder();
+			resources.encoderManager.getCurrentEncoder().startEncoder();
 		} catch (Exception e) {
 			System.out.println("Error trying to run FFmpeg: " + e.getMessage());
 			return false;

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ToStream;
@@ -15,11 +16,11 @@ import net.mms_projects.tostream.ui.cli.commands.Stop;
 
 public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 
-	public CliInterface(Encoder wrapperThread, Settings settings) {
-		super(wrapperThread, settings);
+	public CliInterface(EncoderManager encoderManager, Settings settings) {
+		super(encoderManager, settings);
 		
 		ResourcePasser resources = new ResourcePasser();
-		resources.ffmpegWrapper = wrapperThread;
+		resources.encoderManager = encoderManager;
 		resources.settings = settings;
 		
 		CommandManager commandManager = new CommandManager();
@@ -30,7 +31,7 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 		
 		resources.commandManager = commandManager;
 		
-		wrapperThread.addListener(new EncoderOutputListener() {
+		encoderManager.addListener(new EncoderOutputListener() {
 			public void onStatusUpdate(final int frame, final int framerate) {
 				System.out.println("FPS: " + framerate + " - Frame: "
 						+ frame);

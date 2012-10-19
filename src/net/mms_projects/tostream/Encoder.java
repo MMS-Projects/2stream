@@ -6,14 +6,15 @@ import java.util.List;
 
 public class Encoder extends Thread {
 
-	protected List<EncoderOutputListener> listeners = new ArrayList<EncoderOutputListener>();
+	
 	protected Settings settings;
 	
 	private boolean running = false;
+	private EncoderManager manager;
 	
-	public Encoder(Settings settings) {
+	public Encoder(EncoderManager manager, Settings settings) {
 		this.settings = settings;
-		// TODO Auto-generated constructor stub
+		this.manager  = manager;
 	}
 	
 	public boolean isRunning() {
@@ -28,12 +29,12 @@ public class Encoder extends Thread {
 		setState(false);
 	}
 	
-	public void addListener(EncoderOutputListener toAdd) {
-		listeners.add(toAdd);
-	}
-	
 	protected void setState(boolean running) {
 		this.running = running;
+	}
+	
+	protected EncoderManager getManager() {
+		return manager;
 	}
 
 }

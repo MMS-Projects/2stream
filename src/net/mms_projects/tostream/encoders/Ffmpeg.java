@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
@@ -33,8 +34,8 @@ public class Ffmpeg extends Encoder {
 	InputStream input;
 	BufferedReader reader;
 
-	public Ffmpeg(Settings settings) {
-		super(settings);
+	public Ffmpeg(EncoderManager manager, Settings settings) {
+		super(manager, settings);
 		
 		if (OSValidator.isUnix()) {
 			setExecutable(settings.get(Settings.FFMPEG_EXECUTABLE_LINUX));
@@ -59,7 +60,7 @@ public class Ffmpeg extends Encoder {
 			input = process.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
 			
-			for (EncoderOutputListener listener : listeners) {
+			for (EncoderOutputListener listener : getManager().getListeners()) {
 				listener.onStart();
 			}
 			super.startEncoder();
@@ -82,7 +83,7 @@ public class Ffmpeg extends Encoder {
 		reader = null;
 		process.destroy();
 		
-		for (EncoderOutputListener listener : listeners) {
+		for (EncoderOutputListener listener : getManager().getListeners()) {
 			listener.onStop();
 		}
 		super.stopEncoder();
@@ -116,7 +117,7 @@ public class Ffmpeg extends Encoder {
 							
 							System.out.println(bitrate);
 							
-							for (EncoderOutputListener listener : listeners) {
+							for (EncoderOutputListener listener : getManager().getListeners()) {
 								if (framerate != -1) {
 									listener.onStatusUpdate(frame, framerate, bitrate);
 								}

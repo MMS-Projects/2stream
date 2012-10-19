@@ -1,6 +1,7 @@
 package net.mms_projects.tostream.ui.swt;
 
 import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 
 import org.eclipse.swt.SWT;
@@ -17,13 +18,13 @@ public class DebugConsole extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public DebugConsole(Display display, Encoder wrapperThread) {
+	public DebugConsole(Display display, EncoderManager encoderManager) {
 		super(display, SWT.SHELL_TRIM);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		final Text text = new Text(this, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		
-		wrapperThread.addListener(new EncoderOutputListener() {
+		encoderManager.addListener(new EncoderOutputListener() {
 		    @Override
 		    public void onOutput(final String output) {
 		        Display.getDefault().asyncExec(new Runnable() {

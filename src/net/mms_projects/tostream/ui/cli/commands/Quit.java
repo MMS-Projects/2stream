@@ -11,7 +11,7 @@ public class Quit extends Command {
 	
 	@Override
 	public boolean run(String[] args, ResourcePasser resources) {
-		if (resources.ffmpegWrapper.isRunning()) {
+		if (resources.encoderManager.getCurrentEncoder().isRunning()) {
 			resources.commandManager.executeCommand("stop", resources);
 		}
 		System.out.println("Have a nice day!");

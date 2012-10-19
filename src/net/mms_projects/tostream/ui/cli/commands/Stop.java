@@ -13,7 +13,7 @@ public class Stop extends Command {
 	public boolean run(String[] args, ResourcePasser resources) {
 		System.out.println("Stopping FFmpeg...");
 		try {
-			resources.ffmpegWrapper.stopEncoder();
+			resources.encoderManager.getCurrentEncoder().stopEncoder();
 		} catch (Exception e) {
 			System.out.println("Error trying to stop FFmpeg: " + e.getMessage());
 			return false;

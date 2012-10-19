@@ -2,6 +2,7 @@ package net.mms_projects.tostream.ui.swt;
 
 import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
@@ -52,15 +53,15 @@ public class MainWindow extends Shell {
 	 * @param display
 	 * @param debugWindow 
 	 */
-	public MainWindow(Display display, final Encoder wrapperThread,
+	public MainWindow(Display display, final EncoderManager encoderManager,
 			final Settings settings, final DebugConsole debugWindow) {
 		super(display, SWT.SHELL_TRIM);
 		addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
-				if (wrapperThread.isRunning()) {
+				if (encoderManager.getCurrentEncoder().isRunning()) {
 					try {
-						wrapperThread.stopEncoder();
+						encoderManager.getCurrentEncoder().stopEncoder();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -68,7 +69,6 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		this.ffmpegWrapper = wrapperThread;
 		setLayout(new GridLayout(2, false));
 
 		Menu menu = new Menu(this, SWT.BAR);
@@ -448,7 +448,7 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
-					wrapperThread.startEncoder();
+					encoderManager.getCurrentEncoder().startEncoder();
 				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");
@@ -468,7 +468,7 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					wrapperThread.stopEncoder();
+					encoderManager.getCurrentEncoder().stopEncoder();
 				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");
@@ -487,7 +487,7 @@ public class MainWindow extends Shell {
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblStatus.setText("Please start to get the status");
 
-		this.ffmpegWrapper.addListener(new EncoderOutputListener() {
+		encoderManager.addListener(new EncoderOutputListener() {
 			@Override
 			public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
 				Display.getDefault().asyncExec(new Runnable() {

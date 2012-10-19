@@ -1,6 +1,7 @@
 package net.mms_projects.tostream.ui.swt;
 
 import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ui.InterfaceLoader;
@@ -15,8 +16,8 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class SwtInterface extends InterfaceLoader {
 
-	public SwtInterface(Encoder wrapperThread, Settings settings) {
-		super(wrapperThread, settings);
+	public SwtInterface(EncoderManager encoderManager, Settings settings) {
+		super(encoderManager, settings);
 
 		try {
 			final Display display = Display.getDefault();
@@ -28,7 +29,7 @@ public class SwtInterface extends InterfaceLoader {
 			sfiLoop.setDaemon(true);
 			sfiLoop.start();
 
-			wrapperThread.addListener(new EncoderOutputListener() {
+			encoderManager.addListener(new EncoderOutputListener() {
 				@Override
 				public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
 					Display.getDefault().asyncExec(new Runnable() {
@@ -57,10 +58,10 @@ public class SwtInterface extends InterfaceLoader {
 				}
 			});
 
-			DebugConsole debugWindow = new DebugConsole(display, wrapperThread);
+			DebugConsole debugWindow = new DebugConsole(display, encoderManager);
 			debugWindow.setVisible(settings.getAsBoolean(Settings.SHOW_DEBUGCONSOLE));
 
-			MainWindow shell = new MainWindow(display, wrapperThread, settings, debugWindow);
+			MainWindow shell = new MainWindow(display, encoderManager, settings, debugWindow);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
