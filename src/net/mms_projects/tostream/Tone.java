@@ -1,7 +1,9 @@
 package net.mms_projects.tostream;
 
-import java.util.*;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 
 public class Tone {
 	public static float SAMPLE_RATE = 8000f;

@@ -1,7 +1,5 @@
 package net.mms_projects.tostream.ui.swt;
 
-import java.io.IOException;
-
 import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
@@ -9,16 +7,17 @@ import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
-import net.mms_projects.tostream.encoders.Ffmpeg;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -31,10 +30,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class MainWindow extends Shell {
 
@@ -180,6 +175,7 @@ public class MainWindow extends Shell {
 		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 		settingBitrate.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.set(Settings.BITRATE, settingBitrate.getText());
@@ -219,6 +215,7 @@ public class MainWindow extends Shell {
 		settingsResolutionX.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.RESOLUTION)[0]));
 		settingsResolutionX.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.videoResolution[0] = Integer
@@ -263,6 +260,7 @@ public class MainWindow extends Shell {
 		settingsResolutionY.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.RESOLUTION)[1]));
 		settingsResolutionY.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.videoResolution[1] = Integer
@@ -324,6 +322,7 @@ public class MainWindow extends Shell {
 		settingsLocationX.setText(Integer.toString(settings.getAsIntegerArray(Settings.LOCATION)[0]));
 		settingsLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		settingsLocationX.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
 				try {
@@ -346,6 +345,7 @@ public class MainWindow extends Shell {
 		settingsLocationY.setText(Integer.toString(settings.getAsIntegerArray(Settings.LOCATION)[1]));
 		settingsLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		settingsLocationY.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
 				try {
@@ -378,6 +378,7 @@ public class MainWindow extends Shell {
 
 		settingFramerate = new Text(this, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.set(Settings.FRAME_RATE,
@@ -411,6 +412,7 @@ public class MainWindow extends Shell {
 
 		settingStreamUrl = new Text(this, SWT.BORDER);
 		settingStreamUrl.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent event) {
 				try {
 					settings.set(Settings.STREAM_URL,
@@ -421,8 +423,8 @@ public class MainWindow extends Shell {
 		});
 		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
-		if (settings.get(settings.STREAM_URL) != null) {
-			settingStreamUrl.setText(settings.get(settings.STREAM_URL));
+		if (settings.get(Settings.STREAM_URL) != null) {
+			settingStreamUrl.setText(settings.get(Settings.STREAM_URL));
 		}
 		settings.addListener(Settings.STREAM_URL, new SettingsListener() {
 			@Override
@@ -485,6 +487,7 @@ public class MainWindow extends Shell {
 		lblStatus.setText("Please start to get the status");
 
 		this.ffmpegWrapper.addListener(new EncoderOutputListener() {
+			@Override
 			public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override

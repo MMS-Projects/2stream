@@ -4,14 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.eclipse.swt.widgets.Display;
-
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ToStream;
-import net.mms_projects.tostream.encoders.Ffmpeg;
-import net.mms_projects.tostream.ui.cli.commands.*;
+import net.mms_projects.tostream.ui.cli.commands.Quit;
+import net.mms_projects.tostream.ui.cli.commands.Set;
+import net.mms_projects.tostream.ui.cli.commands.Start;
+import net.mms_projects.tostream.ui.cli.commands.Stop;
 
 public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 

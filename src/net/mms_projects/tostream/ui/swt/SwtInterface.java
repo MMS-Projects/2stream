@@ -1,5 +1,10 @@
 package net.mms_projects.tostream.ui.swt;
 
+import net.mms_projects.tostream.Encoder;
+import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.ui.InterfaceLoader;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
@@ -7,12 +12,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
-
-import net.mms_projects.tostream.Encoder;
-import net.mms_projects.tostream.EncoderOutputListener;
-import net.mms_projects.tostream.Settings;
-import net.mms_projects.tostream.encoders.Ffmpeg;
-import net.mms_projects.tostream.ui.InterfaceLoader;
 
 public class SwtInterface extends InterfaceLoader {
 
@@ -30,6 +29,7 @@ public class SwtInterface extends InterfaceLoader {
 			sfiLoop.start();
 
 			wrapperThread.addListener(new EncoderOutputListener() {
+				@Override
 				public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override

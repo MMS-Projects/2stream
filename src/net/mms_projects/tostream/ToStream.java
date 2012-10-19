@@ -1,6 +1,5 @@
 package net.mms_projects.tostream;
 
-import net.mms_projects.tostream.encoders.Avconv;
 import net.mms_projects.tostream.encoders.Ffmpeg;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 import net.mms_projects.tostream.ui.cli.CliInterface;

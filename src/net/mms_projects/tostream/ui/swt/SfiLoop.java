@@ -2,10 +2,6 @@ package net.mms_projects.tostream.ui.swt;
 
 import java.util.Date;
 
-import javax.sound.sampled.LineUnavailableException;
-
-import net.mms_projects.tostream.Tone;
-
 /*
  * SFI
  * Sound based Frame rate Indicator

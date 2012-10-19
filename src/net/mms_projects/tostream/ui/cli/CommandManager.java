@@ -3,9 +3,6 @@ package net.mms_projects.tostream.ui.cli;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mms_projects.tostream.Settings;
-import net.mms_projects.tostream.encoders.Ffmpeg;
-
 
 public class CommandManager {
 

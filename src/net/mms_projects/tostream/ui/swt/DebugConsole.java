@@ -2,15 +2,12 @@ package net.mms_projects.tostream.ui.swt;
 
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
-import net.mms_projects.tostream.encoders.Ffmpeg;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FillLayout;
 
 public class DebugConsole extends Shell {
 	
@@ -30,7 +27,8 @@ public class DebugConsole extends Shell {
 		    @Override
 		    public void onOutput(final String output) {
 		        Display.getDefault().asyncExec(new Runnable() {
-		        	public void run() {
+		        	@Override
+					public void run() {
 		        		text.append(output);
 		        	}
 		        });
