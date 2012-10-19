@@ -1,5 +1,6 @@
 package net.mms_projects.tostream.ui.swt;
 
+import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.ToStream;
 
 import org.eclipse.swt.SWT;
@@ -61,7 +62,7 @@ public class AboutDialog extends Dialog {
 		new Label(shell, SWT.NONE);
 		
 		Label labelVersion = new Label(shell, SWT.NONE);
-		labelVersion.setText("Version:");
+		labelVersion.setText(Messages.getString("about.version"));
 		
 		Label infoVersion = new Label(shell, SWT.NONE);
 		infoVersion.setText(ToStream.getVersion());

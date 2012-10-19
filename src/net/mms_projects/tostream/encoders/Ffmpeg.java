@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 
@@ -46,10 +47,10 @@ public class Ffmpeg extends Encoder {
 	public void startEncoder() throws IOException, Exception
 	{
 		if (isRunning()) {
-			throw new Exception("FFmpeg is already running");
+			throw new Exception(Messages.getString("Ffmpeg.is-already-running"));
 		}
 		if (executableName.isEmpty()) {
-			throw new Exception("The ");
+			throw new Exception("The executable could not be found");
 		}
 		ProcessBuilder builder = new ProcessBuilder(compileSettings());
 		builder.redirectErrorStream(true);
@@ -75,7 +76,7 @@ public class Ffmpeg extends Encoder {
 	public void stopEncoder() throws Exception
 	{
 		if (!isRunning()) {
-			throw new Exception("FFmpeg is not running");
+			throw new Exception(Messages.getString("Ffmpeg.is-not-running"));
 		}
 		input  = null;
 		reader = null;
@@ -123,7 +124,7 @@ public class Ffmpeg extends Encoder {
 							}
 						}
 					} catch (Exception e) {
-						System.out.println("Error: '" + e.getClass() + "' thrown in the FfmpegWrapper.");
+						System.out.println("Error: '" + e.getClass() + "' thrown in the FfmpegWrapper."); //$NON-NLS-2$
 					}
 				}
 				Thread.sleep(50);

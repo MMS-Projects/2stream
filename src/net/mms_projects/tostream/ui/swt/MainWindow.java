@@ -7,6 +7,7 @@ import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
+import net.mms_projects.tostream.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -74,7 +75,7 @@ public class MainWindow extends Shell {
 		setMenuBar(menu);
 
 		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
-		mntmFile.setText("File");
+		mntmFile.setText(Messages.getString("MainWindow.menuItemFile"));
 
 		Menu menu_1 = new Menu(mntmFile);
 		mntmFile.setMenu(menu_1);
@@ -86,10 +87,10 @@ public class MainWindow extends Shell {
 				close();
 			}
 		});
-		mntmQuit.setText("Quit");
+		mntmQuit.setText(Messages.getString("MainWindow.menuItemQuit"));
 		
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText("Help");
+		mntmHelp.setText(Messages.getString("MainWindow.menuItemHelp"));
 		
 		Menu menu_2 = new Menu(mntmHelp);
 		mntmHelp.setMenu(menu_2);
@@ -106,7 +107,7 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		mntmShowDebugconsole.setText("Show debugconsole");
+		mntmShowDebugconsole.setText(Messages.getString("MainWindow.showDebugConsole"));
 		mntmShowDebugconsole.setSelection(debugWindow.getVisible());
 		
 		MenuItem mntmAdvancedSettings = new MenuItem(menu_2, SWT.NONE);
@@ -117,7 +118,7 @@ public class MainWindow extends Shell {
 				advancedSettings.open();
 			}
 		});
-		mntmAdvancedSettings.setText("Advanced settings");
+		mntmAdvancedSettings.setText(Messages.getString("MainWindow.menuItemAdvancedSettings"));
 		
 		new MenuItem(menu_2, SWT.SEPARATOR);
 		
@@ -129,7 +130,7 @@ public class MainWindow extends Shell {
 				about.open();
 			}
 		});
-		mntmAbout.setText("About " + ToStream.getApplicationName());
+		mntmAbout.setText(Messages.getString("MainWindow.about") + ToStream.getApplicationName());
 		debugWindow.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
@@ -140,7 +141,7 @@ public class MainWindow extends Shell {
 		});
 		
 		Label lblVideoDevice = new Label(this, SWT.NONE);
-		lblVideoDevice.setText("Video device");
+		lblVideoDevice.setText(Messages.getString("videoDevice"));
 		
 		final Combo settingVideoDevice = new Combo(this, SWT.READ_ONLY);
 		settingVideoDevice.addSelectionListener(new SelectionAdapter() {
@@ -154,7 +155,7 @@ public class MainWindow extends Shell {
 		settingVideoDevice.select(DeviceManager.getVideoDeviceIndex(settings));
 		
 		Label labelAudioDevice = new Label(this, SWT.NONE);
-		labelAudioDevice.setText("Audio device");
+		labelAudioDevice.setText(Messages.getString("audioDevice"));
 		
 		final Combo settingAudioDevice = new Combo(this, SWT.READ_ONLY);
 		settingAudioDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -169,7 +170,7 @@ public class MainWindow extends Shell {
 		settingAudioDevice.select(DeviceManager.getAudioDeviceIndex(settings));
 		
 		Label lblVideoBitrate = new Label(this, SWT.NONE);
-		lblVideoBitrate.setText("Video bitrate");
+		lblVideoBitrate.setText(Messages.getString("videoBitrate"));
 
 		settingBitrate = new Text(this, SWT.BORDER);
 		settingBitrate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -201,10 +202,10 @@ public class MainWindow extends Shell {
 		Combo settingVideoEncodePreset = new Combo(this, SWT.READ_ONLY);
 		settingVideoEncodePreset.setLayoutData(new GridData(SWT.FILL,
 				SWT.CENTER, true, false, 1, 1));
-		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" });
+		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" }); //$NON-NLS-2$ //$NON-NLS-3$
 
 		Label lblVideoResolution = new Label(this, SWT.NONE);
-		lblVideoResolution.setText("Video resolution");
+		lblVideoResolution.setText(Messages.getString("videoResolution"));
 
 		Composite compositeVideoResolution = new Composite(this, SWT.NONE);
 		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
@@ -244,7 +245,7 @@ public class MainWindow extends Shell {
 
 				if ((!Character.isDigit(event.character)) && (Character.getNumericValue(event.character) != -1)) {
 					event.doit = false; // disallow the action
-					System.out.println("'" + Character.getNumericValue(event.character) + "'");
+					System.out.println("'" + Character.getNumericValue(event.character) + "'"); //$NON-NLS-2$
 				}
 			}
 		});
@@ -374,7 +375,7 @@ public class MainWindow extends Shell {
 		new Label(compositeVideoResolution, SWT.NONE);
 
 		Label lblVideoFrameRate = new Label(this, SWT.NONE);
-		lblVideoFrameRate.setText("Video frame rate");
+		lblVideoFrameRate.setText(Messages.getString("videoFrameRate"));
 
 		settingFramerate = new Text(this, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
@@ -400,11 +401,11 @@ public class MainWindow extends Shell {
 		});
 
 		Label lblAudioBitrate = new Label(this, SWT.NONE);
-		lblAudioBitrate.setText("Audio bitrate");
+		lblAudioBitrate.setText(Messages.getString("audioBitrate"));
 		new Label(this, SWT.NONE);
 
 		Label lblAudioChannels = new Label(this, SWT.NONE);
-		lblAudioChannels.setText("Audio channels");
+		lblAudioChannels.setText(Messages.getString("audioChannels"));
 		new Label(this, SWT.NONE);
 
 		Label lblStreamUrl = new Label(this, SWT.NONE);
@@ -492,8 +493,8 @@ public class MainWindow extends Shell {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						lblStatus.setText("FPS: " + framerate + " - Frame: "
-								+ frame + " - Bitrate: " + bitrate + " kbit/s");
+						lblStatus.setText("FPS: " + framerate + " - Frame: " //$NON-NLS-2$
+								+ frame + " - Bitrate: " + bitrate + " kbit/s"); //$NON-NLS-2$
 					}
 				});
 			}
@@ -553,7 +554,7 @@ public class MainWindow extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("2STREAM");
+		setText(ToStream.getApplicationName());
 		setSize(600, 425);
 
 	}
