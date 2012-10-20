@@ -49,10 +49,10 @@ public class Settings {
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
 
-		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "swt");
+		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "");
 		defaults.setProperty(VIDEO_DEVICE_LINUX, "x11grab");
-		defaults.setProperty(AUDIO_DEVICE_WINDOWS, "");
-		defaults.setProperty(AUDIO_DEVICE_LINUX, "default");
+		defaults.setProperty(AUDIO_DEVICE_WINDOWS, "None");
+		defaults.setProperty(AUDIO_DEVICE_LINUX, "None");
 
 		defaults.setProperty(FFMPEG_EXECUTABLE_WINDOWS, "ffmpeg.exe");
 		defaults.setProperty(FFMPEG_EXECUTABLE_LINUX, "ffmpeg");

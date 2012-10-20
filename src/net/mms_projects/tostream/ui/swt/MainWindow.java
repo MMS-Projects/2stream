@@ -174,6 +174,7 @@ public class MainWindow extends Shell {
 
 		final Combo settingVideoDevice = new Combo(compositeStandard,
 				SWT.READ_ONLY);
+		settingVideoDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		settingVideoDevice.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -206,6 +207,7 @@ public class MainWindow extends Shell {
 
 		Combo settingVideoEncodePreset = new Combo(compositeStandard,
 				SWT.READ_ONLY);
+		settingVideoEncodePreset.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" }); //$NON-NLS-2$ //$NON-NLS-3$
 
 		Label labelVideoResolution = new Label(compositeStandard, SWT.NONE);
@@ -213,6 +215,7 @@ public class MainWindow extends Shell {
 
 		Composite compositeVideoResolution = new Composite(compositeStandard,
 				SWT.NONE);
+		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		compositeVideoResolution.setLayout(new GridLayout(4, false));
 
 		settingResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
@@ -372,6 +375,7 @@ public class MainWindow extends Shell {
 		labelVideoFrameRate.setText(Messages.getString("videoFrameRate"));
 
 		settingFramerate = new Text(compositeStandard, SWT.BORDER);
+		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		settingFramerate.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -488,6 +492,9 @@ public class MainWindow extends Shell {
 		buttonStop.setText("Stop");
 
 		final Label labelStatus = new Label(composite_1, SWT.NONE);
+		GridData gd_labelStatus = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_labelStatus.widthHint = 367;
+		labelStatus.setLayoutData(gd_labelStatus);
 		labelStatus.setText("Please start to get the status");
 		settings.addListener(Settings.BITRATE, new SettingsListener() {
 			@Override
