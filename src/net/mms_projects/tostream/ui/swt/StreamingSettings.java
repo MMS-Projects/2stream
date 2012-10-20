@@ -5,23 +5,20 @@ import net.mms_projects.tostream.ServiceManager;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.streaming_services.TwitchTv;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 public class StreamingSettings extends Composite {
 	private Text settingRtmpUrl;
@@ -30,7 +27,7 @@ public class StreamingSettings extends Composite {
 	private Text text_1;
 	private Text text_2;
 	private Button txtAuto;
-	private final Combo combo; 
+	private final Combo combo;
 	private final Combo combo_1;
 	private final Button btnAuto;
 
@@ -93,9 +90,9 @@ public class StreamingSettings extends Composite {
 		combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		combo_1.setItems(service.getServerNames());
-		combo_1.select(manager.getCurrentService().getCurrentServerIndex(manager.getCurrentService().getCurrentServerName()));
+		combo_1.select(manager.getCurrentService().getCurrentServerIndex(
+				manager.getCurrentService().getCurrentServerName()));
 
-		
 		btnAuto = new Button(grpManuallyConfigureYour, SWT.NONE);
 		btnAuto.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1,
 				1));
@@ -107,6 +104,7 @@ public class StreamingSettings extends Composite {
 
 		text = new Text(grpManuallyConfigureYour, SWT.BORDER);
 		text.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				manager.getCurrentService().setToken(text.getText());
 				settingRtmpUrl.setText(manager.getCurrentService()
@@ -134,23 +132,25 @@ public class StreamingSettings extends Composite {
 
 		text_1 = new Text(grpAutomaticilly, SWT.BORDER);
 		text_1.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				manager.getCurrentService().setUsername(text_1.getText());
 			}
 		});
 		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
-		text_1.setEnabled(service.authMethod != service.AUTH_METHOD_TOKEN);
+		text_1.setEnabled(service.authMethod != Service.AUTH_METHOD_TOKEN);
 
 		text_2 = new Text(grpAutomaticilly, SWT.BORDER);
 		text_2.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				manager.getCurrentService().setPassword(text_2.getText());
 			}
 		});
 		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
-		text_2.setEnabled(service.authMethod != service.AUTH_METHOD_TOKEN);
+		text_2.setEnabled(service.authMethod != Service.AUTH_METHOD_TOKEN);
 		new Label(grpAutomaticilly, SWT.NONE);
 
 		txtAuto = new Button(grpAutomaticilly, SWT.BORDER);
@@ -199,8 +199,13 @@ public class StreamingSettings extends Composite {
 				updateInterface(manager);
 			}
 		});
-		
+
 		updateInterface(manager);
+	}
+
+	@Override
+	protected void checkSubclass() {
+		// Disable the check that prevents subclassing of SWT components
 	}
 
 	public void updateInterface(ServiceManager manager) {
@@ -208,9 +213,9 @@ public class StreamingSettings extends Composite {
 			boolean manualSection;
 			boolean autoSection;
 			boolean urlSection;
-			
+
 			Service service;
-			
+
 			if (combo.getText() == "Custom") {
 				manualSection = false;
 				autoSection = false;
@@ -218,21 +223,23 @@ public class StreamingSettings extends Composite {
 			} else {
 				manager.setCurrentService(combo.getText());
 				service = manager.getCurrentService();
-				
-				manualSection = service.authMethod == service.AUTH_METHOD_TOKEN;
-				autoSection = service.authMethod == service.AUTH_METHOD_USERNAME;
+
+				manualSection = service.authMethod == Service.AUTH_METHOD_TOKEN;
+				autoSection = service.authMethod == Service.AUTH_METHOD_USERNAME;
 				urlSection = false;
-				
+
 				if (manualSection) {
 					combo_1.setItems(service.getServerNames());
-					combo_1.select(manager.getCurrentService().getCurrentServerIndex(manager.getCurrentService().getCurrentServerName()));
+					combo_1.select(manager.getCurrentService()
+							.getCurrentServerIndex(
+									manager.getCurrentService()
+											.getCurrentServerName()));
 				}
 			}
-			
+
 			combo_1.setEnabled(manualSection);
 			btnAuto.setEnabled(manualSection);
-			txtGetKey
-					.setEnabled(manualSection);
+			txtGetKey.setEnabled(manualSection);
 			text.setEnabled(manualSection);
 
 			// Username field
@@ -240,16 +247,11 @@ public class StreamingSettings extends Composite {
 			// Password field
 			text_2.setEnabled(autoSection);
 			txtAuto.setEnabled(autoSection);
-			
+
 			settingRtmpUrl.setEnabled(urlSection);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
 	}
 }

@@ -15,7 +15,7 @@ public class Settings {
 
 	private LinkedHashMap<String, SettingsListener> listeners = new LinkedHashMap<String, SettingsListener>();
 	private boolean notifyListeners = true;
-	
+
 	public Integer[] videoResolution = new Integer[2];
 
 	private Properties defaults = new Properties();
@@ -36,7 +36,7 @@ public class Settings {
 	public static final String FFMPEG_EXECUTABLE_LINUX = "linuxFfmpegExecutable";
 	public static final String AVCONV_EXECUTABLE_WINDOWS = "windowsAvconvExecutable";
 	public static final String AVCONV_EXECUTABLE_LINUX = "linuxAvconvExecutable";
-	
+
 	private Properties properties;
 
 	public Settings() {
@@ -48,30 +48,34 @@ public class Settings {
 		defaults.setProperty(STREAM_URL, "");
 		defaults.setProperty(SHOW_DEBUGCONSOLE, "false");
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
-		
+
 		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "swt");
-		defaults.setProperty(VIDEO_DEVICE_LINUX,   "x11grab");
+		defaults.setProperty(VIDEO_DEVICE_LINUX, "x11grab");
 		defaults.setProperty(AUDIO_DEVICE_WINDOWS, "");
-		defaults.setProperty(AUDIO_DEVICE_LINUX,   "default");
-		
+		defaults.setProperty(AUDIO_DEVICE_LINUX, "default");
+
 		defaults.setProperty(FFMPEG_EXECUTABLE_WINDOWS, "ffmpeg.exe");
 		defaults.setProperty(FFMPEG_EXECUTABLE_LINUX, "ffmpeg");
 		defaults.setProperty(AVCONV_EXECUTABLE_WINDOWS, "avconv.exe");
 		defaults.setProperty(AVCONV_EXECUTABLE_LINUX, "avconv");
-		
+
 		properties = new Properties(defaults);
+	}
+
+	public void addListener(String key, SettingsListener listener) {
+		listeners.put(key + "-" + listener.toString(), listener);
 	}
 
 	public String get(String key) {
 		return properties.getProperty(key);
 	}
 
-	public int getAsInteger(String key) {
-		return Integer.parseInt(get(key));
-	}
-
 	public boolean getAsBoolean(String key) {
 		return Boolean.parseBoolean(get(key));
+	}
+
+	public int getAsInteger(String key) {
+		return Integer.parseInt(get(key));
 	}
 
 	public Integer[] getAsIntegerArray(String key) {
@@ -83,40 +87,8 @@ public class Settings {
 		return array;
 	}
 
-	public void set(String key, String value) throws Exception {
-		if (!defaults.containsKey(key)) {
-			System.out.println("Tried to set unknown setting \"" + key + "\".");
-		}
-		properties.setProperty(key, value);
-		if (notifyListeners) {
-			notifyListeners = false;
-			for (String listenerKey : listeners.keySet()) {
-				if (listenerKey.startsWith(key)) {
-					listeners.get(listenerKey).settingSet(value);
-				}
-			}
-			notifyListeners = true;
-		}
-		saveProperties();
-	}
-
-	public void set(String key, Integer value) throws Exception {
-		set(key, value.toString());
-	}
-
-	public void set(String key, Boolean value) throws Exception {
-		set(key, value.toString());
-	}
-
-	public void set(String key, Integer[] array) throws Exception {
-		String value = "";
-		
-        for (int i = 0; i < array.length; i++) {
-            value += array[i] + ",";
-        }
-        value = value.substring(0, value.length() - 1);
-        
-		set(key, value);
+	public String getConfigDirectory() {
+		return "." + System.getProperty("file.separator");
 	}
 
 	public LinkedHashMap<String, String> getSettings() {
@@ -166,11 +138,39 @@ public class Settings {
 		}
 	}
 
-	public void addListener(String key, SettingsListener listener) {
-		listeners.put(key + "-" + listener.toString(), listener);
+	public void set(String key, Boolean value) throws Exception {
+		set(key, value.toString());
 	}
-	
-	public String getConfigDirectory() {
-		return "." + System.getProperty("file.separator");
+
+	public void set(String key, Integer value) throws Exception {
+		set(key, value.toString());
+	}
+
+	public void set(String key, Integer[] array) throws Exception {
+		String value = "";
+
+		for (int i = 0; i < array.length; i++) {
+			value += array[i] + ",";
+		}
+		value = value.substring(0, value.length() - 1);
+
+		set(key, value);
+	}
+
+	public void set(String key, String value) throws Exception {
+		if (!defaults.containsKey(key)) {
+			System.out.println("Tried to set unknown setting \"" + key + "\".");
+		}
+		properties.setProperty(key, value);
+		if (notifyListeners) {
+			notifyListeners = false;
+			for (String listenerKey : listeners.keySet()) {
+				if (listenerKey.startsWith(key)) {
+					listeners.get(listenerKey).settingSet(value);
+				}
+			}
+			notifyListeners = true;
+		}
+		saveProperties();
 	}
 }

@@ -8,14 +8,15 @@ public class Stop extends Command {
 	public Stop() {
 		command = "stop";
 	}
-	
+
 	@Override
 	public boolean run(String[] args, ResourcePasser resources) {
 		System.out.println("Stopping FFmpeg...");
 		try {
 			resources.encoderManager.getCurrentEncoder().stopEncoder();
 		} catch (Exception e) {
-			System.out.println("Error trying to stop FFmpeg: " + e.getMessage());
+			System.out
+					.println("Error trying to stop FFmpeg: " + e.getMessage());
 			return false;
 		}
 		return true;

@@ -4,8 +4,8 @@ import org.eclipse.swt.graphics.Point;
 
 public class RecordingSelectionListener {
 
-	public void selectionChanged(Point location, Point size ) {
-		
+	public void selectionChanged(Point location, Point size) {
+
 	}
 
 }

@@ -4,11 +4,11 @@ import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
-import net.mms_projects.tostream.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -31,11 +31,11 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
+
 import swing2swt.layout.BorderLayout;
-import swing2swt.layout.BoxLayout;
 
 public class MainWindow extends Shell {
 
@@ -258,8 +258,8 @@ public class MainWindow extends Shell {
 				true, false, 1, 1));
 
 		Label labelX = new Label(compositeVideoResolution, SWT.NONE);
-		labelX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1,
-				1));
+		labelX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
 		labelX.setText("X");
 
 		settingResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
@@ -321,8 +321,8 @@ public class MainWindow extends Shell {
 		settingLocationX = new Text(compositeVideoResolution, SWT.BORDER);
 		settingLocationX.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.LOCATION)[0]));
-		settingLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
+		settingLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		settingLocationX.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -347,8 +347,8 @@ public class MainWindow extends Shell {
 		settingLocationY = new Text(compositeVideoResolution, SWT.BORDER);
 		settingLocationY.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.LOCATION)[1]));
-		settingLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
+		settingLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		settingLocationY.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -386,19 +386,20 @@ public class MainWindow extends Shell {
 
 		Label labelAudioBitrate = new Label(compositeStandard, SWT.NONE);
 		labelAudioBitrate.setText(Messages.getString("audioBitrate"));
-		
+
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelAudioChannels = new Label(compositeStandard, SWT.NONE);
 		labelAudioChannels.setText(Messages.getString("audioChannels"));
-		
+
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelStreamUrl = new Label(compositeStandard, SWT.NONE);
 		labelStreamUrl.setText("Stream URL");
 
 		settingStreamUrl = new Text(compositeStandard, SWT.BORDER);
-		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				false, false, 1, 1));
 		settingStreamUrl.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -417,7 +418,7 @@ public class MainWindow extends Shell {
 		Composite compositeAdvanced = new Composite(tabFolder, SWT.NONE);
 		tabAdvanced.setControl(compositeAdvanced);
 		compositeAdvanced.setLayout(new GridLayout(2, false));
-		
+
 		Label labelVideoBitrate = new Label(compositeAdvanced, SWT.NONE);
 		labelVideoBitrate.setText(Messages.getString("videoBitrate"));
 
@@ -432,10 +433,11 @@ public class MainWindow extends Shell {
 			}
 		});
 		settingBitrate.setText(settings.get(Settings.BITRATE));
-		
+
 		TabItem tabStreamingSettings = new TabItem(tabFolder, SWT.NONE);
-		tabStreamingSettings.setText(Messages.getString("MainWindow.tbtmStreamingSettings.text")); //$NON-NLS-1$
-		
+		tabStreamingSettings.setText(Messages
+				.getString("MainWindow.tbtmStreamingSettings.text")); //$NON-NLS-1$
+
 		Composite composite_2 = new StreamingSettings(tabFolder, settings);
 		tabStreamingSettings.setControl(composite_2);
 
@@ -539,18 +541,6 @@ public class MainWindow extends Shell {
 
 		encoderManager.addListener(new EncoderOutputListener() {
 			@Override
-			public void onStatusUpdate(final int frame, final int framerate,
-					final double bitrate) {
-				Display.getDefault().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						labelStatus.setText("FPS: " + framerate + " - Frame: " //$NON-NLS-2$
-								+ frame + " - Bitrate: " + bitrate + " kbit/s"); //$NON-NLS-2$
-					}
-				});
-			}
-
-			@Override
 			public void onStart() {
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
@@ -559,6 +549,18 @@ public class MainWindow extends Shell {
 						buttonStart.setEnabled(false);
 
 						regionSelectionWindow.close();
+					}
+				});
+			}
+
+			@Override
+			public void onStatusUpdate(final int frame, final int framerate,
+					final double bitrate) {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						labelStatus.setText("FPS: " + framerate + " - Frame: " //$NON-NLS-2$
+								+ frame + " - Bitrate: " + bitrate + " kbit/s"); //$NON-NLS-2$
 					}
 				});
 			}
@@ -603,6 +605,11 @@ public class MainWindow extends Shell {
 		createContents();
 	}
 
+	@Override
+	protected void checkSubclass() {
+		// Disable the check that prevents subclassing of SWT components
+	}
+
 	/**
 	 * Create contents of the shell.
 	 */
@@ -610,10 +617,5 @@ public class MainWindow extends Shell {
 		setText(ToStream.getApplicationName());
 		setSize(600, 600);
 
-	}
-
-	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
 	}
 }

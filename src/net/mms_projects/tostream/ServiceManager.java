@@ -1,20 +1,18 @@
 package net.mms_projects.tostream;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import net.mms_projects.tostream.streaming_services.TwitchTv;
 
 public class ServiceManager {
 
 	public LinkedHashMap<String, Service> services = new LinkedHashMap<String, Service>();
-	private String currentService; 
-	
+	private String currentService;
+
 	public ServiceManager() {
 		addService(new TwitchTv());
 	}
-	
+
 	public void addService(Service service) {
 		services.put(service.name, service);
 		if (services.size() == 1) {
@@ -24,7 +22,11 @@ public class ServiceManager {
 			}
 		}
 	}
-	
+
+	public Service getCurrentService() {
+		return services.get(currentService);
+	}
+
 	public String[] getServiceNames() {
 		String[] serviceNames = new String[services.size()];
 		int i = 0;
@@ -33,10 +35,6 @@ public class ServiceManager {
 			i++;
 		}
 		return serviceNames;
-	}
-
-	public Service getCurrentService() {
-		return services.get(currentService);
 	}
 
 	public void setCurrentService(String currentService) throws Exception {

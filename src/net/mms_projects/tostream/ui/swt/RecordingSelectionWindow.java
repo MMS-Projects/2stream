@@ -17,15 +17,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RecordingSelectionWindow extends Shell {
 
-	private List<RecordingSelectionListener> listeners = new ArrayList<RecordingSelectionListener>();
-	public boolean notifyListeners = true;
-	
-	public void addListener(RecordingSelectionListener listener) {
-		listeners.add(listener);
-	}
-	
 	/**
 	 * Launch the application.
+	 * 
 	 * @param args
 	 */
 	public static void main(String args[]) {
@@ -44,14 +38,18 @@ public class RecordingSelectionWindow extends Shell {
 			e.printStackTrace();
 		}
 	}
+	private List<RecordingSelectionListener> listeners = new ArrayList<RecordingSelectionListener>();
+
+	public boolean notifyListeners = true;
 
 	/**
 	 * Create the shell.
+	 * 
 	 * @param display
 	 */
 	public RecordingSelectionWindow(Display display) {
 		super(display, SWT.SHELL_TRIM);
-		
+
 		addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
@@ -61,16 +59,27 @@ public class RecordingSelectionWindow extends Shell {
 		});
 		setAlpha(200);
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
-		
+
 		final RecordingSelectionWindow shell = this;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		StyledText styledText = new StyledText(this, SWT.READ_ONLY | SWT.WRAP);
 		styledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		styledText.setBackground(this.getBackground());
-		styledText.setText("1. Make sure the region you want to record is behind the green window\n2. Close the window. The region will be saved and used when recording.");
-		
+		styledText
+				.setText("1. Make sure the region you want to record is behind the green window\n2. Close the window. The region will be saved and used when recording.");
+
 		addControlListener(new ControlAdapter() {
+			@Override
+			public void controlMoved(ControlEvent arg0) {
+				event(arg0);
+			}
+
+			@Override
+			public void controlResized(ControlEvent arg0) {
+				event(arg0);
+			}
+
 			public void event(ControlEvent arg0) {
 				if (notifyListeners) {
 					for (RecordingSelectionListener listener : listeners) {
@@ -80,30 +89,25 @@ public class RecordingSelectionWindow extends Shell {
 					}
 				}
 			}
-			@Override
-			public void controlMoved(ControlEvent arg0) {
-				event(arg0);
-			}
-			@Override
-			public void controlResized(ControlEvent arg0) {
-				event(arg0);
-			}
 		});
-		
+
 		createContents();
+	}
+
+	public void addListener(RecordingSelectionListener listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	protected void checkSubclass() {
+		// Disable the check that prevents subclassing of SWT components
 	}
 
 	@Override
 	public void close() {
 		setVisible(false);
 	}
-	
-	@Override
-	public void setVisible(boolean arg0) {
-		notifyListeners = arg0;
-		super.setVisible(arg0);
-	}
-	
+
 	/**
 	 * Create contents of the shell.
 	 */
@@ -114,7 +118,8 @@ public class RecordingSelectionWindow extends Shell {
 	}
 
 	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
+	public void setVisible(boolean arg0) {
+		notifyListeners = arg0;
+		super.setVisible(arg0);
 	}
 }

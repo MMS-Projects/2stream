@@ -8,7 +8,7 @@ public class Quit extends Command {
 	public Quit() {
 		command = "quit";
 	}
-	
+
 	@Override
 	public boolean run(String[] args, ResourcePasser resources) {
 		if (resources.encoderManager.getCurrentEncoder().isRunning()) {

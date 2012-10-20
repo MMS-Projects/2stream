@@ -8,26 +8,8 @@ import net.mms_projects.tostream.ui.swt.SwtInterface;
 
 public class ToStream {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Settings settings = new Settings();
-		settings.loadProperties();
-
-		EncoderManager encoderManager = new EncoderManager(settings);
-		encoderManager.addEncoder(new Ffmpeg(encoderManager, settings));
-		encoderManager.addEncoder(new Avconv(encoderManager, settings));
-
-		InterfaceLoader uiLoader;
-		if (args.length != 0) {
-			uiLoader = getInterface(args[0], encoderManager, settings);
-		} else {
-			uiLoader = getInterface(settings.get(Settings.DEFAULT_INTERFACE), encoderManager, settings);
-		}
-		if (uiLoader == null) {
-			System.out.println("Unknown interface: " + args[0]);
-		}
+	public static String getApplicationName() {
+		return "2STREAM";
 	}
 
 	public static InterfaceLoader getInterface(String name,
@@ -39,10 +21,6 @@ public class ToStream {
 			return new SwtInterface(encoderManager, settings);
 		}
 		return null;
-	}
-
-	public static String getApplicationName() {
-		return "2STREAM";
 	}
 
 	public static String getVersion() {
@@ -58,6 +36,29 @@ public class ToStream {
 					+ ToStream.class.getPackage().getImplementationVersion();
 		}
 		return version;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Settings settings = new Settings();
+		settings.loadProperties();
+
+		EncoderManager encoderManager = new EncoderManager(settings);
+		encoderManager.addEncoder(new Ffmpeg(encoderManager, settings));
+		encoderManager.addEncoder(new Avconv(encoderManager, settings));
+
+		InterfaceLoader uiLoader;
+		if (args.length != 0) {
+			uiLoader = getInterface(args[0], encoderManager, settings);
+		} else {
+			uiLoader = getInterface(settings.get(Settings.DEFAULT_INTERFACE),
+					encoderManager, settings);
+		}
+		if (uiLoader == null) {
+			System.out.println("Unknown interface: " + args[0]);
+		}
 	}
 
 }

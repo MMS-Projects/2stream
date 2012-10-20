@@ -8,7 +8,7 @@ public class Set extends Command {
 	public Set() {
 		command = "set";
 	}
-	
+
 	@Override
 	public boolean run(String[] args, ResourcePasser resources) {
 		try {

@@ -19,6 +19,7 @@ public class AboutDialog extends Dialog {
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -28,7 +29,35 @@ public class AboutDialog extends Dialog {
 	}
 
 	/**
+	 * Create contents of the dialog.
+	 */
+	private void createContents() {
+		shell = new Shell(getParent(), SWT.CLOSE | SWT.TITLE
+				| SWT.PRIMARY_MODAL);
+		shell.setSize(300, 80);
+		shell.setText(getText());
+		shell.setLayout(new GridLayout(2, false));
+
+		StyledText infoApplicatioName = new StyledText(shell, SWT.NONE);
+		infoApplicatioName.setEnabled(false);
+		infoApplicatioName.setEditable(false);
+		infoApplicatioName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
+		infoApplicatioName.setText(ToStream.getApplicationName());
+		infoApplicatioName.setBackground(shell.getBackground());
+		new Label(shell, SWT.NONE);
+
+		Label labelVersion = new Label(shell, SWT.NONE);
+		labelVersion.setText(Messages.getString("about.version"));
+
+		Label infoVersion = new Label(shell, SWT.NONE);
+		infoVersion.setText(ToStream.getVersion());
+
+	}
+
+	/**
 	 * Open the dialog.
+	 * 
 	 * @return the result
 	 */
 	public Object open() {
@@ -42,30 +71,5 @@ public class AboutDialog extends Dialog {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Create contents of the dialog.
-	 */
-	private void createContents() {
-		shell = new Shell(getParent(), SWT.CLOSE | SWT.TITLE | SWT.PRIMARY_MODAL);
-		shell.setSize(300, 80);
-		shell.setText(getText());
-		shell.setLayout(new GridLayout(2, false));
-		
-		StyledText infoApplicatioName = new StyledText(shell, SWT.NONE);
-		infoApplicatioName.setEnabled(false);
-		infoApplicatioName.setEditable(false);
-		infoApplicatioName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		infoApplicatioName.setText(ToStream.getApplicationName());
-		infoApplicatioName.setBackground(shell.getBackground());
-		new Label(shell, SWT.NONE);
-		
-		Label labelVersion = new Label(shell, SWT.NONE);
-		labelVersion.setText(Messages.getString("about.version"));
-		
-		Label infoVersion = new Label(shell, SWT.NONE);
-		infoVersion.setText(ToStream.getVersion());
-
 	}
 }

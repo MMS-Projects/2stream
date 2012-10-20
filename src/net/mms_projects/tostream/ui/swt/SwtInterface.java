@@ -1,6 +1,5 @@
 package net.mms_projects.tostream.ui.swt;
 
-import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
@@ -24,14 +23,15 @@ public class SwtInterface extends InterfaceLoader {
 
 			Tray tray = display.getSystemTray();
 			final TrayItem item = new TrayItem(tray, SWT.NONE);
-			
+
 			final SfiLoop sfiLoop = new SfiLoop();
 			sfiLoop.setDaemon(true);
 			sfiLoop.start();
 
 			encoderManager.addListener(new EncoderOutputListener() {
 				@Override
-				public void onStatusUpdate(final int frame, final int framerate, final double bitrate) {
+				public void onStatusUpdate(final int frame,
+						final int framerate, final double bitrate) {
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
@@ -41,16 +41,15 @@ public class SwtInterface extends InterfaceLoader {
 							gc.setBackground(display
 									.getSystemColor(SWT.COLOR_GRAY));
 							gc.fillRectangle(image.getBounds());
-							gc.drawString(
-									Integer.toString(framerate),
-									(image.getBounds().height - font.getFontData()[0]
-											.getHeight()) / 2,
-									(image.getBounds().width - font.getFontData()[0]
-											.getHeight()) / 2);
+							gc.drawString(Integer.toString(framerate), (image
+									.getBounds().height - font.getFontData()[0]
+									.getHeight()) / 2,
+									(image.getBounds().width - font
+											.getFontData()[0].getHeight()) / 2);
 							gc.dispose();
 							item.setImage(image);
 							image.dispose();
-							
+
 							sfiLoop.setFrameAmount(frame);
 							sfiLoop.setFramerate(framerate);
 						}
@@ -59,9 +58,11 @@ public class SwtInterface extends InterfaceLoader {
 			});
 
 			DebugConsole debugWindow = new DebugConsole(display, encoderManager);
-			debugWindow.setVisible(settings.getAsBoolean(Settings.SHOW_DEBUGCONSOLE));
+			debugWindow.setVisible(settings
+					.getAsBoolean(Settings.SHOW_DEBUGCONSOLE));
 
-			MainWindow shell = new MainWindow(display, encoderManager, settings, debugWindow);
+			MainWindow shell = new MainWindow(display, encoderManager,
+					settings, debugWindow);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {

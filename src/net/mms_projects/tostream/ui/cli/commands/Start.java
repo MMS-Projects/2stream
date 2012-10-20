@@ -8,7 +8,7 @@ public class Start extends Command {
 	public Start() {
 		command = "start";
 	}
-	
+
 	@Override
 	public boolean run(String[] args, ResourcePasser resources) {
 		System.out.println("Starting FFmpeg...");

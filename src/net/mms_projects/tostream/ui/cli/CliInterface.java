@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
@@ -18,28 +17,28 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 
 	public CliInterface(EncoderManager encoderManager, Settings settings) {
 		super(encoderManager, settings);
-		
+
 		ResourcePasser resources = new ResourcePasser();
 		resources.encoderManager = encoderManager;
 		resources.settings = settings;
-		
+
 		CommandManager commandManager = new CommandManager();
 		commandManager.addCommand(new Start());
 		commandManager.addCommand(new Stop());
 		commandManager.addCommand(new Set());
-		commandManager.addCommand(new Quit());		
-		
+		commandManager.addCommand(new Quit());
+
 		resources.commandManager = commandManager;
-		
+
 		encoderManager.addListener(new EncoderOutputListener() {
 			public void onStatusUpdate(final int frame, final int framerate) {
-				System.out.println("FPS: " + framerate + " - Frame: "
-						+ frame);
+				System.out.println("FPS: " + framerate + " - Frame: " + frame);
 			}
 		});
 
-		System.out.println("Running " + ToStream.getApplicationName() + " version " + ToStream.getVersion());
-		
+		System.out.println("Running " + ToStream.getApplicationName()
+				+ " version " + ToStream.getVersion());
+
 		try {
 			resources.loopRunning = true;
 			while (resources.loopRunning) {
@@ -50,7 +49,7 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 				str = br.readLine().trim();
 				String[] tokens = str.split(" ");
 				System.out.println("input: '" + tokens[0] + "'");
-				
+
 				commandManager.executeCommand(tokens, resources);
 			}
 		} catch (IOException e) {
