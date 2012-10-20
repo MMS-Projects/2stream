@@ -1,8 +1,8 @@
 package net.mms_projects.tostream.ui.swt;
 
 import net.mms_projects.tostream.Service;
-import net.mms_projects.tostream.ServiceManager;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.managers.ServiceManager;
 import net.mms_projects.tostream.streaming_services.TwitchTv;
 
 import org.eclipse.swt.SWT;
@@ -55,7 +55,7 @@ public class StreamingSettings extends Composite {
 		lblAaaa.setText("Streaming Service:");
 
 		combo = new Combo(grpSelectYourStreaming, SWT.READ_ONLY);
-		combo.setItems(manager.getServiceNames());
+		combo.setItems(manager.getItemNames());
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 		combo.add("Custom");
@@ -77,21 +77,21 @@ public class StreamingSettings extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				try {
-					manager.getCurrentService()
+					manager.getCurrentItem()
 							.setCurrentServer(text.getText());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				settingRtmpUrl.setText(manager.getCurrentService()
+				settingRtmpUrl.setText(manager.getCurrentItem()
 						.getStreamUrl());
 			}
 		});
 		combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		combo_1.setItems(service.getServerNames());
-		combo_1.select(manager.getCurrentService().getCurrentServerIndex(
-				manager.getCurrentService().getCurrentServerName()));
+		combo_1.select(manager.getCurrentItem().getCurrentServerIndex(
+				manager.getCurrentItem().getCurrentServerName()));
 
 		btnAuto = new Button(grpManuallyConfigureYour, SWT.NONE);
 		btnAuto.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1,
@@ -106,8 +106,8 @@ public class StreamingSettings extends Composite {
 		text.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent arg0) {
-				manager.getCurrentService().setToken(text.getText());
-				settingRtmpUrl.setText(manager.getCurrentService()
+				manager.getCurrentItem().setToken(text.getText());
+				settingRtmpUrl.setText(manager.getCurrentItem()
 						.getStreamUrl());
 			}
 		});
@@ -134,7 +134,7 @@ public class StreamingSettings extends Composite {
 		text_1.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent arg0) {
-				manager.getCurrentService().setUsername(text_1.getText());
+				manager.getCurrentItem().setUsername(text_1.getText());
 			}
 		});
 		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
@@ -145,7 +145,7 @@ public class StreamingSettings extends Composite {
 		text_2.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent arg0) {
-				manager.getCurrentService().setPassword(text_2.getText());
+				manager.getCurrentItem().setPassword(text_2.getText());
 			}
 		});
 		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
@@ -221,8 +221,8 @@ public class StreamingSettings extends Composite {
 				autoSection = false;
 				urlSection = true;
 			} else {
-				manager.setCurrentService(combo.getText());
-				service = manager.getCurrentService();
+				manager.setCurrentItem(combo.getText());
+				service = manager.getCurrentItem();
 
 				manualSection = service.authMethod == Service.AUTH_METHOD_TOKEN;
 				autoSection = service.authMethod == Service.AUTH_METHOD_USERNAME;
@@ -230,9 +230,9 @@ public class StreamingSettings extends Composite {
 
 				if (manualSection) {
 					combo_1.setItems(service.getServerNames());
-					combo_1.select(manager.getCurrentService()
+					combo_1.select(manager.getCurrentItem()
 							.getCurrentServerIndex(
-									manager.getCurrentService()
+									manager.getCurrentItem()
 											.getCurrentServerName()));
 				}
 			}

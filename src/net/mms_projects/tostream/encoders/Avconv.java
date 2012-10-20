@@ -1,8 +1,8 @@
 package net.mms_projects.tostream.encoders;
 
-import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.managers.EncoderManager;
 
 public class Avconv extends Ffmpeg {
 

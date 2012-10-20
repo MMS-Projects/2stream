@@ -1,4 +1,4 @@
-package net.mms_projects.tostream;
+package net.mms_projects.tostream.managers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.mms_projects.tostream.OSValidator;
+import net.mms_projects.tostream.Settings;
 
 public class DeviceManager {
 

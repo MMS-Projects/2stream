@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
-import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.managers.DeviceManager;
+import net.mms_projects.tostream.managers.EncoderManager;
 
 public class Ffmpeg extends Encoder {
 

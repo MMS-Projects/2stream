@@ -4,10 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ToStream;
+import net.mms_projects.tostream.managers.EncoderManager;
 import net.mms_projects.tostream.ui.cli.commands.Quit;
 import net.mms_projects.tostream.ui.cli.commands.Set;
 import net.mms_projects.tostream.ui.cli.commands.Start;

@@ -2,6 +2,8 @@ package net.mms_projects.tostream;
 
 import java.io.IOException;
 
+import net.mms_projects.tostream.managers.EncoderManager;
+
 public class Encoder extends Thread {
 
 	protected Settings settings;

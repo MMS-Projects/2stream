@@ -1,14 +1,14 @@
 package net.mms_projects.tostream.ui.swt;
 
-import net.mms_projects.tostream.DeviceManager;
 import net.mms_projects.tostream.Encoder;
-import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
+import net.mms_projects.tostream.managers.DeviceManager;
+import net.mms_projects.tostream.managers.EncoderManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -63,9 +63,9 @@ public class MainWindow extends Shell {
 		addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
-				if (encoderManager.getCurrentEncoder().isRunning()) {
+				if (encoderManager.getCurrentItem().isRunning()) {
 					try {
-						encoderManager.getCurrentEncoder().stopEncoder();
+						encoderManager.getCurrentItem().stopEncoder();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -453,7 +453,7 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
-					encoderManager.getCurrentEncoder().startEncoder();
+					encoderManager.getCurrentItem().startEncoder();
 				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");
@@ -473,7 +473,7 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					encoderManager.getCurrentEncoder().stopEncoder();
+					encoderManager.getCurrentItem().stopEncoder();
 				} catch (Exception error) {
 					MessageBox msg = new MessageBox(new Shell());
 					msg.setText("An erorr occured");

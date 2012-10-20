@@ -1,9 +1,10 @@
 package net.mms_projects.tostream.ui.swt;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.mms_projects.tostream.Encoder;
-import net.mms_projects.tostream.EncoderManager;
+import net.mms_projects.tostream.managers.EncoderManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -55,18 +56,18 @@ public class SwitchEncoder extends Dialog {
 		final Combo combo = new Combo(shell, SWT.NONE);
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
-		List<Encoder> encoders = manager.getEncoders();
-		String[] encoderNames = new String[encoders.size()];
-		for (int i = 0; i < encoders.size(); i++) {
-			encoderNames[i] = encoders.get(i).getClass().getName();
-		}
-		combo.setItems(encoderNames);
+		combo.setItems(manager.getItemNames());
 
 		Button btnSave = new Button(shell, SWT.NONE);
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				manager.setCurrentEncoder(combo.getText());
+				try {
+					manager.setCurrentItem(combo.getText());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		btnSave.setText("Save");

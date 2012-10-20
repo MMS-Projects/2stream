@@ -1,7 +1,7 @@
 package net.mms_projects.tostream.ui.swt;
 
-import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.managers.EncoderManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;

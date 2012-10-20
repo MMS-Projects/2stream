@@ -1,7 +1,7 @@
 package net.mms_projects.tostream.ui;
 
-import net.mms_projects.tostream.EncoderManager;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.managers.EncoderManager;
 
 public class InterfaceLoader {
 

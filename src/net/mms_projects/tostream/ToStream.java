@@ -2,6 +2,7 @@ package net.mms_projects.tostream;
 
 import net.mms_projects.tostream.encoders.Avconv;
 import net.mms_projects.tostream.encoders.Ffmpeg;
+import net.mms_projects.tostream.managers.EncoderManager;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 import net.mms_projects.tostream.ui.cli.CliInterface;
 import net.mms_projects.tostream.ui.swt.SwtInterface;
@@ -46,8 +47,8 @@ public class ToStream {
 		settings.loadProperties();
 
 		EncoderManager encoderManager = new EncoderManager(settings);
-		encoderManager.addEncoder(new Ffmpeg(encoderManager, settings));
-		encoderManager.addEncoder(new Avconv(encoderManager, settings));
+		encoderManager.addItem(new Ffmpeg(encoderManager, settings));
+		encoderManager.addItem(new Avconv(encoderManager, settings));
 
 		InterfaceLoader uiLoader;
 		if (args.length != 0) {
