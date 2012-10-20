@@ -2,5 +2,6 @@
 *~
 *.flv
 build/
+bin/
 .gradle/
 options.properties
