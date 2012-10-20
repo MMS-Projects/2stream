@@ -398,6 +398,7 @@ public class MainWindow extends Shell {
 		labelStreamUrl.setText("Stream URL");
 
 		settingStreamUrl = new Text(compositeStandard, SWT.BORDER);
+		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		settingStreamUrl.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -431,6 +432,12 @@ public class MainWindow extends Shell {
 			}
 		});
 		settingBitrate.setText(settings.get(Settings.BITRATE));
+		
+		TabItem tabStreamingSettings = new TabItem(tabFolder, SWT.NONE);
+		tabStreamingSettings.setText(Messages.getString("MainWindow.tbtmStreamingSettings.text")); //$NON-NLS-1$
+		
+		Composite composite_2 = new StreamingSettings(tabFolder, settings);
+		tabStreamingSettings.setControl(composite_2);
 
 		Composite composite_1 = new Composite(this, SWT.NONE);
 		composite_1.setLayoutData(BorderLayout.SOUTH);
@@ -601,7 +608,7 @@ public class MainWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText(ToStream.getApplicationName());
-		setSize(600, 425);
+		setSize(600, 600);
 
 	}
 
