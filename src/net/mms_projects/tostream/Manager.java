@@ -20,6 +20,29 @@ public class Manager<T> {
 		}
 	}
 
+	public String getItemName(int index) {
+		int searchIndex = 0;
+		for (String key : items.keySet()) {
+			if (searchIndex == index) {
+				return key;
+			}
+			index++;
+		}
+		return null;
+	}
+	
+	public T getItem(int index) {
+		return getItem(getItemName(index));
+	}
+	
+	public T getItem(String itemName) {
+		return items.get(itemName);
+	}
+	
+	public T getItem() {
+		return getCurrentItem();
+	}
+	
 	public T getCurrentItem() {
 		return items.get(currentItem);
 	}
@@ -44,6 +67,17 @@ public class Manager<T> {
 
 	public Collection<T> getItems() {
 		return items.values();
+	}
+	
+	public int getItemIndex(String itemName) {
+		int index = 0;
+		for (String key : items.keySet()) {
+			if (key.equalsIgnoreCase(itemName)) {
+				return index;
+			}
+			index++;
+		}
+		return -1;
 	}
 	
 }

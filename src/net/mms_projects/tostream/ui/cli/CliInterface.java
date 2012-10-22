@@ -10,6 +10,7 @@ import net.mms_projects.tostream.ToStream;
 import net.mms_projects.tostream.managers.EncoderManager;
 import net.mms_projects.tostream.ui.cli.commands.Quit;
 import net.mms_projects.tostream.ui.cli.commands.Set;
+import net.mms_projects.tostream.ui.cli.commands.Setup;
 import net.mms_projects.tostream.ui.cli.commands.Start;
 import net.mms_projects.tostream.ui.cli.commands.Stop;
 
@@ -27,6 +28,7 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 		commandManager.addCommand(new Stop());
 		commandManager.addCommand(new Set());
 		commandManager.addCommand(new Quit());
+		commandManager.addCommand(new Setup());
 
 		resources.commandManager = commandManager;
 
