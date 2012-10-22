@@ -23,7 +23,7 @@ public class Setup extends Command {
 		final BufferedReader br = new BufferedReader(new InputStreamReader(
 				System.in));
 		if (args[1].equalsIgnoreCase("stream")) {
-			InlineSwitch<Integer, String> switcher = new InlineSwitch<>();
+			InlineSwitch<Integer, String> switcher = new InlineSwitch<Integer, String>();
 			switcher.addClause(Service.AUTH_METHOD_TOKEN, "token");
 			switcher.addClause(Service.AUTH_METHOD_USERNAME, "username");
 			
