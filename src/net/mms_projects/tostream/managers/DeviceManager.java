@@ -152,16 +152,34 @@ public class DeviceManager {
 		return new String[][] { _windowsVideo, _windowsAudio };
 	}
 
-	public static ArrayList<String> buildDeviceString(Settings settings,
-			Integer[] location) {
+	public static ArrayList<String> buildDeviceString(Settings settings) {
 		return buildDeviceString(DeviceManager.getVideoDevice(settings),
-				DeviceManager.getAudioDevice(settings), location);
+				DeviceManager.getAudioDevice(settings), settings);
 	}
 
 	public static ArrayList<String> buildDeviceString(String deviceVideo,
-			String deviceAudio, Integer[] location) {
+			String deviceAudio, Settings settings) {
 		ArrayList<String> command = new ArrayList<String>();
+
+		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
+		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
+
+		if (resolution[0] % 2 == 1) {
+			resolution[0] -= 1;
+		}
+		if (resolution[1] % 2 == 1) {
+			resolution[1] -= 1;
+		}
+		
 		if (OSValidator.isUnix()) {
+			if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
+				command.add("-r");
+				command.add(settings.get(Settings.FRAME_RATE));
+			}
+
+			command.add("-s");
+			command.add(resolution[0] + "x" + resolution[1]);
+			
 			if (deviceVideo.equalsIgnoreCase("x11grab")) {
 				command.add("-f");
 				command.add("x11grab");
@@ -191,7 +209,7 @@ public class DeviceManager {
 			command.add("dshow");
 
 			command.add("-i");
-			command.add("video=" + deviceVideo + ":audio=" + deviceAudio + "");
+			command.add("video=\"" + deviceVideo + "\":audio=\"" + deviceAudio + "\"");
 		}
 		return command;
 	}

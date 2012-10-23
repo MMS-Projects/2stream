@@ -52,17 +52,6 @@ public class Ffmpeg extends Encoder {
 		 */
 
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
-		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
-
-		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
-			command.add("-r");
-			command.add(settings.get(Settings.FRAME_RATE));
-		}
-
-		command.add("-s");
-		command.add(resolution[0] + "x" + resolution[1]);
-
-		command.addAll(DeviceManager.buildDeviceString(settings, location));
 
 		if (resolution[0] % 2 == 1) {
 			resolution[0] -= 1;
@@ -70,6 +59,8 @@ public class Ffmpeg extends Encoder {
 		if (resolution[1] % 2 == 1) {
 			resolution[1] -= 1;
 		}
+
+		command.addAll(DeviceManager.buildDeviceString(settings));
 
 		/*
 		 * command.add("-i"); if (OSValidator.isUnix()) { command.add(":0.0+" +
