@@ -45,14 +45,16 @@ public class Ffmpeg extends Encoder {
 		List<String> command = new ArrayList<String>();
 		command.add(executableName);
 		command.add("-y");
-		/*
-		 * command.add("-f"); if (OSValidator.isUnix()) {
-		 * command.add("x11grab"); } else if (OSValidator.isWindows()) {
-		 * command.add("dshow"); }
-		 */
 
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
 		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
+		
+		if (resolution[0] % 2 == 1) {
+			resolution[0] -= 1;
+		}
+		if (resolution[1] % 2 == 1) {
+			resolution[1] -= 1;
+		}
 
 		if (settings.getAsInteger(Settings.FRAME_RATE) > 5) {
 			command.add("-r");
@@ -62,22 +64,40 @@ public class Ffmpeg extends Encoder {
 		command.add("-s");
 		command.add(resolution[0] + "x" + resolution[1]);
 
-		command.addAll(DeviceManager.buildDeviceString(settings, location));
+		String deviceVideo = DeviceManager.getVideoDevice(settings);
+		String deviceAudio = DeviceManager.getAudioDevice(settings);
+		if (OSValidator.isUnix()) {
+			if (deviceVideo.equalsIgnoreCase("x11grab")) {
+				command.add("-f");
+				command.add("x11grab");
 
-		if (resolution[0] % 2 == 1) {
-			resolution[0] -= 1;
-		}
-		if (resolution[1] % 2 == 1) {
-			resolution[1] -= 1;
-		}
+				command.add("-i");
+				command.add(":0.0+" + Integer.toString(location[0]) + ","
+						+ Integer.toString(location[1]));
+			} else {
+				command.add("-f");
+				command.add("video4linux2");
 
-		/*
-		 * command.add("-i"); if (OSValidator.isUnix()) { command.add(":0.0+" +
-		 * Integer.toString(location[0]) + "," + Integer.toString(location[1]));
-		 * } else if (OSValidator.isWindows()) { command.add("video=" +
-		 * settings.get("windowsVideo") + ":audio=" +
-		 * settings.get("windowsAudio") +""); }
-		 */
+				command.add("-i");
+				command.add(deviceVideo);
+			}
+			if (!deviceAudio.equalsIgnoreCase("none")) {
+				command.add("-f");
+				command.add("pulse");
+				command.add("-i");
+				command.add(deviceAudio);
+				command.add("-ab");
+				command.add("64k");
+				command.add("-ar");
+				command.add("22050");
+			}
+		} else if (OSValidator.isWindows()) {
+			command.add("-f");
+			command.add("dshow");
+
+			command.add("-i");
+			command.add("video=" + deviceVideo + ":audio=" + deviceAudio + "");
+		}
 
 		command.add("-vcodec");
 		command.add("libx264");

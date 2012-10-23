@@ -152,50 +152,6 @@ public class DeviceManager {
 		return new String[][] { _windowsVideo, _windowsAudio };
 	}
 
-	public static ArrayList<String> buildDeviceString(Settings settings,
-			Integer[] location) {
-		return buildDeviceString(DeviceManager.getVideoDevice(settings),
-				DeviceManager.getAudioDevice(settings), location);
-	}
-
-	public static ArrayList<String> buildDeviceString(String deviceVideo,
-			String deviceAudio, Integer[] location) {
-		ArrayList<String> command = new ArrayList<String>();
-		if (OSValidator.isUnix()) {
-			if (deviceVideo.equalsIgnoreCase("x11grab")) {
-				command.add("-f");
-				command.add("x11grab");
-
-				command.add("-i");
-				command.add(":0.0+" + Integer.toString(location[0]) + ","
-						+ Integer.toString(location[1]));
-			} else {
-				command.add("-f");
-				command.add("video4linux2");
-
-				command.add("-i");
-				command.add(deviceVideo);
-			}
-			if (!deviceAudio.equalsIgnoreCase("none")) {
-				command.add("-f");
-				command.add("pulse");
-				command.add("-i");
-				command.add(deviceAudio);
-				command.add("-ab");
-				command.add("64k");
-				command.add("-ar");
-				command.add("22050");
-			}
-		} else if (OSValidator.isWindows()) {
-			command.add("-f");
-			command.add("dshow");
-
-			command.add("-i");
-			command.add("video=" + deviceVideo + ":audio=" + deviceAudio + "");
-		}
-		return command;
-	}
-
 	public static String getAudioDevice(Settings settings) {
 		if (OSValidator.isUnix()) {
 			return settings.get(Settings.AUDIO_DEVICE_LINUX);
