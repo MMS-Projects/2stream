@@ -1,5 +1,7 @@
 package net.mms_projects.tostream.ui.swt;
 
+import java.util.LinkedHashMap;
+
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Messages;
@@ -40,16 +42,49 @@ import swing2swt.layout.BorderLayout;
 public class MainWindow extends Shell {
 
 	Encoder ffmpegWrapper;
-	private Text settingBitrate;
-	private Text settingResolutionX;
-	private Text settingResolutionY;
-	private Text settingFramerate;
-	private Text settingStreamUrl;
 
 	private RecordingSelectionWindow regionSelectionWindow = new RecordingSelectionWindow(
 			getDisplay());
+	
+	private VerifyListener numberVerify = new VerifyListener() {
+		@Override
+		public void verifyText(final VerifyEvent event) {
+			switch (event.keyCode) {
+			case SWT.BS: // Backspace
+			case SWT.DEL: // Delete
+			case SWT.HOME: // Home
+			case SWT.END: // End
+			case SWT.ARROW_LEFT: // Left arrow
+			case SWT.ARROW_RIGHT: // Right arrow
+				return;
+			}
+
+			if ((!Character.isDigit(event.character))
+					&& (Character.getNumericValue(event.character) != -1)) {
+				event.doit = false; // disallow the action
+				System.out.println(event.character);
+			}
+		}
+	};
+	private EncoderManager encoderManager;
+	private Settings settings;
+	private DebugConsole debugWindow;
+	
+	// Menu items
+	private MenuItem mntmShowDebugconsole;
+	
+	// Settings
+	private Text settingResolutionX;
+	private Text settingResolutionY;
+	
 	private Text settingLocationX;
 	private Text settingLocationY;
+	
+	private Text settingBitrate;
+	private Combo settingFramerate;
+	private Text settingStreamUrl;
+
+	private Label resolutionName;
 
 	/**
 	 * Create the shell.
@@ -60,6 +95,12 @@ public class MainWindow extends Shell {
 	public MainWindow(Display display, final EncoderManager encoderManager,
 			final Settings settings, final DebugConsole debugWindow) {
 		super(display, SWT.SHELL_TRIM);
+		this.encoderManager = encoderManager;
+		this.settings = settings;
+		this.debugWindow = debugWindow;
+
+		createMenu();
+		
 		addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
@@ -74,83 +115,7 @@ public class MainWindow extends Shell {
 			}
 		});
 		setLayout(new BorderLayout(0, 0));
-
-		Menu menu = new Menu(this, SWT.BAR);
-		setMenuBar(menu);
-
-		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
-		mntmFile.setText(Messages.getString("MainWindow.menuItemFile"));
-
-		Menu menu_1 = new Menu(mntmFile);
-		mntmFile.setMenu(menu_1);
-
-		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
-		mntmQuit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				close();
-			}
-		});
-		mntmQuit.setText(Messages.getString("MainWindow.menuItemQuit"));
-
-		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText(Messages.getString("MainWindow.menuItemHelp"));
-
-		Menu menu_2 = new Menu(mntmHelp);
-		mntmHelp.setMenu(menu_2);
-
-		final MenuItem mntmShowDebugconsole = new MenuItem(menu_2, SWT.CHECK);
-		mntmShowDebugconsole.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				if (mntmShowDebugconsole.getSelection()) {
-					debugWindow.open();
-				} else {
-					debugWindow.close();
-				}
-			}
-		});
-		mntmShowDebugconsole.setText(Messages
-				.getString("MainWindow.showDebugConsole"));
-		mntmShowDebugconsole.setSelection(debugWindow.getVisible());
-
-		MenuItem mntmAdvancedSettings = new MenuItem(menu_2, SWT.NONE);
-		mntmAdvancedSettings.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				AdvancedSettings advancedSettings = new AdvancedSettings(
-						arg0.display.getActiveShell(), settings);
-				advancedSettings.open();
-			}
-		});
-		mntmAdvancedSettings.setText(Messages
-				.getString("MainWindow.menuItemAdvancedSettings"));
-
-		MenuItem mntmSelectEncoder = new MenuItem(menu_2, SWT.NONE);
-		mntmSelectEncoder.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				SwitchEncoder switcher = new SwitchEncoder(getShell(),
-						encoderManager);
-				switcher.open();
-			}
-		});
-		mntmSelectEncoder.setText(Messages
-				.getString("MainWindow.mntmSelectEncoder.text")); //$NON-NLS-1$
-
-		new MenuItem(menu_2, SWT.SEPARATOR);
-
-		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
-		mntmAbout.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				AboutDialog about = new AboutDialog(arg0.display
-						.getActiveShell());
-				about.open();
-			}
-		});
-		mntmAbout.setText(Messages.getString("MainWindow.about")
-				+ ToStream.getApplicationName());
+		
 		debugWindow.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
@@ -174,7 +139,9 @@ public class MainWindow extends Shell {
 
 		final Combo settingVideoDevice = new Combo(compositeStandard,
 				SWT.READ_ONLY);
-		settingVideoDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_settingVideoDevice = new GridData();
+		gd_settingVideoDevice.widthHint = 200;
+		settingVideoDevice.setLayoutData(gd_settingVideoDevice);
 		settingVideoDevice.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -190,8 +157,9 @@ public class MainWindow extends Shell {
 
 		final Combo settingAudioDevice = new Combo(compositeStandard,
 				SWT.READ_ONLY);
-		settingAudioDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
+		GridData gd_settingAudioDevice = new GridData();
+		gd_settingAudioDevice.widthHint = 200;
+		settingAudioDevice.setLayoutData(gd_settingAudioDevice);
 		settingAudioDevice.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -207,16 +175,18 @@ public class MainWindow extends Shell {
 
 		Combo settingVideoEncodePreset = new Combo(compositeStandard,
 				SWT.READ_ONLY);
-		settingVideoEncodePreset.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" }); //$NON-NLS-2$ //$NON-NLS-3$
+		GridData gd_settingVideoEncodePreset = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_settingVideoEncodePreset.widthHint = 200;
+		settingVideoEncodePreset.setLayoutData(gd_settingVideoEncodePreset);
+		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" });
 
 		Label labelVideoResolution = new Label(compositeStandard, SWT.NONE);
+		labelVideoResolution.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		labelVideoResolution.setText(Messages.getString("videoResolution"));
 
 		Composite compositeVideoResolution = new Composite(compositeStandard,
 				SWT.NONE);
-		compositeVideoResolution.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		compositeVideoResolution.setLayout(new GridLayout(4, false));
+		compositeVideoResolution.setLayout(new GridLayout(5, false));
 
 		settingResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
 		settingResolutionX.setText(Integer.toString(settings
@@ -236,29 +206,11 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingResolutionX.addVerifyListener(new VerifyListener() {
-			@Override
-			public void verifyText(final VerifyEvent event) {
-				switch (event.keyCode) {
-				case SWT.BS: // Backspace
-				case SWT.DEL: // Delete
-				case SWT.HOME: // Home
-				case SWT.END: // End
-				case SWT.ARROW_LEFT: // Left arrow
-				case SWT.ARROW_RIGHT: // Right arrow
-					return;
-				}
-
-				if ((!Character.isDigit(event.character))
-						&& (Character.getNumericValue(event.character) != -1)) {
-					event.doit = false; // disallow the action
-					System.out
-							.println("'" + Character.getNumericValue(event.character) + "'"); //$NON-NLS-2$
-				}
-			}
-		});
-		settingResolutionX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
+		settingResolutionX.addVerifyListener(numberVerify);
+		GridData gd_settingResolutionX = new GridData(SWT.LEFT, SWT.CENTER,
+				true, false, 1, 1);
+		gd_settingResolutionX.widthHint = 50;
+		settingResolutionX.setLayoutData(gd_settingResolutionX);
 
 		Label labelX = new Label(compositeVideoResolution, SWT.NONE);
 		labelX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
@@ -283,28 +235,19 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-		settingResolutionY.addVerifyListener(new VerifyListener() {
-			@Override
-			public void verifyText(final VerifyEvent event) {
-				switch (event.keyCode) {
-				case SWT.BS: // Backspace
-				case SWT.DEL: // Delete
-				case SWT.HOME: // Home
-				case SWT.END: // End
-				case SWT.ARROW_LEFT: // Left arrow
-				case SWT.ARROW_RIGHT: // Right arrow
-					return;
-				}
-
-				if ((!Character.isDigit(event.character))
-						&& (Character.getNumericValue(event.character) != -1)) {
-					event.doit = false; // disallow the action
-					System.out.println(event.character);
-				}
-			}
-		});
-		settingResolutionY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
+		settingResolutionY.addVerifyListener(numberVerify);
+		GridData gd_settingResolutionY = new GridData(SWT.LEFT, SWT.CENTER,
+				true, false, 1, 1);
+		gd_settingResolutionY.widthHint = 50;
+		settingResolutionY.setLayoutData(gd_settingResolutionY);
+		
+		resolutionName = new Label(compositeVideoResolution, SWT.NONE);
+		GridData gd_resolutionName = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_resolutionName.widthHint = 75;
+		resolutionName.setLayoutData(gd_resolutionName);
+		resolutionName.setText(Messages.getString("MainWindow.label.text")); //$NON-NLS-1$
+		
+		updateResolutionName();
 
 		Button btnSelectRegion = new Button(compositeVideoResolution, SWT.NONE);
 		btnSelectRegion.addSelectionListener(new SelectionAdapter() {
@@ -324,8 +267,11 @@ public class MainWindow extends Shell {
 		settingLocationX = new Text(compositeVideoResolution, SWT.BORDER);
 		settingLocationX.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.LOCATION)[0]));
-		settingLocationX.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
+		GridData gd_settingLocationX = new GridData(SWT.LEFT, SWT.CENTER, true,
+				false, 1, 1);
+		gd_settingLocationX.widthHint = 50;
+		settingLocationX.setLayoutData(gd_settingLocationX);
+		settingLocationX.addVerifyListener(numberVerify);
 		settingLocationX.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -350,8 +296,11 @@ public class MainWindow extends Shell {
 		settingLocationY = new Text(compositeVideoResolution, SWT.BORDER);
 		settingLocationY.setText(Integer.toString(settings
 				.getAsIntegerArray(Settings.LOCATION)[1]));
-		settingLocationY.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
+		GridData gd_settingLocationY = new GridData(SWT.LEFT, SWT.CENTER, true,
+				false, 1, 1);
+		gd_settingLocationY.widthHint = 50;
+		settingLocationY.setLayoutData(gd_settingLocationY);
+		settingLocationY.addVerifyListener(numberVerify);
 		settingLocationY.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -368,24 +317,37 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
+		new Label(compositeVideoResolution, SWT.NONE);
 
 		new Label(compositeVideoResolution, SWT.NONE);
 
 		Label labelVideoFrameRate = new Label(compositeStandard, SWT.NONE);
 		labelVideoFrameRate.setText(Messages.getString("videoFrameRate"));
 
-		settingFramerate = new Text(compositeStandard, SWT.BORDER);
-		settingFramerate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		settingFramerate = new Combo(compositeStandard, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent event) {
+			public void modifyText(ModifyEvent arg0) {
+				System.out.println(settingFramerate.getText());
 				try {
-					settings.set(Settings.FRAME_RATE,
-							settingFramerate.getText());
+					settings.set(Settings.FRAME_RATE, settingFramerate.getText());
 				} catch (Exception e) {
 				}
 			}
 		});
+		settingFramerate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				System.out.println(settingFramerate.getText());
+				try {
+					settings.set(Settings.FRAME_RATE, settingFramerate.getText());
+				} catch (Exception e) {
+				}
+			}
+		});
+		settingFramerate.setItems(new String[] {"5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"});
+		GridData gd_settingFramerate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_settingFramerate.widthHint = 200;
+		settingFramerate.setLayoutData(gd_settingFramerate);
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
 
 		Label labelAudioBitrate = new Label(compositeStandard, SWT.NONE);
@@ -399,11 +361,15 @@ public class MainWindow extends Shell {
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelStreamUrl = new Label(compositeStandard, SWT.NONE);
+		labelStreamUrl.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		labelStreamUrl.setText("Stream URL");
 
-		settingStreamUrl = new Text(compositeStandard, SWT.BORDER);
-		settingStreamUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				false, false, 1, 1));
+		settingStreamUrl = new Text(compositeStandard, SWT.BORDER | SWT.WRAP);
+		GridData gd_settingStreamUrl = new GridData(SWT.LEFT, SWT.CENTER,
+				false, false, 1, 1);
+		gd_settingStreamUrl.widthHint = 200;
+		gd_settingStreamUrl.heightHint = 52;
+		settingStreamUrl.setLayoutData(gd_settingStreamUrl);
 		settingStreamUrl.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -604,6 +570,7 @@ public class MainWindow extends Shell {
 							settings.set(Settings.LOCATION, locationArray);
 						} catch (Exception e) {
 						}
+						updateResolutionName();
 					}
 				});
 			}
@@ -624,5 +591,109 @@ public class MainWindow extends Shell {
 		setText(ToStream.getApplicationName());
 		setSize(600, 600);
 
+	}
+	
+	protected void updateResolutionName() {
+		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
+		LinkedHashMap<String, Point> resolutions = new LinkedHashMap<String, Point>();
+		resolutions.put("240p", new Point(426, 240));
+		resolutions.put("320p", new Point(640, 360));
+		resolutions.put("480p", new Point(854, 480));
+		resolutions.put("720p HD", new Point(1280, 720));
+		resolutions.put("1080p HD", new Point(1920, 1080));
+		
+		for (String name : resolutions.keySet()) {
+			Point size = resolutions.get(name);
+			int difference = Math.min(Math.abs(size.x - resolution[0]), Math.abs(size.y -resolution[1]));
+			boolean good = true;
+			if (Math.abs(size.x - resolution[0]) > 100) {
+				good = false;
+			}
+			if (Math.abs(size.y -resolution[1]) > 100) {
+				good = false;
+			}
+			if (good) {
+				resolutionName.setText((difference != 0 ? "≈ " : "") + name);
+			}
+		}
+	}
+	
+	protected void createMenu() {
+		Menu menu = new Menu(this, SWT.BAR);
+		setMenuBar(menu);
+
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText(Messages.getString("MainWindow.menuItemFile"));
+
+		Menu menu_1 = new Menu(mntmFile);
+		mntmFile.setMenu(menu_1);
+
+		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
+		mntmQuit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				close();
+			}
+		});
+		mntmQuit.setText(Messages.getString("MainWindow.menuItemQuit"));
+
+		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
+		mntmHelp.setText(Messages.getString("MainWindow.menuItemHelp"));
+
+		Menu menu_2 = new Menu(mntmHelp);
+		mntmHelp.setMenu(menu_2);
+
+		mntmShowDebugconsole = new MenuItem(menu_2, SWT.CHECK);
+		mntmShowDebugconsole.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (mntmShowDebugconsole.getSelection()) {
+					debugWindow.open();
+				} else {
+					debugWindow.close();
+				}
+			}
+		});
+		mntmShowDebugconsole.setText(Messages
+				.getString("MainWindow.showDebugConsole"));
+		mntmShowDebugconsole.setSelection(debugWindow.getVisible());
+
+		MenuItem mntmAdvancedSettings = new MenuItem(menu_2, SWT.NONE);
+		mntmAdvancedSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				AdvancedSettings advancedSettings = new AdvancedSettings(
+						arg0.display.getActiveShell(), settings);
+				advancedSettings.open();
+			}
+		});
+		mntmAdvancedSettings.setText(Messages
+				.getString("MainWindow.menuItemAdvancedSettings"));
+
+		MenuItem mntmSelectEncoder = new MenuItem(menu_2, SWT.NONE);
+		mntmSelectEncoder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				SwitchEncoder switcher = new SwitchEncoder(getShell(),
+						encoderManager);
+				switcher.open();
+			}
+		});
+		mntmSelectEncoder.setText(Messages
+				.getString("MainWindow.mntmSelectEncoder.text")); //$NON-NLS-1$
+
+		new MenuItem(menu_2, SWT.SEPARATOR);
+
+		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
+		mntmAbout.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				AboutDialog about = new AboutDialog(arg0.display
+						.getActiveShell());
+				about.open();
+			}
+		});
+		mntmAbout.setText(Messages.getString("MainWindow.about")
+				+ ToStream.getApplicationName());
 	}
 }
