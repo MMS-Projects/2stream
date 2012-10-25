@@ -128,14 +128,14 @@ public class MainWindow extends Shell {
 		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
 
 		TabItem tabStandard = new TabItem(tabFolder, SWT.NONE);
-		tabStandard.setText(Messages.getString("MainWindow.tbtmNewItem.text")); //$NON-NLS-1$
+		tabStandard.setText(Messages.getString("MainWindow.tab.standard")); //$NON-NLS-1$
 
 		Composite compositeStandard = new Composite(tabFolder, SWT.NONE);
 		tabStandard.setControl(compositeStandard);
 		compositeStandard.setLayout(new GridLayout(2, false));
 
 		Label labelVideoDevice = new Label(compositeStandard, SWT.NONE);
-		labelVideoDevice.setText(Messages.getString("videoDevice"));
+		labelVideoDevice.setText(Messages.getString("setting.video-device"));
 
 		final Combo settingVideoDevice = new Combo(compositeStandard,
 				SWT.READ_ONLY);
@@ -153,7 +153,7 @@ public class MainWindow extends Shell {
 		settingVideoDevice.select(DeviceManager.getVideoDeviceIndex(settings));
 
 		Label labelAudioDevice = new Label(compositeStandard, SWT.NONE);
-		labelAudioDevice.setText(Messages.getString("audioDevice"));
+		labelAudioDevice.setText(Messages.getString("setting.audio-device"));
 
 		final Combo settingAudioDevice = new Combo(compositeStandard,
 				SWT.READ_ONLY);
@@ -182,7 +182,7 @@ public class MainWindow extends Shell {
 
 		Label labelVideoResolution = new Label(compositeStandard, SWT.NONE);
 		labelVideoResolution.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		labelVideoResolution.setText(Messages.getString("videoResolution"));
+		labelVideoResolution.setText(Messages.getString("setting.video-resolution"));
 
 		Composite compositeVideoResolution = new Composite(compositeStandard,
 				SWT.NONE);
@@ -262,7 +262,7 @@ public class MainWindow extends Shell {
 				regionSelectionWindow.open();
 			}
 		});
-		btnSelectRegion.setText("Select region");
+		btnSelectRegion.setText(Messages.getString("MainWindow.select-region"));
 
 		settingLocationX = new Text(compositeVideoResolution, SWT.BORDER);
 		settingLocationX.setText(Integer.toString(settings
@@ -322,7 +322,7 @@ public class MainWindow extends Shell {
 		new Label(compositeVideoResolution, SWT.NONE);
 
 		Label labelVideoFrameRate = new Label(compositeStandard, SWT.NONE);
-		labelVideoFrameRate.setText(Messages.getString("videoFrameRate"));
+		labelVideoFrameRate.setText(Messages.getString("setting.video-frame-rate"));
 
 		settingFramerate = new Combo(compositeStandard, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
@@ -351,18 +351,18 @@ public class MainWindow extends Shell {
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
 
 		Label labelAudioBitrate = new Label(compositeStandard, SWT.NONE);
-		labelAudioBitrate.setText(Messages.getString("audioBitrate"));
+		labelAudioBitrate.setText(Messages.getString("setting.audio-bitrate"));
 
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelAudioChannels = new Label(compositeStandard, SWT.NONE);
-		labelAudioChannels.setText(Messages.getString("audioChannels"));
+		labelAudioChannels.setText(Messages.getString("setting.audio-channels"));
 
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelStreamUrl = new Label(compositeStandard, SWT.NONE);
 		labelStreamUrl.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		labelStreamUrl.setText("Stream URL");
+		labelStreamUrl.setText(Messages.getString("setting.stream-url"));
 
 		settingStreamUrl = new Text(compositeStandard, SWT.BORDER | SWT.WRAP);
 		GridData gd_settingStreamUrl = new GridData(SWT.LEFT, SWT.CENTER,
@@ -383,14 +383,14 @@ public class MainWindow extends Shell {
 
 		TabItem tabAdvanced = new TabItem(tabFolder, SWT.NONE);
 		tabAdvanced
-				.setText(Messages.getString("MainWindow.tbtmNewItem.text_1"));
+				.setText(Messages.getString("MainWindow.tab.advanced"));
 
 		Composite compositeAdvanced = new Composite(tabFolder, SWT.NONE);
 		tabAdvanced.setControl(compositeAdvanced);
 		compositeAdvanced.setLayout(new GridLayout(2, false));
 
 		Label labelVideoBitrate = new Label(compositeAdvanced, SWT.NONE);
-		labelVideoBitrate.setText(Messages.getString("videoBitrate"));
+		labelVideoBitrate.setText(Messages.getString("setting.video-bitrate"));
 
 		settingBitrate = new Text(compositeAdvanced, SWT.BORDER);
 		settingBitrate.addModifyListener(new ModifyListener() {
@@ -406,7 +406,7 @@ public class MainWindow extends Shell {
 
 		TabItem tabStreamingSettings = new TabItem(tabFolder, SWT.NONE);
 		tabStreamingSettings.setText(Messages
-				.getString("MainWindow.tbtmStreamingSettings.text")); //$NON-NLS-1$
+				.getString("MainWindow.tab.streaming-settings")); //$NON-NLS-1$
 
 		Composite composite_2 = new StreamingSettings(tabFolder, settings);
 		tabStreamingSettings.setControl(composite_2);
@@ -623,7 +623,7 @@ public class MainWindow extends Shell {
 		setMenuBar(menu);
 
 		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
-		mntmFile.setText(Messages.getString("MainWindow.menuItemFile"));
+		mntmFile.setText(Messages.getString("MainWindow.menu.file"));
 
 		Menu menu_1 = new Menu(mntmFile);
 		mntmFile.setMenu(menu_1);
@@ -635,10 +635,10 @@ public class MainWindow extends Shell {
 				close();
 			}
 		});
-		mntmQuit.setText(Messages.getString("MainWindow.menuItemQuit"));
+		mntmQuit.setText(Messages.getString("application.exit"));
 
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText(Messages.getString("MainWindow.menuItemHelp"));
+		mntmHelp.setText(Messages.getString("MainWindow.menu.help"));
 
 		Menu menu_2 = new Menu(mntmHelp);
 		mntmHelp.setMenu(menu_2);
@@ -693,7 +693,6 @@ public class MainWindow extends Shell {
 				about.open();
 			}
 		});
-		mntmAbout.setText(Messages.getString("MainWindow.about")
-				+ ToStream.getApplicationName());
+		mntmAbout.setText(Messages.getString("application.about"));
 	}
 }

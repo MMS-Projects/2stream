@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 
@@ -45,7 +46,7 @@ public class DeviceManager {
 						}
 					}
 				}
-				audioDevices.add(0, "None");
+				audioDevices.add(0, Messages.getString("list.none"));
 				_linuxAudio = new String[audioDevices.size()];
 				for (int i = 0; i < audioDevices.size(); i++) {
 					_linuxAudio[i] = audioDevices.get(i);

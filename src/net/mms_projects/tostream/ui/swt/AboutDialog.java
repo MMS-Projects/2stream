@@ -25,7 +25,7 @@ public class AboutDialog extends Dialog {
 	 */
 	public AboutDialog(Shell parent) {
 		super(parent);
-		setText("About " + ToStream.getApplicationName());
+		setText(Messages.getString("application.about"));
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class AboutDialog extends Dialog {
 		new Label(shell, SWT.NONE);
 
 		Label labelVersion = new Label(shell, SWT.NONE);
-		labelVersion.setText(Messages.getString("about.version"));
+		labelVersion.setText(Messages.getString("application.version"));
 
 		Label infoVersion = new Label(shell, SWT.NONE);
 		infoVersion.setText(ToStream.getVersion());

@@ -1,5 +1,6 @@
 package net.mms_projects.tostream.ui.swt;
 
+import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.Service;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.managers.ServiceManager;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 public class StreamingSettings extends Composite {
@@ -185,10 +187,10 @@ public class StreamingSettings extends Composite {
 				}
 			}
 		});
-		btnApply.setText("Apply");
+		btnApply.setText(Messages.getString("gui.apply"));
 
 		Button btnReset = new Button(composite, SWT.NONE);
-		btnReset.setText("Reset");
+		btnReset.setText(Messages.getString("gui.reset"));
 		if (service != null) {
 			settingRtmpUrl.setEnabled(false);
 		}

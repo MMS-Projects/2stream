@@ -1,5 +1,7 @@
 package net.mms_projects.tostream;
 
+import java.util.Locale;
+
 import net.mms_projects.tostream.encoders.Avconv;
 import net.mms_projects.tostream.encoders.Ffmpeg;
 import net.mms_projects.tostream.managers.EncoderManager;
@@ -45,6 +47,8 @@ public class ToStream {
 	public static void main(String[] args) {
 		Settings settings = new Settings();
 		settings.loadProperties();
+		
+		Messages.setLocale(new Locale("en", "US"));
 
 		EncoderManager encoderManager = new EncoderManager(settings);
 		encoderManager.addItem(new Ffmpeg(encoderManager, settings));
