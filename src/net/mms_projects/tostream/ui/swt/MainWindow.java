@@ -461,7 +461,7 @@ public class MainWindow extends Shell {
 		GridData gd_labelStatus = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_labelStatus.widthHint = 367;
 		labelStatus.setLayoutData(gd_labelStatus);
-		labelStatus.setText("Please start to get the status");
+		labelStatus.setText(Messages.getString("MainWindow.beginning-status"));
 		settings.addListener(Settings.BITRATE, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {

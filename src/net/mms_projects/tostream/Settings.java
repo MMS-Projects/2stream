@@ -36,6 +36,7 @@ public class Settings {
 	public static final String FFMPEG_EXECUTABLE_LINUX = "linuxFfmpegExecutable";
 	public static final String AVCONV_EXECUTABLE_WINDOWS = "windowsAvconvExecutable";
 	public static final String AVCONV_EXECUTABLE_LINUX = "linuxAvconvExecutable";
+	public static final String LANGUAGE = "language";
 
 	private Properties properties;
 
@@ -58,6 +59,8 @@ public class Settings {
 		defaults.setProperty(FFMPEG_EXECUTABLE_LINUX, "ffmpeg");
 		defaults.setProperty(AVCONV_EXECUTABLE_WINDOWS, "avconv.exe");
 		defaults.setProperty(AVCONV_EXECUTABLE_LINUX, "avconv");
+		
+		defaults.setProperty(LANGUAGE, "en-US");
 
 		properties = new Properties(defaults);
 	}
