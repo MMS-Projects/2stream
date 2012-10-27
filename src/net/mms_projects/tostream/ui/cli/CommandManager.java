@@ -1,27 +1,21 @@
 package net.mms_projects.tostream.ui.cli;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.mms_projects.tostream.Manager;
 
-public class CommandManager {
+public class CommandManager extends Manager<Command> {
 
-	private List<Command> commands = new ArrayList<Command>();
-
-	public CommandManager() {
-		// TODO Auto-generated constructor stub
+	public void addItem(Command item) {
+		super.addItem(item.command, item);
 	}
-
-	public void addCommand(Command command) {
-		commands.add(command);
-	}
-
+	
 	public void executeCommand(String command, ResourcePasser resources) {
 		String[] args = { command };
 		executeCommand(args, resources);
 	}
 
 	public void executeCommand(String[] args, ResourcePasser resources) {
-		for (Command command : commands) {
+		for (String commandKey : items.keySet()) {
+			Command command = items.get(commandKey);
 			if (args[0].equalsIgnoreCase(command.command)) {
 				command.run(args, resources);
 			}

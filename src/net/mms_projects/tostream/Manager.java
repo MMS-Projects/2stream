@@ -7,7 +7,8 @@ import java.util.List;
 
 public class Manager<T> {
 	
-	private LinkedHashMap<String, T> items = new LinkedHashMap<String, T>();
+	protected LinkedHashMap<String, T> items = new LinkedHashMap<String, T>();
+	
 	private String currentItem;
 
 	public void addItem(String name, T item) {

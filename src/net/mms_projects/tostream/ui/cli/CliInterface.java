@@ -24,11 +24,11 @@ public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 		resources.settings = settings;
 
 		CommandManager commandManager = new CommandManager();
-		commandManager.addCommand(new Start());
-		commandManager.addCommand(new Stop());
-		commandManager.addCommand(new Set());
-		commandManager.addCommand(new Quit());
-		commandManager.addCommand(new Setup());
+		commandManager.addItem(new Start());
+		commandManager.addItem(new Stop());
+		commandManager.addItem(new Set());
+		commandManager.addItem(new Quit());
+		commandManager.addItem(new Setup());
 
 		resources.commandManager = commandManager;
 
