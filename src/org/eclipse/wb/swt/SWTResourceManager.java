@@ -122,6 +122,7 @@ public class SWTResourceManager {
 	 * Maps IDs to cursors.
 	 */
 	private static Map<Integer, Cursor> m_idToCursorMap = new HashMap<Integer, Cursor>();
+
 	/**
 	 * Returns an {@link Image} composed of a base image decorated by another
 	 * image.
@@ -135,6 +136,7 @@ public class SWTResourceManager {
 	public static Image decorateImage(Image baseImage, Image decorator) {
 		return decorateImage(baseImage, decorator, BOTTOM_RIGHT);
 	}
+
 	/**
 	 * Returns an {@link Image} composed of a base image decorated by another
 	 * image.
@@ -188,6 +190,7 @@ public class SWTResourceManager {
 		}
 		return result;
 	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	//
 	// General
@@ -204,6 +207,7 @@ public class SWTResourceManager {
 		disposeFonts();
 		disposeCursors();
 	}
+
 	/**
 	 * Dispose of all the cached {@link Color}'s.
 	 */
@@ -213,6 +217,7 @@ public class SWTResourceManager {
 		}
 		m_colorMap.clear();
 	}
+
 	/**
 	 * Dispose all of the cached cursors.
 	 */
@@ -296,6 +301,7 @@ public class SWTResourceManager {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);
 	}
+
 	/**
 	 * Returns a {@link Color} given its red, green and blue component values.
 	 * 

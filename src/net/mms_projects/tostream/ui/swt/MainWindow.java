@@ -1,7 +1,5 @@
 package net.mms_projects.tostream.ui.swt;
 
-import java.util.LinkedHashMap;
-
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Messages;
@@ -9,7 +7,6 @@ import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
-import net.mms_projects.tostream.input_devices.Desktop;
 import net.mms_projects.tostream.managers.DeviceManager;
 import net.mms_projects.tostream.managers.EncoderManager;
 import net.mms_projects.tostream.managers.VideoDeviceManager;
@@ -21,9 +18,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -48,31 +42,31 @@ public class MainWindow extends Shell {
 	private EncoderManager encoderManager;
 	private Settings settings;
 	private DebugConsole debugWindow;
-	
+
 	// Menu items
 	private MenuItem mntmShowDebugconsole;
-	
+
 	private Text settingBitrate;
 	private Combo settingFramerate;
 	private Text settingStreamUrl;
-
 
 	/**
 	 * Create the shell.
 	 * 
 	 * @param display
 	 * @param debugWindow
-	 * @param videoManager 
+	 * @param videoManager
 	 */
 	public MainWindow(Display display, final EncoderManager encoderManager,
-			final Settings settings, final DebugConsole debugWindow, final VideoDeviceManager videoManager) {
+			final Settings settings, final DebugConsole debugWindow,
+			final VideoDeviceManager videoManager) {
 		super(display, SWT.SHELL_TRIM);
 		this.encoderManager = encoderManager;
 		this.settings = settings;
 		this.debugWindow = debugWindow;
 
 		createMenu();
-		
+
 		addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
@@ -87,7 +81,7 @@ public class MainWindow extends Shell {
 			}
 		});
 		setLayout(new BorderLayout(0, 0));
-		
+
 		debugWindow.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
@@ -118,7 +112,8 @@ public class MainWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				try {
-					videoManager.setCurrentItem(settingVideoDevice.getText(), settings);
+					videoManager.setCurrentItem(settingVideoDevice.getText(),
+							settings);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -127,12 +122,13 @@ public class MainWindow extends Shell {
 		});
 		settingVideoDevice.setItems(videoManager.getItemNames());
 		settingVideoDevice.select(videoManager.getItemIndex(settings));
-		
+
 		Button buttonVideoSetting = new Button(compositeStandard, SWT.NONE);
 		buttonVideoSetting.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				VideoSettings dialog = new VideoSettings(getShell(), videoManager.getCurrentItem());
+				VideoSettings dialog = new VideoSettings(getShell(),
+						videoManager.getCurrentItem());
 				dialog.open();
 			}
 		});
@@ -162,21 +158,25 @@ public class MainWindow extends Shell {
 
 		Combo settingVideoEncodePreset = new Combo(compositeStandard,
 				SWT.READ_ONLY);
-		GridData gd_settingVideoEncodePreset = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_settingVideoEncodePreset = new GridData(SWT.LEFT,
+				SWT.CENTER, false, false, 1, 1);
 		gd_settingVideoEncodePreset.widthHint = 200;
 		settingVideoEncodePreset.setLayoutData(gd_settingVideoEncodePreset);
 		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" });
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelVideoFrameRate = new Label(compositeStandard, SWT.NONE);
-		labelVideoFrameRate.setText(Messages.getString("setting.video-frame-rate"));
+		labelVideoFrameRate.setText(Messages
+				.getString("setting.video-frame-rate"));
 
 		settingFramerate = new Combo(compositeStandard, SWT.BORDER);
 		settingFramerate.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				System.out.println(settingFramerate.getText());
 				try {
-					settings.set(Settings.FRAME_RATE, settingFramerate.getText());
+					settings.set(Settings.FRAME_RATE,
+							settingFramerate.getText());
 				} catch (Exception e) {
 				}
 			}
@@ -186,13 +186,16 @@ public class MainWindow extends Shell {
 			public void widgetSelected(SelectionEvent arg0) {
 				System.out.println(settingFramerate.getText());
 				try {
-					settings.set(Settings.FRAME_RATE, settingFramerate.getText());
+					settings.set(Settings.FRAME_RATE,
+							settingFramerate.getText());
 				} catch (Exception e) {
 				}
 			}
 		});
-		settingFramerate.setItems(new String[] {"5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"});
-		GridData gd_settingFramerate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		settingFramerate.setItems(new String[] { "5", "10", "15", "20", "25",
+				"30", "35", "40", "45", "50", "55", "60" });
+		GridData gd_settingFramerate = new GridData(SWT.LEFT, SWT.CENTER,
+				false, false, 1, 1);
 		gd_settingFramerate.widthHint = 200;
 		settingFramerate.setLayoutData(gd_settingFramerate);
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
@@ -205,13 +208,15 @@ public class MainWindow extends Shell {
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelAudioChannels = new Label(compositeStandard, SWT.NONE);
-		labelAudioChannels.setText(Messages.getString("setting.audio-channels"));
+		labelAudioChannels
+				.setText(Messages.getString("setting.audio-channels"));
 
 		new Label(compositeStandard, SWT.NONE);
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelStreamUrl = new Label(compositeStandard, SWT.NONE);
-		labelStreamUrl.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		labelStreamUrl.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false,
+				false, 1, 1));
 		labelStreamUrl.setText(Messages.getString("setting.stream-url"));
 
 		settingStreamUrl = new Text(compositeStandard, SWT.BORDER | SWT.WRAP);
@@ -220,7 +225,7 @@ public class MainWindow extends Shell {
 		gd_settingStreamUrl.widthHint = 200;
 		gd_settingStreamUrl.heightHint = 52;
 		settingStreamUrl.setLayoutData(gd_settingStreamUrl);
-				new Label(compositeStandard, SWT.NONE);
+		new Label(compositeStandard, SWT.NONE);
 		settingStreamUrl.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -233,8 +238,7 @@ public class MainWindow extends Shell {
 		});
 
 		TabItem tabAdvanced = new TabItem(tabFolder, SWT.NONE);
-		tabAdvanced
-				.setText(Messages.getString("MainWindow.tab.advanced"));
+		tabAdvanced.setText(Messages.getString("MainWindow.tab.advanced"));
 
 		Composite compositeAdvanced = new Composite(tabFolder, SWT.NONE);
 		tabAdvanced.setControl(compositeAdvanced);
@@ -309,7 +313,8 @@ public class MainWindow extends Shell {
 		buttonStop.setText("Stop");
 
 		final Label labelStatus = new Label(composite_1, SWT.NONE);
-		GridData gd_labelStatus = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		GridData gd_labelStatus = new GridData(SWT.FILL, SWT.CENTER, false,
+				false, 1, 1);
 		gd_labelStatus.widthHint = 367;
 		labelStatus.setLayoutData(gd_labelStatus);
 		labelStatus.setText(Messages.getString("MainWindow.beginning-status"));
@@ -393,7 +398,7 @@ public class MainWindow extends Shell {
 		setSize(600, 600);
 
 	}
-	
+
 	protected void createMenu() {
 		Menu menu = new Menu(this, SWT.BAR);
 		setMenuBar(menu);

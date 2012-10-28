@@ -17,7 +17,8 @@ import net.mms_projects.tostream.ui.cli.commands.Stop;
 
 public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 
-	public CliInterface(EncoderManager encoderManager, Settings settings, VideoDeviceManager videoManager) {
+	public CliInterface(EncoderManager encoderManager, Settings settings,
+			VideoDeviceManager videoManager) {
 		super(encoderManager, settings);
 
 		ResourcePasser resources = new ResourcePasser();

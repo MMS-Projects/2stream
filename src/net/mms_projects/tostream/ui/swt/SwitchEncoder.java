@@ -1,9 +1,5 @@
 package net.mms_projects.tostream.ui.swt;
 
-import java.util.Collection;
-import java.util.List;
-
-import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.managers.EncoderManager;
 
 import org.eclipse.swt.SWT;

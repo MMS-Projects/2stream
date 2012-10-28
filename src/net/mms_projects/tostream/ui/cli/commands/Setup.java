@@ -1,10 +1,8 @@
 package net.mms_projects.tostream.ui.cli.commands;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.mms_projects.tostream.Manager;
 import net.mms_projects.tostream.Service;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.managers.ServiceManager;
@@ -17,7 +15,7 @@ public class Setup extends Command {
 	public Setup() {
 		command = "setup";
 	}
-	
+
 	@Override
 	public boolean run(String[] args, ResourcePasser resources) {
 		final BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -26,19 +24,25 @@ public class Setup extends Command {
 			InlineSwitch<Integer, String> switcher = new InlineSwitch<Integer, String>();
 			switcher.addClause(Service.AUTH_METHOD_TOKEN, "token");
 			switcher.addClause(Service.AUTH_METHOD_USERNAME, "username");
-			
+
 			final ServiceManager manager = new ServiceManager();
 			System.out.println("Setting up stream...");
-			
+
 			for (String serviceName : manager.getItemNames()) {
 				System.out.print(" * ");
-				System.out.print("[" + manager.getItemIndex(serviceName) + "]\t");
-				System.out.println(serviceName + "\t<" + switcher.runSwitch(manager.getItem(serviceName).authMethod) + ">");
+				System.out.print("[" + manager.getItemIndex(serviceName)
+						+ "]\t");
+				System.out
+						.println(serviceName
+								+ "\t<"
+								+ switcher.runSwitch(manager
+										.getItem(serviceName).authMethod) + ">");
 			}
 			System.out.print("Type the number of the streaming service: ");
 			String serviceKey = null;
 			try {
-				serviceKey = manager.getItemName(Integer.parseInt(br.readLine().trim()));
+				serviceKey = manager.getItemName(Integer.parseInt(br.readLine()
+						.trim()));
 				manager.setCurrentItem(serviceKey);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -46,9 +50,11 @@ public class Setup extends Command {
 				return false;
 			}
 			System.out.println("Service: " + manager.getCurrentItem().name);
-			
-			System.out.println("This service uses a " + switcher.runSwitch(manager.getCurrentItem().authMethod) + " based authentification method.");
-			
+
+			System.out.println("This service uses a "
+					+ switcher.runSwitch(manager.getCurrentItem().authMethod)
+					+ " based authentification method.");
+
 			switcher.runSwitch(Service.AUTH_METHOD_TOKEN, new Runnable() {
 				@Override
 				public void run() {
@@ -62,14 +68,16 @@ public class Setup extends Command {
 				}
 			});
 			try {
-				resources.settings.set(Settings.STREAM_URL, manager.getCurrentItem().getStreamUrl());
+				resources.settings.set(Settings.STREAM_URL, manager
+						.getCurrentItem().getStreamUrl());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("The streaming URL has been set to: " + manager.getCurrentItem().getStreamUrl());
+			System.out.println("The streaming URL has been set to: "
+					+ manager.getCurrentItem().getStreamUrl());
 		}
 		return super.run(args, resources);
 	}
-	
+
 }

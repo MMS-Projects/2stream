@@ -3,28 +3,23 @@ package net.mms_projects.tostream.ui.swt.video_settings;
 import java.util.LinkedHashMap;
 
 import net.mms_projects.tostream.Messages;
-import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.input_devices.Desktop;
 import net.mms_projects.tostream.ui.swt.RecordingSelectionListener;
 import net.mms_projects.tostream.ui.swt.RecordingSelectionWindow;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.TouchListener;
-import org.eclipse.swt.events.TouchEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 public class DesktopSettings extends Composite {
 
@@ -112,7 +107,8 @@ public class DesktopSettings extends Composite {
 		settingResolutionY.addVerifyListener(numberVerify);
 
 		resolutionName = new Label(compositeVideoResolution, SWT.NONE);
-		GridData gd_resolutionName = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_resolutionName = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
 		gd_resolutionName.widthHint = 70;
 		resolutionName.setLayoutData(gd_resolutionName);
 		resolutionName.setText(Messages.getString("MainWindow.label.text")); //$NON-NLS-1$
@@ -174,6 +170,11 @@ public class DesktopSettings extends Composite {
 		});
 	}
 
+	@Override
+	protected void checkSubclass() {
+		// Disable the check that prevents subclassing of SWT components
+	}
+
 	public void save() {
 		device.setCursorVisible(btnShowCursor.getSelection());
 		device.setResolution(Integer.parseInt(settingResolutionX.getText()),
@@ -209,11 +210,6 @@ public class DesktopSettings extends Composite {
 				resolutionName.setText((difference != 0 ? "≈ " : "") + name);
 			}
 		}
-	}
-
-	@Override
-	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
 	}
 
 }

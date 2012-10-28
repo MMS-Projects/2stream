@@ -7,7 +7,7 @@ public class CommandManager extends Manager<Command> {
 	public void addItem(Command item) {
 		super.addItem(item.command, item);
 	}
-	
+
 	public void executeCommand(String command, ResourcePasser resources) {
 		String[] args = { command };
 		executeCommand(args, resources);

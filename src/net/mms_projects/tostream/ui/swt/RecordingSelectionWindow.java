@@ -38,6 +38,7 @@ public class RecordingSelectionWindow extends Shell {
 			e.printStackTrace();
 		}
 	}
+
 	private List<RecordingSelectionListener> listeners = new ArrayList<RecordingSelectionListener>();
 
 	public boolean notifyListeners = true;

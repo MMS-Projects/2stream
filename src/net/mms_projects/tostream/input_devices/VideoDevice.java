@@ -5,11 +5,11 @@ import net.mms_projects.tostream.Settings;
 
 public class VideoDevice extends InputDevice {
 
+	private String deviceFile = null;
+
 	public VideoDevice(Settings settings) {
 		super(settings);
 	}
-
-	private String deviceFile = null;
 
 	public String getDeviceFile() {
 		return deviceFile;

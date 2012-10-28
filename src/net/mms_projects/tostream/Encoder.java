@@ -9,12 +9,12 @@ public class Encoder extends Thread {
 
 	protected Settings settings;
 	protected VideoDeviceManager videoManager;
-	
+
 	private boolean running = false;
 	private EncoderManager manager;
-	
 
-	public Encoder(EncoderManager manager, Settings settings, VideoDeviceManager videoManager) {
+	public Encoder(EncoderManager manager, Settings settings,
+			VideoDeviceManager videoManager) {
 		this.settings = settings;
 		this.manager = manager;
 		this.videoManager = videoManager;

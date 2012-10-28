@@ -36,7 +36,8 @@ public class Ffmpeg extends Encoder {
 	InputStream input;
 	BufferedReader reader;
 
-	public Ffmpeg(EncoderManager manager, Settings settings, VideoDeviceManager videoManager) {
+	public Ffmpeg(EncoderManager manager, Settings settings,
+			VideoDeviceManager videoManager) {
 		super(manager, settings, videoManager);
 
 		if (OSValidator.isUnix()) {
@@ -46,13 +47,13 @@ public class Ffmpeg extends Encoder {
 		}
 	}
 
-	public List<String> compileSettings() {		
+	public List<String> compileSettings() {
 		List<String> command = new ArrayList<String>();
 		command.add(executableName);
 		command.add("-y");
 
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
-		
+
 		if (resolution[0] % 2 == 1) {
 			resolution[0] -= 1;
 		}
@@ -69,15 +70,15 @@ public class Ffmpeg extends Encoder {
 		command.add(resolution[0] + "x" + resolution[1]);
 
 		InputDevice deviceVideo = videoManager.getCurrentItem();
-		
+
 		System.out.println(deviceVideo);
-		
+
 		String deviceAudio = DeviceManager.getAudioDevice(settings);
-		
+
 		if (OSValidator.isUnix()) {
 			if (deviceVideo instanceof Desktop) {
 				Point location1 = ((Desktop) deviceVideo).getLocation();
-				
+
 				command.add("-f");
 				command.add("x11grab");
 

@@ -22,8 +22,18 @@ public class VideoDeviceManager extends Manager<InputDevice> {
 	public int getItemIndex(Settings settings) {
 		return getItemIndex(getVideoDevice(settings));
 	}
-	
-	public void setCurrentItem(String currentItem, Settings settings) throws Exception {
+
+	public String getVideoDevice(Settings settings) {
+		if (OSValidator.isUnix()) {
+			return settings.get(Settings.VIDEO_DEVICE_LINUX);
+		} else if (OSValidator.isWindows()) {
+			return settings.get(Settings.VIDEO_DEVICE_WINDOWS);
+		}
+		return null;
+	}
+
+	public void setCurrentItem(String currentItem, Settings settings)
+			throws Exception {
 		setCurrentItem(currentItem);
 		setVideoDevice(currentItem, settings);
 	}
@@ -41,15 +51,6 @@ public class VideoDeviceManager extends Manager<InputDevice> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	public String getVideoDevice(Settings settings) {
-		if (OSValidator.isUnix()) {
-			return settings.get(Settings.VIDEO_DEVICE_LINUX);
-		} else if (OSValidator.isWindows()) {
-			return settings.get(Settings.VIDEO_DEVICE_WINDOWS);
-		}
-		return null;
 	}
 
 }

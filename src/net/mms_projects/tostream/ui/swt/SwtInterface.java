@@ -16,7 +16,8 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class SwtInterface extends InterfaceLoader {
 
-	public SwtInterface(EncoderManager encoderManager, Settings settings, VideoDeviceManager videoManager) {
+	public SwtInterface(EncoderManager encoderManager, Settings settings,
+			VideoDeviceManager videoManager) {
 		super(encoderManager, settings);
 
 		try {

@@ -21,7 +21,7 @@ public class EncoderManager extends Manager<Encoder> {
 	public void addItem(Encoder item) {
 		item.setDaemon(true);
 		item.start();
-		
+
 		super.addItem(item.getClass().getName(), item);
 	}
 

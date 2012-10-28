@@ -59,9 +59,9 @@ public class Settings {
 		defaults.setProperty(FFMPEG_EXECUTABLE_LINUX, "ffmpeg");
 		defaults.setProperty(AVCONV_EXECUTABLE_WINDOWS, "avconv.exe");
 		defaults.setProperty(AVCONV_EXECUTABLE_LINUX, "avconv");
-		
+
 		defaults.setProperty(LANGUAGE, "en-US");
-		
+
 		defaults.setProperty("desktop-device.cursor-visible", "false");
 
 		properties = new Properties(defaults);

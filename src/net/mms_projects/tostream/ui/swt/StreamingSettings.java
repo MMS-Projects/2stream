@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 public class StreamingSettings extends Composite {
@@ -79,14 +78,12 @@ public class StreamingSettings extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				try {
-					manager.getCurrentItem()
-							.setCurrentServer(text.getText());
+					manager.getCurrentItem().setCurrentServer(text.getText());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				settingRtmpUrl.setText(manager.getCurrentItem()
-						.getStreamUrl());
+				settingRtmpUrl.setText(manager.getCurrentItem().getStreamUrl());
 			}
 		});
 		combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -109,8 +106,7 @@ public class StreamingSettings extends Composite {
 			@Override
 			public void modifyText(ModifyEvent arg0) {
 				manager.getCurrentItem().setToken(text.getText());
-				settingRtmpUrl.setText(manager.getCurrentItem()
-						.getStreamUrl());
+				settingRtmpUrl.setText(manager.getCurrentItem().getStreamUrl());
 			}
 		});
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
