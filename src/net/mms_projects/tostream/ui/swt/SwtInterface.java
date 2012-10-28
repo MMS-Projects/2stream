@@ -3,6 +3,7 @@ package net.mms_projects.tostream.ui.swt;
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.managers.EncoderManager;
+import net.mms_projects.tostream.managers.VideoDeviceManager;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 
 import org.eclipse.swt.SWT;
@@ -15,7 +16,7 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class SwtInterface extends InterfaceLoader {
 
-	public SwtInterface(EncoderManager encoderManager, Settings settings) {
+	public SwtInterface(EncoderManager encoderManager, Settings settings, VideoDeviceManager videoManager) {
 		super(encoderManager, settings);
 
 		try {
@@ -62,7 +63,7 @@ public class SwtInterface extends InterfaceLoader {
 					.getAsBoolean(Settings.SHOW_DEBUGCONSOLE));
 
 			MainWindow shell = new MainWindow(display, encoderManager,
-					settings, debugWindow);
+					settings, debugWindow, videoManager);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {

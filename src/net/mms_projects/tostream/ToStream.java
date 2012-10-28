@@ -6,7 +6,9 @@ import javax.security.auth.callback.LanguageCallback;
 
 import net.mms_projects.tostream.encoders.Avconv;
 import net.mms_projects.tostream.encoders.Ffmpeg;
+import net.mms_projects.tostream.input_devices.Desktop;
 import net.mms_projects.tostream.managers.EncoderManager;
+import net.mms_projects.tostream.managers.VideoDeviceManager;
 import net.mms_projects.tostream.ui.InterfaceLoader;
 import net.mms_projects.tostream.ui.cli.CliInterface;
 import net.mms_projects.tostream.ui.swt.SwtInterface;
@@ -18,12 +20,12 @@ public class ToStream {
 	}
 
 	public static InterfaceLoader getInterface(String name,
-			EncoderManager encoderManager, Settings settings) {
+			EncoderManager encoderManager, Settings settings, VideoDeviceManager videoManager) {
 		if (name.equalsIgnoreCase("cli")) {
-			return new CliInterface(encoderManager, settings);
+			return new CliInterface(encoderManager, settings, videoManager);
 		}
 		if (name.equalsIgnoreCase("swt")) {
-			return new SwtInterface(encoderManager, settings);
+			return new SwtInterface(encoderManager, settings, videoManager);
 		}
 		return null;
 	}
@@ -46,7 +48,7 @@ public class ToStream {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		Settings settings = new Settings();
 		settings.loadProperties();
 		
@@ -57,16 +59,25 @@ public class ToStream {
 			Messages.setLocale(new Locale("en", "US"));
 		}
 
+		VideoDeviceManager videoManager = new VideoDeviceManager(settings);
+		
+		try {
+			videoManager.setCurrentItem(videoManager.getVideoDevice(settings));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		EncoderManager encoderManager = new EncoderManager(settings);
-		encoderManager.addItem(new Ffmpeg(encoderManager, settings));
-		encoderManager.addItem(new Avconv(encoderManager, settings));
+		encoderManager.addItem(new Ffmpeg(encoderManager, settings, videoManager));
+		encoderManager.addItem(new Avconv(encoderManager, settings, videoManager));
 
 		InterfaceLoader uiLoader;
 		if (args.length != 0) {
-			uiLoader = getInterface(args[0], encoderManager, settings);
+			uiLoader = getInterface(args[0], encoderManager, settings, videoManager);
 		} else {
 			uiLoader = getInterface(settings.get(Settings.DEFAULT_INTERFACE),
-					encoderManager, settings);
+					encoderManager, settings, videoManager);
 		}
 		if (uiLoader == null) {
 			System.out.println("Unknown interface: " + args[0]);

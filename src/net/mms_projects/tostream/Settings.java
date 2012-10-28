@@ -51,7 +51,7 @@ public class Settings {
 		defaults.setProperty(DEFAULT_INTERFACE, "swt");
 
 		defaults.setProperty(VIDEO_DEVICE_WINDOWS, "");
-		defaults.setProperty(VIDEO_DEVICE_LINUX, "x11grab");
+		defaults.setProperty(VIDEO_DEVICE_LINUX, "desktop");
 		defaults.setProperty(AUDIO_DEVICE_WINDOWS, "None");
 		defaults.setProperty(AUDIO_DEVICE_LINUX, "None");
 
@@ -61,6 +61,8 @@ public class Settings {
 		defaults.setProperty(AVCONV_EXECUTABLE_LINUX, "avconv");
 		
 		defaults.setProperty(LANGUAGE, "en-US");
+		
+		defaults.setProperty("desktop-device.cursor-visible", "false");
 
 		properties = new Properties(defaults);
 	}

@@ -83,7 +83,6 @@ public class DeviceManager {
 						videoDevices.add("/dev/" + line);
 					}
 				}
-				videoDevices.add(0, "x11grab");
 				_linuxVideo = new String[videoDevices.size()];
 				for (int i = 0; i < videoDevices.size(); i++) {
 					_linuxVideo[i] = videoDevices.get(i);

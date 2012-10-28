@@ -9,8 +9,10 @@ import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.SettingsListener;
 import net.mms_projects.tostream.ToStream;
+import net.mms_projects.tostream.input_devices.Desktop;
 import net.mms_projects.tostream.managers.DeviceManager;
 import net.mms_projects.tostream.managers.EncoderManager;
+import net.mms_projects.tostream.managers.VideoDeviceManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -43,29 +45,6 @@ public class MainWindow extends Shell {
 
 	Encoder ffmpegWrapper;
 
-	private RecordingSelectionWindow regionSelectionWindow = new RecordingSelectionWindow(
-			getDisplay());
-	
-	private VerifyListener numberVerify = new VerifyListener() {
-		@Override
-		public void verifyText(final VerifyEvent event) {
-			switch (event.keyCode) {
-			case SWT.BS: // Backspace
-			case SWT.DEL: // Delete
-			case SWT.HOME: // Home
-			case SWT.END: // End
-			case SWT.ARROW_LEFT: // Left arrow
-			case SWT.ARROW_RIGHT: // Right arrow
-				return;
-			}
-
-			if ((!Character.isDigit(event.character))
-					&& (Character.getNumericValue(event.character) != -1)) {
-				event.doit = false; // disallow the action
-				System.out.println(event.character);
-			}
-		}
-	};
 	private EncoderManager encoderManager;
 	private Settings settings;
 	private DebugConsole debugWindow;
@@ -73,27 +52,20 @@ public class MainWindow extends Shell {
 	// Menu items
 	private MenuItem mntmShowDebugconsole;
 	
-	// Settings
-	private Text settingResolutionX;
-	private Text settingResolutionY;
-	
-	private Text settingLocationX;
-	private Text settingLocationY;
-	
 	private Text settingBitrate;
 	private Combo settingFramerate;
 	private Text settingStreamUrl;
 
-	private Label resolutionName;
 
 	/**
 	 * Create the shell.
 	 * 
 	 * @param display
 	 * @param debugWindow
+	 * @param videoManager 
 	 */
 	public MainWindow(Display display, final EncoderManager encoderManager,
-			final Settings settings, final DebugConsole debugWindow) {
+			final Settings settings, final DebugConsole debugWindow, final VideoDeviceManager videoManager) {
 		super(display, SWT.SHELL_TRIM);
 		this.encoderManager = encoderManager;
 		this.settings = settings;
@@ -132,7 +104,7 @@ public class MainWindow extends Shell {
 
 		Composite compositeStandard = new Composite(tabFolder, SWT.NONE);
 		tabStandard.setControl(compositeStandard);
-		compositeStandard.setLayout(new GridLayout(2, false));
+		compositeStandard.setLayout(new GridLayout(3, false));
 
 		Label labelVideoDevice = new Label(compositeStandard, SWT.NONE);
 		labelVideoDevice.setText(Messages.getString("setting.video-device"));
@@ -145,12 +117,26 @@ public class MainWindow extends Shell {
 		settingVideoDevice.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				DeviceManager.setVideoDevice(settingVideoDevice.getText(),
-						settings);
+				try {
+					videoManager.setCurrentItem(settingVideoDevice.getText(), settings);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
-		settingVideoDevice.setItems(DeviceManager.getVideoDevices());
-		settingVideoDevice.select(DeviceManager.getVideoDeviceIndex(settings));
+		settingVideoDevice.setItems(videoManager.getItemNames());
+		settingVideoDevice.select(videoManager.getItemIndex(settings));
+		
+		Button buttonVideoSetting = new Button(compositeStandard, SWT.NONE);
+		buttonVideoSetting.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				VideoSettings dialog = new VideoSettings(getShell(), videoManager.getCurrentItem());
+				dialog.open();
+			}
+		});
+		buttonVideoSetting.setText("Settings");
 
 		Label labelAudioDevice = new Label(compositeStandard, SWT.NONE);
 		labelAudioDevice.setText(Messages.getString("setting.audio-device"));
@@ -169,6 +155,7 @@ public class MainWindow extends Shell {
 		});
 		settingAudioDevice.setItems(DeviceManager.getAudioDevices());
 		settingAudioDevice.select(DeviceManager.getAudioDeviceIndex(settings));
+		new Label(compositeStandard, SWT.NONE);
 
 		Label labelVideoEncodePreset = new Label(compositeStandard, SWT.NONE);
 		labelVideoEncodePreset.setText("Video encode preset");
@@ -179,147 +166,7 @@ public class MainWindow extends Shell {
 		gd_settingVideoEncodePreset.widthHint = 200;
 		settingVideoEncodePreset.setLayoutData(gd_settingVideoEncodePreset);
 		settingVideoEncodePreset.setItems(new String[] { "a", "a", "a" });
-
-		Label labelVideoResolution = new Label(compositeStandard, SWT.NONE);
-		labelVideoResolution.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		labelVideoResolution.setText(Messages.getString("setting.video-resolution"));
-
-		Composite compositeVideoResolution = new Composite(compositeStandard,
-				SWT.NONE);
-		compositeVideoResolution.setLayout(new GridLayout(5, false));
-
-		settingResolutionX = new Text(compositeVideoResolution, SWT.BORDER);
-		settingResolutionX.setText(Integer.toString(settings
-				.getAsIntegerArray(Settings.RESOLUTION)[0]));
-		settingResolutionX.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent event) {
-				try {
-					settings.videoResolution[0] = Integer
-							.parseInt(settingResolutionX.getText());
-				} catch (java.lang.NumberFormatException e) {
-					settingResolutionX.setText("0");
-				}
-				try {
-					settings.set(Settings.RESOLUTION, settings.videoResolution);
-				} catch (Exception e) {
-				}
-			}
-		});
-		settingResolutionX.addVerifyListener(numberVerify);
-		GridData gd_settingResolutionX = new GridData(SWT.LEFT, SWT.CENTER,
-				true, false, 1, 1);
-		gd_settingResolutionX.widthHint = 50;
-		settingResolutionX.setLayoutData(gd_settingResolutionX);
-
-		Label labelX = new Label(compositeVideoResolution, SWT.NONE);
-		labelX.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
-				1, 1));
-		labelX.setText("X");
-
-		settingResolutionY = new Text(compositeVideoResolution, SWT.BORDER);
-		settingResolutionY.setText(Integer.toString(settings
-				.getAsIntegerArray(Settings.RESOLUTION)[1]));
-		settingResolutionY.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent event) {
-				try {
-					settings.videoResolution[1] = Integer
-							.parseInt(settingResolutionY.getText());
-				} catch (java.lang.NumberFormatException e) {
-					settingResolutionY.setText("0");
-				}
-				try {
-					settings.set(Settings.RESOLUTION, settings.videoResolution);
-				} catch (Exception e) {
-				}
-			}
-		});
-		settingResolutionY.addVerifyListener(numberVerify);
-		GridData gd_settingResolutionY = new GridData(SWT.LEFT, SWT.CENTER,
-				true, false, 1, 1);
-		gd_settingResolutionY.widthHint = 50;
-		settingResolutionY.setLayoutData(gd_settingResolutionY);
-		
-		resolutionName = new Label(compositeVideoResolution, SWT.NONE);
-		GridData gd_resolutionName = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_resolutionName.widthHint = 75;
-		resolutionName.setLayoutData(gd_resolutionName);
-		resolutionName.setText(Messages.getString("MainWindow.label.text")); //$NON-NLS-1$
-		
-		updateResolutionName();
-
-		Button btnSelectRegion = new Button(compositeVideoResolution, SWT.NONE);
-		btnSelectRegion.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				regionSelectionWindow.setSize(
-						settings.getAsIntegerArray(Settings.RESOLUTION)[0],
-						settings.getAsIntegerArray(Settings.RESOLUTION)[1]);
-				regionSelectionWindow.setLocation(
-						settings.getAsIntegerArray(Settings.LOCATION)[0],
-						settings.getAsIntegerArray(Settings.LOCATION)[1]);
-				regionSelectionWindow.open();
-			}
-		});
-		btnSelectRegion.setText(Messages.getString("MainWindow.select-region"));
-
-		settingLocationX = new Text(compositeVideoResolution, SWT.BORDER);
-		settingLocationX.setText(Integer.toString(settings
-				.getAsIntegerArray(Settings.LOCATION)[0]));
-		GridData gd_settingLocationX = new GridData(SWT.LEFT, SWT.CENTER, true,
-				false, 1, 1);
-		gd_settingLocationX.widthHint = 50;
-		settingLocationX.setLayoutData(gd_settingLocationX);
-		settingLocationX.addVerifyListener(numberVerify);
-		settingLocationX.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent event) {
-				Integer[] location = settings
-						.getAsIntegerArray(Settings.LOCATION);
-				try {
-					location[0] = Integer.parseInt(settingLocationX.getText());
-				} catch (java.lang.NumberFormatException e) {
-					settingLocationX.setText("0");
-				}
-				try {
-					settings.set(Settings.LOCATION, location);
-				} catch (Exception e) {
-				}
-			}
-		});
-		Label labelLocation = new Label(compositeVideoResolution, SWT.NONE);
-		labelLocation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-				false, 1, 1));
-		labelLocation.setText(",");
-
-		settingLocationY = new Text(compositeVideoResolution, SWT.BORDER);
-		settingLocationY.setText(Integer.toString(settings
-				.getAsIntegerArray(Settings.LOCATION)[1]));
-		GridData gd_settingLocationY = new GridData(SWT.LEFT, SWT.CENTER, true,
-				false, 1, 1);
-		gd_settingLocationY.widthHint = 50;
-		settingLocationY.setLayoutData(gd_settingLocationY);
-		settingLocationY.addVerifyListener(numberVerify);
-		settingLocationY.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent event) {
-				Integer[] location = settings
-						.getAsIntegerArray(Settings.LOCATION);
-				try {
-					location[1] = Integer.parseInt(settingLocationY.getText());
-				} catch (java.lang.NumberFormatException e) {
-					settingLocationY.setText("0");
-				}
-				try {
-					settings.set(Settings.LOCATION, location);
-				} catch (Exception e) {
-				}
-			}
-		});
-		new Label(compositeVideoResolution, SWT.NONE);
-
-		new Label(compositeVideoResolution, SWT.NONE);
+		new Label(compositeStandard, SWT.NONE);
 
 		Label labelVideoFrameRate = new Label(compositeStandard, SWT.NONE);
 		labelVideoFrameRate.setText(Messages.getString("setting.video-frame-rate"));
@@ -349,15 +196,18 @@ public class MainWindow extends Shell {
 		gd_settingFramerate.widthHint = 200;
 		settingFramerate.setLayoutData(gd_settingFramerate);
 		settingFramerate.setText(settings.get(Settings.FRAME_RATE));
+		new Label(compositeStandard, SWT.NONE);
 
 		Label labelAudioBitrate = new Label(compositeStandard, SWT.NONE);
 		labelAudioBitrate.setText(Messages.getString("setting.audio-bitrate"));
 
 		new Label(compositeStandard, SWT.NONE);
+		new Label(compositeStandard, SWT.NONE);
 
 		Label labelAudioChannels = new Label(compositeStandard, SWT.NONE);
 		labelAudioChannels.setText(Messages.getString("setting.audio-channels"));
 
+		new Label(compositeStandard, SWT.NONE);
 		new Label(compositeStandard, SWT.NONE);
 
 		Label labelStreamUrl = new Label(compositeStandard, SWT.NONE);
@@ -370,6 +220,7 @@ public class MainWindow extends Shell {
 		gd_settingStreamUrl.widthHint = 200;
 		gd_settingStreamUrl.heightHint = 52;
 		settingStreamUrl.setLayoutData(gd_settingStreamUrl);
+				new Label(compositeStandard, SWT.NONE);
 		settingStreamUrl.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -470,28 +321,6 @@ public class MainWindow extends Shell {
 				}
 			}
 		});
-
-		settings.addListener(Settings.RESOLUTION, new SettingsListener() {
-			@Override
-			public void settingSet(String value) {
-				String[] resolution = value.split(",");
-				if (!OSValidator.isWindows()) {
-					settingResolutionX.setText(resolution[0]);
-					settingResolutionY.setText(resolution[1]);
-				}
-			}
-		});
-
-		settings.addListener(Settings.LOCATION, new SettingsListener() {
-			@Override
-			public void settingSet(String value) {
-				String[] resolution = value.split(",");
-				if (!OSValidator.isWindows()) {
-					settingLocationX.setText(resolution[0]);
-					settingLocationY.setText(resolution[1]);
-				}
-			}
-		});
 		settings.addListener(Settings.FRAME_RATE, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {
@@ -520,8 +349,6 @@ public class MainWindow extends Shell {
 					public void run() {
 						buttonStop.setEnabled(true);
 						buttonStart.setEnabled(false);
-
-						regionSelectionWindow.close();
 					}
 				});
 			}
@@ -550,32 +377,6 @@ public class MainWindow extends Shell {
 			}
 		});
 
-		regionSelectionWindow.addListener(new RecordingSelectionListener() {
-			@Override
-			public void selectionChanged(final Point location, final Point size) {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						settingResolutionX.setText(Integer.toString(size.x));
-						settingResolutionY.setText(Integer.toString(size.y));
-
-						settingLocationX.setText(Integer.toString(location.x));
-						settingLocationY.setText(Integer.toString(location.y));
-
-						Integer[] resolution = { size.x, size.y };
-						Integer[] locationArray = { location.x, location.y };
-						try {
-							settings.set(Settings.RESOLUTION, resolution);
-							settings.set(Settings.LOCATION, locationArray);
-						} catch (Exception e) {
-						}
-						updateResolutionName();
-					}
-				});
-			}
-		});
-
 		createContents();
 	}
 
@@ -591,31 +392,6 @@ public class MainWindow extends Shell {
 		setText(ToStream.getApplicationName());
 		setSize(600, 600);
 
-	}
-	
-	protected void updateResolutionName() {
-		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
-		LinkedHashMap<String, Point> resolutions = new LinkedHashMap<String, Point>();
-		resolutions.put("240p", new Point(426, 240));
-		resolutions.put("320p", new Point(640, 360));
-		resolutions.put("480p", new Point(854, 480));
-		resolutions.put("720p HD", new Point(1280, 720));
-		resolutions.put("1080p HD", new Point(1920, 1080));
-		
-		for (String name : resolutions.keySet()) {
-			Point size = resolutions.get(name);
-			int difference = Math.min(Math.abs(size.x - resolution[0]), Math.abs(size.y -resolution[1]));
-			boolean good = true;
-			if (Math.abs(size.x - resolution[0]) > 100) {
-				good = false;
-			}
-			if (Math.abs(size.y -resolution[1]) > 100) {
-				good = false;
-			}
-			if (good) {
-				resolutionName.setText((difference != 0 ? "≈ " : "") + name);
-			}
-		}
 	}
 	
 	protected void createMenu() {

@@ -1,5 +1,6 @@
 package net.mms_projects.tostream.encoders;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,11 +12,15 @@ import java.util.regex.Pattern;
 
 import net.mms_projects.tostream.Encoder;
 import net.mms_projects.tostream.EncoderOutputListener;
+import net.mms_projects.tostream.InputDevice;
 import net.mms_projects.tostream.Messages;
 import net.mms_projects.tostream.OSValidator;
 import net.mms_projects.tostream.Settings;
+import net.mms_projects.tostream.input_devices.Desktop;
+import net.mms_projects.tostream.input_devices.VideoDevice;
 import net.mms_projects.tostream.managers.DeviceManager;
 import net.mms_projects.tostream.managers.EncoderManager;
+import net.mms_projects.tostream.managers.VideoDeviceManager;
 
 public class Ffmpeg extends Encoder {
 
@@ -31,8 +36,8 @@ public class Ffmpeg extends Encoder {
 	InputStream input;
 	BufferedReader reader;
 
-	public Ffmpeg(EncoderManager manager, Settings settings) {
-		super(manager, settings);
+	public Ffmpeg(EncoderManager manager, Settings settings, VideoDeviceManager videoManager) {
+		super(manager, settings, videoManager);
 
 		if (OSValidator.isUnix()) {
 			setExecutable(settings.get(Settings.FFMPEG_EXECUTABLE_LINUX));
@@ -41,13 +46,12 @@ public class Ffmpeg extends Encoder {
 		}
 	}
 
-	public List<String> compileSettings() {
+	public List<String> compileSettings() {		
 		List<String> command = new ArrayList<String>();
 		command.add(executableName);
 		command.add("-y");
 
 		Integer[] resolution = settings.getAsIntegerArray(Settings.RESOLUTION);
-		Integer[] location = settings.getAsIntegerArray(Settings.LOCATION);
 		
 		if (resolution[0] % 2 == 1) {
 			resolution[0] -= 1;
@@ -64,24 +68,30 @@ public class Ffmpeg extends Encoder {
 		command.add("-s");
 		command.add(resolution[0] + "x" + resolution[1]);
 
-		String deviceVideo = DeviceManager.getVideoDevice(settings);
+		InputDevice deviceVideo = videoManager.getCurrentItem();
+		
+		System.out.println(deviceVideo);
+		
 		String deviceAudio = DeviceManager.getAudioDevice(settings);
+		
 		if (OSValidator.isUnix()) {
-			if (deviceVideo.equalsIgnoreCase("x11grab")) {
+			if (deviceVideo instanceof Desktop) {
+				Point location1 = ((Desktop) deviceVideo).getLocation();
+				
 				command.add("-f");
 				command.add("x11grab");
 
 				command.add("-i");
-				command.add(":0.0+" + Integer.toString(location[0]) + ","
-						+ Integer.toString(location[1]));
-			} else {
+				command.add(":0.0+" + Integer.toString(location1.x) + ","
+						+ Integer.toString(location1.y));
+			} else if (deviceVideo instanceof VideoDevice) {
 				command.add("-f");
 				command.add("video4linux2");
 
 				command.add("-i");
-				command.add(deviceVideo);
+				command.add(((VideoDevice) deviceVideo).getDeviceFile());
 			}
-			if (!deviceAudio.equalsIgnoreCase("none")) {
+			if (!deviceAudio.equalsIgnoreCase(Messages.getString("list.none"))) {
 				command.add("-f");
 				command.add("pulse");
 				command.add("-i");

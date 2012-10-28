@@ -8,6 +8,7 @@ import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.ToStream;
 import net.mms_projects.tostream.managers.EncoderManager;
+import net.mms_projects.tostream.managers.VideoDeviceManager;
 import net.mms_projects.tostream.ui.cli.commands.Quit;
 import net.mms_projects.tostream.ui.cli.commands.Set;
 import net.mms_projects.tostream.ui.cli.commands.Setup;
@@ -16,7 +17,7 @@ import net.mms_projects.tostream.ui.cli.commands.Stop;
 
 public class CliInterface extends net.mms_projects.tostream.ui.InterfaceLoader {
 
-	public CliInterface(EncoderManager encoderManager, Settings settings) {
+	public CliInterface(EncoderManager encoderManager, Settings settings, VideoDeviceManager videoManager) {
 		super(encoderManager, settings);
 
 		ResourcePasser resources = new ResourcePasser();
