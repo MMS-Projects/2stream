@@ -1,0 +1,2 @@
+#!/bin/bash
+java -jar /usr/share/2stream/2stream-linux-`uname -i`.jar

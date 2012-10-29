@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+Version=0.0.1
+Name=2STREAM
+# Gnome and KDE 3 uses Comment.
+Comment=Run 2STREAM
+Exec=/usr/bin/2stream
+Terminal=false
+Icon=mmsprojects-2stream
+Type=Application
+Categories=X11;
+Name[en]=mmsprojects-2stream

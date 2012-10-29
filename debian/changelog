@@ -1,5 +1,5 @@
-2stream (0.0.1-0ubuntu1) precise; urgency=low
+2stream (0.0.1) precise; urgency=low
 
   * Added video device selection support
 
--- Marlin Cremers <m.cremers@mms-projects.net>  Thu, 22 Oct 2012 04:57:00 +0100
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Mon, 22 Oct 2012 04:57:00 +0100

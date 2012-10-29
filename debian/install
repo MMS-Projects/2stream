@@ -1,0 +1,6 @@
+build/2stream-linux-x86.jar usr/share/2stream
+build/2stream-linux-x86_64.jar usr/share/2stream
+res/mmsprojects-2stream-*.png usr/share/2stream
+
+debian/package/2stream usr/bin
+debian/package/mmsprojects-2stream.desktop usr/share/applications
