@@ -337,14 +337,14 @@ public class MainWindow extends Shell {
 		if (settings.get(Settings.STREAM_URL) != null) {
 			settingStreamUrl.setText(settings.get(Settings.STREAM_URL));
 		}
-		settings.addListener(Settings.STREAM_URL, new SettingsListener() {
+		/*settings.addListener(Settings.STREAM_URL, new SettingsListener() {
 			@Override
 			public void settingSet(String value) {
 				if (!OSValidator.isWindows()) {
 					settingStreamUrl.setText(value);
 				}
 			}
-		});
+		})*/;
 
 		encoderManager.addListener(new EncoderOutputListener() {
 			@Override

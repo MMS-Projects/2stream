@@ -1,3 +1,15 @@
+2stream (0.0.6) precise; urgency=high
+
+  * The deb didn't update
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Sat, 3 Nov 2012 16:43:23 +0100
+
+2stream (0.0.5) precise; urgency=high
+
+  * Workaround for a little main window bug
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Sat, 3 Nov 2012 16:24:57 +0100
+
 2stream (0.0.4-1) precise; urgency=high
 
   * Bump to 0.0.4-1
