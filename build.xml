@@ -55,6 +55,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 			<fileset dir=".">
                <include name="**/res/**.properties" />
+               <include name="**/res/mmsprojects-2stream-**.png" />
             </fileset>
 		</jar>
 	</target>
@@ -74,6 +75,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 			<fileset dir=".">
                <include name="**/res/**.properties" />
+               <include name="**/res/mmsprojects-2stream-**.png" />
             </fileset>
 		</jar>
 	</target>
@@ -93,6 +95,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 			<fileset dir=".">
                <include name="**/res/**.properties" />
+               <include name="**/res/mmsprojects-2stream-**.png" />
             </fileset>
 		</jar>
 	</target>
@@ -112,6 +115,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/swing2swt.jar" />
 			<fileset dir=".">
                <include name="**/res/**.properties" />
+               <include name="**/res/mmsprojects-2stream-**.png" />
             </fileset>
 		</jar>
 	</target>

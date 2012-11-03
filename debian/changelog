@@ -1,3 +1,9 @@
+2stream (0.0.4-0) precise; urgency=high
+
+  * Forgot to include the logo in the build script
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Sat, 3 Nov 2012 15:04:55 +0100
+
 2stream (0.0.4) precise; urgency=high
 
   * The Ubuntu build now checks for the 32 bit Java compiler
