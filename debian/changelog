@@ -1,3 +1,9 @@
+2stream (0.0.4-1) precise; urgency=high
+
+  * Bump to 0.0.4-1
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Sat, 3 Nov 2012 15:43:14 +0100
+
 2stream (0.0.4-0) precise; urgency=high
 
   * Forgot to include the logo in the build script
