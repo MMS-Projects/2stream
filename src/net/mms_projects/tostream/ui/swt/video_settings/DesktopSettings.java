@@ -207,7 +207,7 @@ public class DesktopSettings extends Composite {
 				good = false;
 			}
 			if (good) {
-				resolutionName.setText((difference != 0 ? "≈ " : "") + name);
+				resolutionName.setText((difference != 0 ? "\u2248 " : "") + name);
 			}
 		}
 	}

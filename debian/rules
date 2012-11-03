@@ -4,7 +4,12 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+ARCH := $(shell getconf LONG_BIT)
+
+JAVA_HOME_32 := /usr/lib/jvm/java-7-openjdk-i386
+JAVA_HOME_64 := /usr/lib/jvm/java-7-openjdk-amd64
+
+export JAVA_HOME := $(JAVA_HOME_$(ARCH))
 
 %:
 	dh  $@ #--with javahelper

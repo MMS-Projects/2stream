@@ -1,3 +1,10 @@
+2stream (0.0.4) precise; urgency=high
+
+  * The Ubuntu build now checks for the 32 bit Java compiler
+  * Removed the unicode character that caused the build to fail
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Sat, 3 Nov 2012 13:34:10 +0100
+
 2stream (0.0.3) precise; urgency=high
 
   * The build now uses default Ant again and this should fix build problems
