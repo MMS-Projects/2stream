@@ -3,12 +3,12 @@ Section: devel
 Priority: optional
 Maintainer: Marlin Cremers <m.cremers@mms-projects.net>
 Standards-Version: 3.9.1
-Build-Depends: debhelper (>= 7), openjdk-7-jre, openjdk-7-jdk, ant, javahelper
+Build-Depends: debhelper (>= 7), openjdk-7-jre, openjdk-7-jdk, ant
 Vcs-Browser: https://github.com/MMS-Projects/2stream
 Vcs-Git: git://github.com/MMS-Projects/2stream.git
 Homepage: https://github.com/MMS-Projects/2stream/
 
 Package: 2stream
 Architecture: any
-Depends: ${shlibs:Depends}, ffmpeg, openjdk-7-jre
+Depends: ${shlibs:Depends}, ffmpeg, openjdk-7-jre, pulseaudio-utils
 Description: A Livestreaming application for Ubuntu

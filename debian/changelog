@@ -1,3 +1,15 @@
+2stream (0.0.3) precise; urgency=high
+
+  * The build now uses default Ant again and this should fix build problems
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Sat, 3 Nov 2012 13:34:10 +0100
+
+2stream (0.0.2-2) precise; urgency=high
+
+  * The build now uses javahelper instead of direct Ant
+
+ -- Marlin Cremers <m.cremers@mms-projects.net>  Thu, 30 Oct 2012 18:00:10 +0100
+
 2stream (0.0.2-1) precise; urgency=high
 
   * Another test upload

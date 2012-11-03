@@ -1,5 +1,7 @@
 package net.mms_projects.tostream.ui.swt;
 
+import java.io.InputStream;
+
 import net.mms_projects.tostream.EncoderOutputListener;
 import net.mms_projects.tostream.Settings;
 import net.mms_projects.tostream.managers.EncoderManager;
@@ -65,6 +67,12 @@ public class SwtInterface extends InterfaceLoader {
 
 			MainWindow shell = new MainWindow(display, encoderManager,
 					settings, debugWindow, videoManager);
+
+			InputStream stream = getClass().getResourceAsStream("/res/mmsprojects-2stream-64.png");
+			Image image = new Image(display, stream);
+			shell.setImage(image);
+			image.dispose();
+			
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {

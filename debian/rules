@@ -4,10 +4,10 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
-JAVA_HOME=/usr/lib/jvm/default-java
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 
 %:
-	dh  $@ --with javahelper
+	dh  $@ #--with javahelper
        
 build: clean
 	ant linux
